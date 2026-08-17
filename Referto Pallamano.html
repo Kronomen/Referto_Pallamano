@@ -215,20 +215,26 @@ DATI GARA
         <button onclick="avviaFullscreen(); initMatchDashboard()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
             ✅ Referto
         </button>
+
         <button onclick="apriGaraDaFile()" class="bg-blue-700 hover:bg-blue-600 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
             📂 Apri
         </button>
+
         <input type="file" id="importGaraXLSX" accept=".xlsx,.xls" class="hidden">
+
         <button onclick="document.getElementById('importGaraXLSX').click()" class="bg-emerald-700 hover:bg-emerald-600 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
             📥 Excel
         </button>
+
         <button id="btn-recupero-rapido" onclick="recuperaUltimaGara()" class="hidden bg-orange-600 hover:bg-orange-500 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
             🔄 Recupero
         </button>
+
         <button onclick="apriPopupDurata()" class="bg-slate-700 hover:bg-slate-800 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
             ⏱️ Durata: <span id="durataLabel">30'</span>
         </button>
-        <button onclick="window.close()" class="bg-red-600 hover:bg-red-700 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
+
+        <button onclick="esciProgramma()" class="bg-red-600 hover:bg-red-700 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
             ✖ Chiudi
         </button>
     </div>
@@ -2244,6 +2250,10 @@ function arrestaCronometroFineTempo(){
     salvaPartita();
 }
 
+    //---------------------------------
+    // Esci
+    //---------------------------------
+
 function esciProgramma(){
 
     if(timerInterval !== null){
@@ -2253,7 +2263,7 @@ function esciProgramma(){
 
     salvaPartita();
 
-    window.location.href = "index.html";
+    window.close();
 }
 
 //=====================================
