@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referto Pallamano FIGH</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+    background-color:#041937;
+    width:100%;
+    height:100%;
+    margin:0;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:
+        linear-gradient(90deg,rgba(4,25,55,.66),rgba(4,25,55,.18),rgba(4,25,55,.66)),
+        url("referto-pallamano-home-clean.png") center center/contain no-repeat;
+}
+
+.page{
+    width:100%;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+}
+
+/* TESTATA */
+.top{
+    text-align:center;
+    color:white;
+    text-shadow:0 3px 12px rgba(0,0,0,.45);
+    margin-bottom:25px;
+}
+
+.top h1{
+    margin:0;
+    font-size:clamp(34px,5vw,72px);
+    font-weight:900;
+    letter-spacing:3px;
+}
+
+.top p{
+    margin:8px 0 0;
+    font-size:clamp(14px,1.5vw,23px);
+    font-weight:700;
+    letter-spacing:4px;
+}
+
+.line{
+    width:min(720px,80vw);
+    height:4px;
+    margin:18px auto 0;
+    background:linear-gradient(
+        90deg,
+        #164e9b 0 38%,
+        #008c45 38% 48%,
+        white 48% 52%,
+        #ce2b37 52% 62%,
+        #164e9b 62% 100%
+    );
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+
+/* PANNELLO CENTRALE */
+.card{
+    width:min(700px,92vw);
+    padding:30px 38px;
+    border-radius:25px;
+    background:rgba(255,255,255,.92);
+    border:1px solid rgba(255,255,255,.95);
+    box-shadow:0 20px 60px rgba(0,0,0,.28);
+    text-align:center;
+    backdrop-filter:blur(8px);
+    transform:translateY(190px);
+}
+
+.card h2{
+    margin:0 0 10px;
+    color:#102d56;
+    font-size:clamp(25px,3vw,38px);
+    font-weight:900;
+}
+
+.card p{
+    margin:0 auto 24px;
+    max-width:560px;
+    color:#334155;
+    font-size:16px;
+    line-height:1.55;
+}
+
+.open-button{
+    border:0;
+    width:100%;
+    max-width:560px;
+    min-height:68px;
+    border-radius:17px;
+    background:#1557a6;
+    color:white;
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:.8px;
+    cursor:pointer;
+    box-shadow:0 10px 24px rgba(21,87,166,.35);
+    transition:transform .15s ease,background .15s ease,box-shadow .15s ease;
+}
+
+.open-button:hover{
+    background:#0d468b;
+    transform:translateY(-2px);
+    box-shadow:0 14px 30px rgba(21,87,166,.42);
+}
+
+.open-button:active{
+    transform:translateY(0);
+}
+
+/* CREDITO PROGRAMMATORE */
+.creator{
+    position:fixed;
+    left:24px;
+    bottom:14px;
+    z-index:20;
+    color:rgba(255,255,255,.88);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.5px;
+    text-shadow:0 2px 6px rgba(0,0,0,.7);
+    opacity:.9;
+}
+
+/* PIEDE */
+.bottom{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    min-height:60px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:55px;
+    padding:12px 20px;
+    background:rgba(4,30,65,.94);
+    color:white;
+    font-size:13px;
+    font-weight:700;
+}
+
+.bottom span{
+    opacity:.95;
+}
+
+@media(max-width:700px){
+    body{background-position:center center}
+    .page{padding:18px}
+    .top h1{letter-spacing:1px}
+    .top p{letter-spacing:2px}
+    .card{padding:24px 20px}
+    .open-button{font-size:17px;min-height:60px}
+    .bottom{gap:15px;font-size:10px}
+    .creator{
+        left:auto;
+        right:12px;
+        bottom:68px;
+        font-size:9px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<main class="page">
+
+<section class="top">
+    <h1>
+    <h1>
+
+    <div class="line"></div>
+</section>
+
+    <section class="card">
+        <h2>Benvenuto</h2>
+
+        <p>
+            Sistema digitale per la gestione del referto di gara,
+            del cronometro, degli eventi e delle informazioni delle squadre.
+        </p>
+
+        <button class="open-button" onclick="apriReferto()">
+            🏐 &nbsp; APRI REFERTO PALLAMANO
+        </button>
+    </section>
+
+</main>
+
+<footer class="bottom">
+    <span>🛡️ REFERTO DIGITALE</span>
+    <span>⏱️ GESTIONE GARA</span>
+    <span>🏐 PALLAMANO</span>
+</footer>
+
+<div class="creator">
+    Kronoman V. 2.01 08/26
+</div>
+
+<script>
+
+function apriReferto(){
+
+    window.location.href = "Referto%20Pallamano.html";
+
+}
+
+</script>
+
+</body>
+</html>
