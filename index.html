@@ -105,6 +105,7 @@ body{
     box-shadow:0 20px 60px rgba(0,0,0,.28);
     text-align:center;
     backdrop-filter:blur(8px);
+    transform:translateY(190px);
 }
 
 .card h2{
@@ -222,11 +223,12 @@ body{
 
 <main class="page">
 
-    <section class="top">
-        <h1>REFERTO PALLAMANO</h1>
-        <p>SISTEMA DI REFERTAZIONE</p>
-        <div class="line"></div>
-    </section>
+<section class="top">
+    <h1>
+    <h1>
+
+    <div class="line"></div>
+</section>
 
     <section class="card">
         <h2>Benvenuto</h2>
@@ -254,26 +256,13 @@ body{
 </div>
 
 <script>
+
 function apriReferto(){
 
-    const finestra = window.open(
-        "Referto%20Pallamano.html",
-        "_blank",
-        "width=1600,height=1000,resizable=yes,scrollbars=yes"
-    );
+    window.location.href = "Referto%20Pallamano.html";
 
-    if(!finestra){
-
-        alert(
-            "Il browser ha bloccato l'apertura del Referto. " +
-            "Consenti i popup per questo sito."
-        );
-
-        return;
-    }
-
-    finestra.focus();
 }
+
 </script>
 
 </body>
