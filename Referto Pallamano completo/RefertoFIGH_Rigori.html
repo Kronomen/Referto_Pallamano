@@ -1,0 +1,3375 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referto FIGH - Serie dei Rigori</title>
+
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    background-color: #ffffff;
+    overflow-x: auto;
+    overflow-y: auto;
+    height: 100vh;
+}
+        .penalty-flash { animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+@keyframes timerFlash {
+
+    0%,100%{
+        border-color:#ef4444;
+        box-shadow:0 0 8px #ef4444;
+    }
+
+    50%{
+        border-color:#facc15;
+        box-shadow:0 0 20px #ef4444;
+    }
+
+}
+
+.timer-warning{
+
+    animation:timerFlash .6s infinite;
+
+}
+
+    </style>
+</head>
+
+    <!-- SCHERMATA COMPILAZIONE DISTINTE (SETUP) -->
+
+    <div id="setup-section" class="hidden">
+
+        <div class="rounded-xl overflow-hidden border border-slate-300 shadow">
+
+    <div class="bg-blue-700 text-white text-center py-3">
+
+        <h1 class="text-xl font-black uppercase tracking-widest">
+            F.I.G.H. - CONFIGURAZIONE INIZIALE GARA
+        </h1>
+
+    </div>
+
+    <div class="bg-white text-center py-2 px-4 border-t border-slate-300">
+
+        <p class="text-slate-600 text-[11px] font-semibold">
+            Svuota la casella del Numero o della Lettera per escludere un elemento dal referto finale.
+        </p>
+
+    </div>
+
+</div>
+        <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 space-y-3 text-slate-100">
+
+    <div class="grid grid-cols-3 gap-3">
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Numero Gara</label>
+            <input id="match-num" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Campionato</label>
+            <input id="match-league" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Stagione Sportiva</label>
+            <input id="match-season" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white"
+                   placeholder="2026/2027">
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Data</label>
+            <input id="match-date" type="date"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Ora</label>
+            <input id="match-time" type="time"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Località</label>
+            <input id="match-city" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Impianto</label>
+            <input id="match-venue" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Arbitro 1</label>
+            <input id="referee1" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Arbitro 2</label>
+            <input id="referee2" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Commissario 1</label>
+            <input id="delegate1" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Commissario 2</label>
+            <input id="delegate2" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Cronometrista</label>
+            <input id="timekeeper" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+        <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-400">Segretario</label>
+            <input id="secretary" type="text"
+                   class="w-full rounded border border-slate-600 p-1 bg-slate-700 text-xs text-white">
+        </div>
+
+    </div>
+
+</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- SETUP SQUADRA A -->
+            <div class="bg-blue-900/20 p-3 rounded-xl border border-blue-900/50">
+                <input type="text" id="team-a-name" class="w-full p-1.5 border border-blue-800 rounded font-black text-blue-400 bg-slate-800 text-sm mb-2" value="SQUADRA CASA">
+                <div class="grid grid-cols-2 gap-1 text-slate-200" id="inputs-players-a"></div>
+                <div class="grid grid-cols-1 gap-1 text-slate-200 mt-2" id="inputs-officials-a"></div>
+            </div>
+            <!-- SETUP SQUADRA B -->
+            <div class="bg-red-900/20 p-3 rounded-xl border border-red-900/50">
+                <input type="text" id="team-b-name" class="w-full p-1.5 border border-red-800 rounded font-black text-red-400 bg-slate-800 text-sm mb-2" value="SQUADRA OSPITI">
+                <div class="grid grid-cols-2 gap-1 text-slate-200" id="inputs-players-b"></div>
+                <div class="grid grid-cols-1 gap-1 text-slate-200 mt-2" id="inputs-officials-b"></div>
+            </div>
+        </div>
+
+<div class="text-center space-y-3 pt-6 border-t border-slate-700">
+    <div class="flex flex-row flex-wrap justify-center gap-4">
+        <!-- TASTO CONFERMA -->
+        <button onclick="initMatchDashboard()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase py-2.5 px-6 rounded-lg shadow cursor-pointer">
+            Conferma e Vai al Referto
+        </button>
+
+        <!-- TASTO APRI FILE -->
+        <button onclick="apriGaraDaFile()" class="bg-blue-700 hover:bg-blue-600 text-white text-xs font-black uppercase py-2.5 px-6 rounded-lg shadow cursor-pointer">
+            📂 Apri Gara da File
+        </button>
+
+        <!-- TASTO RECUPERO (Inizialmente nascosto) -->
+        <button id="btn-recupero-rapido" onclick="recuperaUltimaGara()" class="hidden bg-orange-600 hover:bg-orange-500 text-white text-xs font-black uppercase py-2.5 px-6 rounded-lg shadow cursor-pointer">
+            🔄 Recupero Ultima Gara
+        </button>
+    </div>
+</div>
+    </div>
+
+<!-- ==========================================================
+DASHBOARD GARA
+=========================================================== -->
+
+<div id="match-section" 
+     class="flex-1 flex flex-col gap-4 h-full max-w-7xl w-full mx-auto relative">
+
+<!-- LOGO FIGH - NON OCCUPA SPAZIO -->
+<img
+    src="FIGH.png"
+    alt="Logo FIGH"
+    class="absolute top-1 left-2 h-35 w-auto object-contain z-20 pointer-events-none">
+
+<!-- LOGO FICR - NON OCCUPA SPAZIO -->
+<img
+    src="FICR.png.webp"
+    alt="Logo FICR"
+    class="absolute top-10 right-2 h-15 w-auto object-contain z-20 pointer-events-none">
+
+
+    <!-- ======================================================
+    TABELLONE SUPERIORE
+    ======================================================= -->
+
+    <div class="bg-white rounded-2xl border border-slate-300 shadow-lg px-5 py-3">
+
+        <!-- Squadre + Risultato -->
+
+        <div class="grid grid-cols-[170px_1fr_auto_1fr_170px] items-center gap-3">
+
+            <!-- SPAZIO SINISTRO -->
+            <div></div>
+
+           <!-- CASA -->
+<div class="relative flex justify-end items-center overflow-visible">
+
+    <h2 id="dash-team-a"
+        class="text-2xl font-black text-blue-700 uppercase text-right truncate">
+        CASA
+    </h2>
+
+    <div id="action-panel-A"
+         class="hidden absolute right-full mr-3 top-1/2 -translate-y-1/2
+                w-[155px]
+                bg-slate-100
+                rounded-lg
+                p-1.5
+                border border-slate-300
+                shadow-2xl
+                z-[9999]
+                pointer-events-auto">
+
+        <div id="action-title-A"
+             class="text-center text-slate-700 text-xs font-bold mb-1">
+        </div>
+
+        <div class="flex gap-2">
+
+            <button
+                id="action-btn1-A"
+                type="button"
+                onclick="confirmPenaltyGoal();"
+                class="flex-1 h-7 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-bold shadow cursor-pointer">
+
+                ⚽ GOAL
+
+            </button>
+
+            <button
+                id="action-btn2-A"
+                type="button"
+                onclick="confirmPenaltyMiss();"
+                class="flex-1 h-7 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold shadow cursor-pointer">
+
+                ✖ ERRATO
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- RISULTATO -->
+    <div id="updateScoreboard(scoreA, scoreB)"
+         class="bg-black border-4 border-yellow-500 rounded-2xl
+                px-8 py-3
+                text-6xl font-mono font-black tracking-widest
+                text-yellow-300 shadow-xl">
+
+        00 - 00
+
+    </div>
+
+<!-- OSPITI -->
+<div class="relative flex justify-start items-center overflow-visible">
+
+    <h2 id="dash-team-b"
+        class="text-2xl font-black text-red-700 uppercase text-left truncate">
+        OSPITI
+    </h2>
+
+    <!-- PANNELLO AZIONI OSPITI -->
+
+    <div id="action-panel-B"
+         class="hidden absolute left-full ml-3 top-1/2 -translate-y-1/2
+                w-[155px]
+                bg-slate-100
+                rounded-lg
+                p-1.5
+                border border-slate-300
+                shadow-2xl
+                z-[9999]
+                pointer-events-auto">
+
+        <div id="action-title-B"
+             class="text-center text-slate-700 text-xs font-bold mb-1">
+        </div>
+
+        <div class="flex gap-2">
+
+            <button
+                id="action-btn1-B"
+                type="button"
+                onclick="confirmPenaltyGoal();"
+                class="flex-1 h-7 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-bold shadow cursor-pointer">
+
+                ⚽ GOAL
+
+            </button>
+
+            <button
+                id="action-btn2-B"
+                type="button"
+                onclick="confirmPenaltyMiss();"
+                class="flex-1 h-7 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold shadow cursor-pointer">
+
+                ✖ ERRATO
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+<!-- Stato Gara -->
+
+<div class="flex justify-center mt-0">
+<div id="half-display"
+     class="bg-slate-100 border border-slate-300 rounded-full px-6 py-1.5 shadow-sm">
+
+                <div id="half-content"
+                     class="text-sm font-bold tracking-[3px] uppercase text-slate-700">
+
+                    RIGORI
+
+                </div>
+
+            </div>
+
+ </div>
+  
+
+        <!-- BLOCCO CENTRALE RICALIBRATO: REGISTRO ALLARGATO (30% - 40% - 30%) -->
+        <div class="flex-1 grid grid-cols-10 gap-4 overflow-hidden items-stretch mt-0">
+            
+            <!-- SQUADRA CASA (A) - Ridotto a 3 Colonne -->
+            <div class="col-span-3 bg-white border border-slate-300 rounded-2xl shadow-lg flex flex-col overflow-hidden p-3">
+                <div>
+                    <div class="relative flex justify-between items-start bg-blue-50 border border-blue-200 rounded-xl p-3 mb-3">
+
+    <div class="flex flex-col flex-1 min-w-0">
+
+        <span
+    id="panel-title-a"
+    class="text-lg font-black text-blue-700 uppercase whitespace-nowrap overflow-hidden text-ellipsis">
+            CASA
+        </span>
+
+        <span id="penalty-counter-a"
+      class="text-xs font-bold text-slate-700">
+    Rigori: 0/0
+</span>
+
+<span id="timeout-counter-a"
+      class="text-xs font-bold text-cyan-700">
+    Time Out: 0/3
+</span>
+
+    </div>
+
+    <div class="flex flex-col gap-1 ml-2">
+
+<!-- Pulsante Rigore eliminato -->
+        
+
+    </div>
+
+</div>
+                    <table class="w-full text-[11px] text-left border-collapse bg-white rounded-xl overflow-hidden">
+
+<thead>
+<tr class="bg-slate-100 text-slate-700 uppercase text-[10px] border-b border-slate-300">
+
+<th class="p-0.5 w-6 text-center">N°</th>
+<th class="p-0.5">Nominativo</th>
+
+<th class="p-0.5 w-6 text-center text-blue-400">G</th>
+<th class="p-0.5 w-6 text-center text-yellow-500">A</th>
+<th class="p-0.5 w-8 text-center text-orange-500">2'</th>
+<th class="p-0.5 w-5 text-center text-red-600">R</th>
+<th class="p-0.5 w-12 text-center">Tira</th>
+
+</tr>
+</thead>
+
+                        <tbody id="table-body-a" class="divide-y divide-slate-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+           <!-- CENTRO: REGISTRO GARA ALLARGATO -->
+<div class="col-span-4 bg-white border border-slate-300 rounded-2xl shadow-lg flex flex-col p-4 overflow-hidden">
+
+    <div class="border-b border-slate-300 pb-3 mb-2">
+
+        <div class="text-center text-sm font-black uppercase tracking-widest text-slate-700 mb-3">
+
+            🥅 SERIE UFFICIALE DEI RIGORI
+
+        </div>
+
+<!-- Barra pulsanti -->
+
+<div class="flex justify-center items-center gap-4 mt-2">
+
+    <button
+        id="btn-undo"
+        onclick="undoLastAction()"
+        class="w-32 bg-orange-700 hover:bg-orange-600 text-white text-[11px] font-bold py-2 rounded-lg transition">
+
+        ↩ Undo
+
+    </button>
+
+    <button
+        id="btn-save-game"
+        onclick="salvaGaraSuFile()"
+        class="w-32 bg-green-700 hover:bg-green-600 text-white text-[11px] font-bold py-2 rounded-lg transition">
+
+        💾 Salva
+
+    </button>
+
+    <button
+        id="btn-post-game"
+        onclick="apriRegistroPostGara()"
+        class="w-32 bg-orange-700 hover:bg-orange-600 text-white text-[11px] font-bold py-2 rounded-lg transition hidden">
+
+        📝 Registro
+
+    </button>
+
+    </div>
+</div>
+
+       
+   
+
+
+    <!--=========================================
+        REGISTRO GARA
+    ==========================================-->
+
+    <div class="border border-slate-700 rounded overflow-hidden flex-1 flex flex-col mt-1">
+
+
+        <!-- Corpo Registro -->
+
+       <div class="border border-slate-700 rounded-xl overflow-hidden flex-1 bg-white">
+
+    <table class="w-full border-collapse">
+
+        <thead>
+
+<tr class="bg-blue-700 text-white text-[11px] font-bold">
+
+    <th class="p-2 w-10">T</th>
+
+    <th class="p-2 w-12">N°</th>
+
+    <th class="p-2">CASA</th>
+
+    <th class="p-2 w-20">ESITO</th>
+
+    <th class="p-2 w-20">ESITO</th>
+
+    <th class="p-2">OSPITI</th>
+
+    <th class="p-2 w-12">N°</th>
+
+</tr>
+
+        </thead>
+
+        <tbody id="rigori-table">
+
+        </tbody>
+
+    </table>
+
+</div> 
+
+    </div>
+
+    <div class="text-center text-[9px] text-slate-500 font-semibold border-t border-slate-800 pt-1 mt-2">
+
+        [Barra Spaziatrice] Avvia / Ferma Cronometro
+
+    </div>
+
+</div>
+
+              <!-- SQUADRA OSPITI (B) - Ridotto a 3 Colonne -->
+            <div class="col-span-3 bg-white border border-slate-300 rounded-2xl shadow-lg flex flex-col overflow-hidden p-3">
+                <div>
+                    <div class="relative flex justify-between items-start bg-red-50 border border-red-200 rounded-xl p-3 mb-3">
+
+    <div class="flex flex-col flex-1 min-w-0">
+
+        <span
+            id="panel-title-b"
+            class="text-lg font-black text-red-700 uppercase whitespace-nowrap overflow-hidden text-ellipsis">
+            OSPITI
+        </span>
+
+        <span
+            id="penalty-counter-b"
+            class="text-xs font-bold text-slate-700">
+            Rigori: 0/0
+        </span>
+
+        <span
+            id="timeout-counter-b"
+            class="text-xs font-bold text-cyan-700">
+            Time Out: 0/3
+        </span>
+
+    </div>
+
+    <div class="flex flex-col gap-2 ml-2">
+
+<!-- Pulsante Rigore eliminato -->
+        
+
+    </div>
+            </div>
+                    <table class="w-full text-[11px] text-left border-collapse bg-white rounded-xl overflow-hidden">
+                        <thead>
+<tr class="bg-slate-100 text-slate-700 uppercase text-[10px] border-b border-slate-300">
+
+<th class="p-0.5 w-6 text-center">N°</th>
+<th class="p-0.5">Nominativo</th>
+
+<th class="p-0.5 w-6 text-center text-blue-400">G</th>
+<th class="p-0.5 w-6 text-center text-yellow-500">A</th>
+<th class="p-0.5 w-8 text-center text-orange-500">2'</th>
+<th class="p-0.5 w-5 text-center text-red-600">R</th>
+<th class="p-0.5 w-12 text-center">Tira</th>
+
+</tr>
+</thead>
+                        <tbody id="table-body-b" class="divide-y divide-slate-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<!-- ==========================================
+SCELTA PRIMO TIRATORE
+========================================== -->
+
+<div id="popup-primo-rigore"
+     class="fixed inset-0 bg-black/60 hidden items-center justify-center z-[99999]">
+
+    <div class="bg-white rounded-xl shadow-2xl w-[420px]">
+
+        <div class="bg-blue-700 text-white text-center py-3 rounded-t-xl">
+
+            <div class="text-lg font-black uppercase">
+                Serie dei Rigori
+            </div>
+
+        </div>
+
+        <div class="p-6 text-center">
+
+            <div class="text-slate-700 font-bold mb-6">
+
+                Quale squadra esegue il primo tiro?
+
+            </div>
+
+            <div class="flex justify-center gap-5">
+
+                <button
+                    onclick="iniziaRigori('A')"
+                    class="bg-blue-700 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold">
+
+                    CASA
+
+                </button>
+
+                <button
+                    onclick="iniziaRigori('B')"
+                    class="bg-red-700 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-bold">
+
+                    OSPITI
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+    <script>
+
+//=========================================
+// STATI DELLA GARA
+//=========================================
+
+const STATO_GARA = {
+
+    PREPARTITA: "PREPARTITA",
+
+    RIGORI: "RIGORI",
+
+    PARTITA_TERMINATA: "PARTITA_TERMINATA",
+
+    EDIT_POST_GARA: "EDIT_POST_GARA",
+
+    SALVATA: "SALVATA",
+
+    CERTIFICATA: "CERTIFICATA"
+
+};
+
+let savedRosterDataA = {
+    players: {},
+    officials: {}
+};
+
+let savedRosterDataB = {
+    players: {},
+    officials: {}
+};
+
+let logEvents = [];
+
+//=========================================
+// STATO ATTUALE
+//=========================================
+
+let statoGara = STATO_GARA.PREPARTITA;
+
+
+//=========================================
+// CAMBIA STATO GARA
+//=========================================
+
+function cambiaStatoGara(nuovoStato){
+
+    statoGara = nuovoStato;
+
+    salvaPartita();
+
+}
+
+//=========================================
+// BLOCCA DEFINITIVAMENTE LA GARA
+//=========================================
+
+function bloccaGara(){
+
+    currentRosterA.players.forEach(g=>{
+        g.canShoot = false;
+    });
+
+    currentRosterB.players.forEach(g=>{
+        g.canShoot = false;
+    });
+
+    renderTable("A");
+    renderTable("B");
+
+}
+
+
+
+  //=========================================
+ // STORICO AZIONI (UNDO)
+//=========================================
+        let undoHistory = [];
+
+	//=========================================
+       // STORICO REDO
+      //=========================================
+
+        let redoHistory = [];
+let partita = null;
+        let isFirstInit = true;
+	let currentHalf = 1; // 1 per primo tempo, 2 per secondo tempo
+
+let timerSeconds = 0;
+
+let timerInterval = null;
+let autosaveInterval = null;
+
+//=========================================
+//
+//=========================================
+        function buildSetupInputs() {
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            const fillInputs = (containerId, prefix, offset=0) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                for(let i=1; i<=16; i++) {
+                    container.innerHTML += `
+                        <div class="flex gap-1 items-center">
+                            <input type="text" id="num-${prefix}-${i}" class="w-12 p-0.5 text-center border border-slate-600 rounded text-xs bg-slate-700 text-white font-mono font-bold" placeholder="#" value="${i+offset}">
+                            <input type="text" id="name-${prefix}-${i}" class="flex-1 p-0.5 border border-slate-600 rounded text-xs bg-slate-700 text-white" placeholder="(Opzionale) Atleta ${i}">
+                        </div>`;
+                }
+            };
+            const fillOfficials = (containerId, prefix) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                letters.forEach(l => {
+                    container.innerHTML += `
+                        <div class="flex gap-1 items-center">
+                            <input type="text" id="off-letter-${prefix}-${l}" class="w-7 font-mono font-bold text-center text-xs bg-slate-700 text-white border border-slate-600 rounded" value="${l}">
+                            <input type="text" id="off-name-${prefix}-${l}" class="flex-1 p-0.5 border border-slate-600 rounded text-xs bg-slate-700 text-white" placeholder="(Opzionale) Dirigente ${l}">
+                        </div>`;
+                });
+            };
+            fillInputs('inputs-players-a', 'a', 0);
+            fillOfficials('inputs-officials-a', 'a');
+            fillInputs('inputs-players-b', 'b', 10);
+            fillOfficials('inputs-officials-b', 'b');
+        }
+
+//=========================================
+// MOTORE SERIE RIGORI
+//=========================================
+
+let rigori = [];
+
+let ordineRigori = [];
+
+let squadraInizia = "A";
+
+let turnoCorrente = 0;
+
+let faseRigori = 1;
+
+let rigoriA = 0;
+let rigoriB = 0;
+
+let tentativiA = 0;
+let tentativiB = 0;
+
+let serieTerminata = false;
+
+let pendingPenalty = null;
+let rigoriAvviati = false;
+
+//=========================================
+// Inizio Rigori
+//=========================================
+
+function initRigori(squadra = "A"){
+
+    //----------------------------------
+    // SQUADRA CHE INIZIA
+    //----------------------------------
+
+    squadraInizia = squadra;
+
+    //----------------------------------
+    // RESET STATO
+    //----------------------------------
+
+    turnoCorrente = 0;
+
+    faseRigori = 1;
+
+    rigori = [];
+
+    rigoriA = 0;
+    rigoriB = 0;
+
+    tentativiA = 0;
+    tentativiB = 0;
+
+    serieTerminata = false;
+
+    pendingPenalty = null;
+
+    rigoriAvviati = true;
+
+    //----------------------------------
+    // RESET GIOCATORI
+    //----------------------------------
+
+    currentRosterA.players.forEach(g=>{
+
+        g.penaltyTaken = false;
+        g.canShoot = false;
+
+    });
+
+    currentRosterB.players.forEach(g=>{
+
+        g.penaltyTaken = false;
+        g.canShoot = false;
+
+    });
+
+    //----------------------------------
+    // CREA ORDINE TIRI
+    //----------------------------------
+
+    ordineRigori = [];
+
+    for(let i=0;i<5;i++){
+
+        if(squadra==="A"){
+
+            ordineRigori.push("A");
+            ordineRigori.push("B");
+
+        }else{
+
+            ordineRigori.push("B");
+            ordineRigori.push("A");
+
+        }
+
+    }
+
+    //----------------------------------
+    // ATTIVA I TIRATORI DEL PRIMO TURNO
+    //----------------------------------
+
+    aggiornaDisponibilitaGiocatori();
+
+    //----------------------------------
+    // STATO GARA
+    //----------------------------------
+
+    statoGara = STATO_GARA.RIGORI;
+
+    //----------------------------------
+    // REGISTRO UFFICIALE
+    //----------------------------------
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        "INIZIO SERIE RIGORI"
+    );
+
+    //----------------------------------
+    // AGGIORNA INTERFACCIA
+    //----------------------------------
+
+    renderTable("A");
+    renderTable("B");
+
+    updatePenaltyCountersDisplay();
+
+    aggiornaTabelloneRigori();
+
+    //----------------------------------
+    // SALVA
+    //----------------------------------
+
+    salvaPartita();
+
+}
+    //----------------------------------
+    // 
+    //----------------------------------
+
+function mostraPopupPrimoRigore(){
+
+    document
+        .getElementById("popup-primo-rigore")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("popup-primo-rigore")
+        .classList.add("flex");
+
+}
+
+//----------------------------------
+// 
+//----------------------------------
+
+function iniziaRigori(squadra){
+
+    document
+        .getElementById("popup-primo-rigore")
+        .classList.remove("flex");
+
+    document
+        .getElementById("popup-primo-rigore")
+        .classList.add("hidden");
+
+    initRigori(squadra);
+
+}
+
+    //----------------------------------
+    // Turno Squadra
+    //----------------------------------
+
+function squadraDiTurno(){
+
+    return ordineRigori[turnoCorrente];
+
+}
+
+//----------------------------------
+// TURNO SUCCESSIVO
+//----------------------------------
+
+function turnoSuccessivo(){
+
+    //----------------------------------
+    // PASSA AL TIRO SUCCESSIVO
+    //----------------------------------
+
+    turnoCorrente++;
+
+    //----------------------------------
+    // TERMINATI I PRIMI 10 RIGORI
+    //----------------------------------
+
+    if(faseRigori === 1 && turnoCorrente >= 10){
+
+        controllaFineRigori();
+
+        if(serieTerminata){
+
+            return;
+
+        }
+
+        //----------------------------------
+        // INIZIA L'OLTRANZA
+        //----------------------------------
+
+        faseRigori = 2;
+
+        console.log(">>> INIZIO MORTE IMPROVVISA");
+
+    }
+
+    //----------------------------------
+    // OLTRANZA
+    //----------------------------------
+
+    if(faseRigori === 2){
+
+        //----------------------------------
+        // SE TUTTI HANNO GIÀ TIRATO
+        // SI RICOMINCIA IL GIRO
+        //----------------------------------
+
+        aggiornaDisponibilitaGiocatori();
+
+        //----------------------------------
+        // ESTENDE L'ORDINE DEI TIRI
+        //----------------------------------
+
+        while(turnoCorrente >= ordineRigori.length){
+
+            if(squadraInizia === "A"){
+
+                ordineRigori.push("A");
+                ordineRigori.push("B");
+
+            }
+            else{
+
+                ordineRigori.push("B");
+                ordineRigori.push("A");
+
+            }
+
+        }
+
+    }
+
+    //----------------------------------
+    // AGGIORNA I TIRATORI DISPONIBILI
+    //----------------------------------
+
+    aggiornaDisponibilitaGiocatori();
+
+}
+
+//----------------------------------
+// Aggiorna disponibilità Giocatori
+//----------------------------------
+
+function aggiornaDisponibilitaGiocatori(){
+
+    //----------------------------------
+    // Nessun giocatore abilitato
+    //----------------------------------
+
+    currentRosterA.players.forEach(g=>{
+
+        if(!g.red){
+
+            g.canShoot = false;
+
+        }
+
+    });
+
+    currentRosterB.players.forEach(g=>{
+
+        if(!g.red){
+
+            g.canShoot = false;
+
+        }
+
+    });
+
+    //----------------------------------
+    // Squadra di turno
+    //----------------------------------
+
+    const squadra = squadraDiTurno();
+
+    const roster =
+
+        squadra === "A"
+
+        ? currentRosterA.players
+
+        : currentRosterB.players;
+
+    //----------------------------------
+    // Giocatori ancora disponibili
+    //----------------------------------
+
+    let disponibili = roster.filter(g=>
+
+        !g.red && !g.penaltyTaken
+
+    );
+
+    //----------------------------------
+    // Tutti hanno già tirato
+    //----------------------------------
+
+    if(disponibili.length === 0){
+
+        console.log(">>> NUOVO GIRO RIGORI");
+
+        roster.forEach(g=>{
+
+            if(!g.red){
+
+                g.penaltyTaken = false;
+
+                g.canShoot = false;
+
+            }
+
+        });
+
+        disponibili = roster.filter(g=>!g.red);
+
+    }
+
+    //----------------------------------
+    // Abilita i giocatori
+    //----------------------------------
+
+    disponibili.forEach(g=>{
+
+        g.canShoot = true;
+
+    });
+
+    //----------------------------------
+    // Aggiorna tabelle
+    //----------------------------------
+
+    renderTable("A");
+
+    renderTable("B");
+
+}
+
+//=========================================
+// GARA MODIFICABILE
+//=========================================
+
+function garaModificabile(messaggio = true){
+
+    switch(statoGara){
+
+    case STATO_GARA.RIGORI:
+
+        return true;
+
+}
+
+    if(messaggio){
+
+        alert(
+            "La gara è già terminata.\n" +
+            "Non è più possibile modificare il referto."
+        );
+
+    }
+
+    return false;
+
+}
+
+ //=========================================
+ // initMatchDashboard
+//=========================================
+
+function initMatchDashboard() {
+
+    const processRoster = (prefix, targetRoster, savedState) => {
+
+        const newPlayers = [];
+        const newOfficials = [];
+        const numeriUsati = new Set();
+
+        // ==========================
+        // GIOCATORI
+        // ==========================
+
+        for (let i = 1; i <= 16; i++) {
+
+            let num = document.getElementById(`num-${prefix}-${i}`).value.trim();
+            let name = document.getElementById(`name-${prefix}-${i}`).value.trim();
+
+            if (num !== "") {
+
+                // Controllo numero duplicato
+                if (numeriUsati.has(num)) {
+                    alert(`Numero di maglia ${num} inserito due volte nella stessa squadra.`);
+                    return false;
+                }
+
+                numeriUsati.add(num);
+
+                let finalName = name ? name.toUpperCase() : `ATLETA #${num}`;
+                let key = `p_${num}`;
+
+                let old = savedState.players[key] || {
+                    goals: 0,
+                    yellows: 0,
+                    suspensions: 0,
+                    red: false
+                };
+
+                let pObj = {
+                    id: key,
+                    num: num,
+                    name: finalName,
+                    ...old,
+                    type: "G"
+                };
+
+                savedState.players[key] = pObj;
+                newPlayers.push(pObj);
+            }
+        }
+
+        // Ordina i giocatori per numero di maglia
+        newPlayers.sort((a, b) => parseInt(a.num, 10) - parseInt(b.num, 10));
+
+        // ==========================
+        // DIRIGENTI
+        // ==========================
+
+        ["A", "B", "C", "D", "E"].forEach(lettera => {
+
+            let letter = document.getElementById(`off-letter-${prefix}-${lettera}`).value.trim();
+            let name = document.getElementById(`off-name-${prefix}-${lettera}`).value.trim();
+
+            if (letter !== "") {
+
+                let finalName = name ? name.toUpperCase() : `DIRIGENTE ${letter}`;
+                let key = `o_${lettera}`;
+
+                let old = savedState.officials[key] || {
+                    goals: 0,
+                    yellows: 0,
+                    suspensions: 0,
+                    red: false
+                };
+
+                let oObj = {
+                    id: key,
+                    num: letter,
+                    name: finalName,
+                    ...old,
+                    type: "D"
+                };
+
+                savedState.officials[key] = oObj;
+                newOfficials.push(oObj);
+            }
+        });
+
+        targetRoster.players = newPlayers;
+        targetRoster.officials = newOfficials;
+
+        return true;
+    };
+
+    // Controllo squadra A
+    if (!processRoster("a", currentRosterA, savedRosterDataA)) return;
+
+    // Controllo squadra B
+    if (!processRoster("b", currentRosterB, savedRosterDataB)) return;
+
+    const nameA = document.getElementById("team-a-name").value.toUpperCase() || "CASA";
+    const nameB = document.getElementById("team-b-name").value.toUpperCase() || "OSPITI";
+
+    document.getElementById("dash-team-a").innerText = nameA;
+    document.getElementById("dash-team-b").innerText = nameB;
+    document.getElementById("panel-title-a").innerText = nameA;
+    document.getElementById("panel-title-b").innerText = nameB;
+
+if (currentRosterA.players.length) {
+    renderTable("A");
+}
+
+if (currentRosterB.players.length) {
+    renderTable("B");
+}
+
+updatePenaltyCountersDisplay();
+updateClockDisplay();
+
+document.getElementById("setup-section").classList.add("hidden");
+document.getElementById("match-section").classList.remove("hidden");
+
+//=========================================
+// DEBUG AVVIO DASHBOARD
+//=========================================
+    //=========================================
+    // GESTIONE PULSANTI
+    //=========================================
+
+    // Modifica disponibile solo prima dell'inizio gara
+    if (timerSeconds === 0) {
+        document.getElementById("btn-edit-setup").classList.remove("hidden");
+    } else {
+        document.getElementById("btn-edit-setup").classList.add("hidden");
+    }
+
+    // Esci visibile perché il cronometro è fermo
+    document.getElementById("btn-exit").classList.remove("hidden");
+
+    //=========================================
+    // STATO INIZIALE DELLA GARA
+    //=========================================
+
+    cambiaStatoGara(STATO_GARA.PREPARTITA);
+
+    salvaPartita();
+
+    startAutosave();
+
+    if (isFirstInit) {
+        isFirstInit = false;
+    }
+}
+
+
+ //=========================================
+// RENDER TABELLA GARA
+//=========================================
+
+function renderTable(team){
+
+    const roster = team === "A"
+        ? currentRosterA.players
+        : currentRosterB.players;
+
+    const tbody = document.getElementById(`table-body-${team.toLowerCase()}`);
+
+    tbody.innerHTML = "";
+
+    roster
+    .sort((a, b) => (parseInt(a.num) || 999) - (parseInt(b.num) || 999))
+    .forEach(item => {
+
+            if(item.canShoot===undefined)
+                item.canShoot = !item.red;
+
+            if(item.penaltyTaken===undefined)
+                item.penaltyTaken = false;
+
+            tbody.innerHTML += `
+
+<tr class="border-b border-slate-200">
+
+<td class="p-1 text-center font-black font-mono">
+${item.num}
+</td>
+
+<td class="p-1 font-semibold">
+${item.name}
+</td>
+
+<td class="p-1 text-center">
+${item.goals||0}
+</td>
+
+<td class="p-1 text-center">
+${item.yellows||0}
+</td>
+
+<td class="p-1 text-center">
+${item.suspensions||0}
+</td>
+
+<td class="p-1 text-center">
+${item.red ? "🟥" : ""}
+</td>
+
+<td class="p-1 text-center">
+
+<button
+onclick="handlePenalty7mPlayer('${team}','${item.id}')"
+${(!item.canShoot || item.penaltyTaken) ? "disabled" : ""}
+class="px-2 py-1 rounded text-[10px] font-bold
+${(!item.canShoot || item.penaltyTaken)
+? "bg-slate-400 text-slate-700 cursor-not-allowed"
+: "bg-blue-700 hover:bg-blue-600 text-white"}">
+
+${item.penaltyTaken ? "✔" : "TIRA"}
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+        });
+
+}
+
+//=========================================
+// AGGIORNA CONTATORI RIGORI
+//=========================================
+
+function updatePenaltyCountersDisplay(){
+
+    const tentativiA = rigori.filter(r => r.team === "A").length;
+    const tentativiB = rigori.filter(r => r.team === "B").length;
+
+    const golA = rigori.filter(r => r.team === "A" && r.goal).length;
+    const golB = rigori.filter(r => r.team === "B" && r.goal).length;
+
+    const lblA = document.getElementById("penalty-counter-a");
+    const lblB = document.getElementById("penalty-counter-b");
+
+    if(lblA){
+
+        lblA.innerText = `Rigori: ${golA}/${tentativiA}`;
+
+    }
+
+    if(lblB){
+
+        lblB.innerText = `Rigori: ${golB}/${tentativiB}`;
+
+    }
+
+}
+
+
+
+//=========================================
+// CHIUSURA DEFINITIVA DELLA GARA
+//=========================================
+
+function terminaGaraDefinitivamente(){
+
+    //----------------------------------
+    // STATO GARA
+    //----------------------------------
+
+    cambiaStatoGara(STATO_GARA.PARTITA_TERMINATA);
+
+    //----------------------------------
+    // BLOCCA DEFINITIVAMENTE LA GARA
+    //----------------------------------
+
+    bloccaGara();
+
+    //----------------------------------
+    // REGISTRO EVENTI
+    //----------------------------------
+
+const vincitore = rigoriA > rigoriB
+    ? (document.getElementById("team-a-name").value || "Squadra A")
+    : (document.getElementById("team-b-name").value || "Squadra B");
+
+logMatchSystem(
+    "SYS",
+    "-",
+    `FINE SERIE RIGORI ${String(rigoriA).padStart(2,"0")}-${String(rigoriB).padStart(2,"0")} (${vincitore})`
+);
+
+    //----------------------------------
+    // ETICHETTA CENTRALE
+    //----------------------------------
+
+    const half = document.getElementById("half-content");
+
+    if(half){
+        half.innerHTML = "GARA TERMINATA";
+    }
+
+    //----------------------------------
+    // ABILITA REGISTRO POST GARA
+    //----------------------------------
+
+    const btnRegistro = document.getElementById("btn-post-game");
+
+    if(btnRegistro){
+        btnRegistro.classList.remove("hidden");
+    }
+
+    //----------------------------------
+    // SALVA LA GARA
+    //----------------------------------
+
+    salvaPartita();
+
+alert(
+    "La serie dei rigori è terminata.\n\nPremere 'Salva' e successivamente 'Registro'."
+);
+}
+
+//=========================================
+// USCITA DAL PROGRAMMA
+//=========================================
+
+function esciProgramma(){
+
+    // Se il cronometro è in movimento non permettere l'uscita
+    if(timerInterval){
+        return;
+    }
+
+    // Salva sempre la partita
+    salvaPartita();
+
+    // Prova a chiudere la finestra
+    window.close();
+
+}
+
+//=========================================
+// AGGIORNA TABELLONE RIGORI
+//=========================================
+
+function aggiornaTabelloneRigori(){
+
+    const tabellone = document.getElementById("updateScoreboard(scoreA, scoreB)");
+
+    if(tabellone){
+
+        tabellone.innerText =
+            `${String(rigoriA).padStart(2,"0")} - ${String(rigoriB).padStart(2,"0")}`;
+
+    }
+
+    ricostruisciRegistro();
+
+}
+
+//=========================================
+// CHIUDE PANNELLO AZIONI
+//=========================================
+
+function closeActionPanel(team){
+
+    const panel = document.getElementById("action-panel-"+team);
+
+    panel.classList.add("hidden");
+    panel.style.display = "none";
+
+    document.getElementById("action-title-"+team).innerHTML = "";
+
+    pendingPenalty = null;
+
+}
+
+
+//=========================================
+// PANNELLO AZIONI
+//=========================================
+
+function showActionPanel(
+    team,
+    titolo,
+    testo1,
+    testo2,
+    callback1,
+    callback2
+){
+
+    const panel = document.getElementById("action-panel-" + team);
+    const title = document.getElementById("action-title-" + team);
+    const b1 = document.getElementById("action-btn1-" + team);
+    const b2 = document.getElementById("action-btn2-" + team);
+
+    if(!panel || !title || !b1 || !b2)
+        return;
+
+    //---------------------------------
+    // TITOLO
+    //---------------------------------
+
+    title.innerHTML = titolo;
+
+    //---------------------------------
+    // TESTO PULSANTI
+    //---------------------------------
+
+    b1.innerHTML = testo1;
+    b2.innerHTML = testo2;
+
+    //---------------------------------
+    // CALLBACK
+    //---------------------------------
+
+    b1.onclick = callback1;
+    b2.onclick = callback2;
+
+    //---------------------------------
+    // PULSANTI ATTIVI
+    //---------------------------------
+
+    b1.disabled = false;
+    b2.disabled = false;
+
+    b1.classList.remove("hidden");
+    b2.classList.remove("hidden");
+
+    //---------------------------------
+    // PORTA IN PRIMO PIANO
+    //---------------------------------
+
+    panel.style.position = "absolute";
+    panel.style.zIndex = "99999";
+    panel.style.pointerEvents = "auto";
+
+    b1.style.pointerEvents = "auto";
+    b2.style.pointerEvents = "auto";
+
+    //---------------------------------
+    // COLORE BORDO
+    //---------------------------------
+
+    panel.classList.remove(
+        "border-green-600",
+        "border-orange-500",
+        "border-red-600"
+    );
+
+    if(titolo.includes("⚽")){
+
+        panel.classList.add("border-green-600");
+
+    }else if(titolo.includes("🟧")){
+
+        panel.classList.add("border-orange-500");
+
+    }else if(titolo.includes("🟥")){
+
+        panel.classList.add("border-red-600");
+
+    }
+
+    //---------------------------------
+    // VISUALIZZA
+    //---------------------------------
+
+    panel.classList.remove("hidden");
+
+    panel.style.display = "block";
+
+}
+
+//=========================================
+// PANNELLO STAMPA CARTELLINO
+//=========================================
+
+function showCardPrintPanel(team,item,tipo){
+
+    const icona =
+        tipo==="ROSSO"
+        ? "🟥"
+        : "🟧";
+
+//---------------------------------
+// NOME MAX 10 CARATTERI
+//---------------------------------
+
+const nomeBreve =
+    item.name.length > 10
+    ? item.name.substring(0,8) + "…"
+    : item.name;
+
+    showActionPanel(
+
+        team,
+
+        `
+            <div class="text-center">
+
+<div class="text-[12px] font-bold ${
+    tipo === "ROSSO"
+        ? "text-red-700"
+        : "text-orange-600"
+}">
+
+    ${icona} ${item.num} | ${nomeBreve}
+
+</div>
+                <div class="text-[10px] text-red-700 font-bold mt-1">
+
+                    Stampare il cartellino?
+
+                </div>
+
+            </div>
+        `,
+
+        "🖨 SI",
+
+        "NO",
+
+        ()=>{
+
+            stampaCartellino(
+                team,
+                item.num,
+                tipo
+            );
+
+            closeActionPanel(team);
+
+        },
+
+        ()=>{
+
+            closeActionPanel(team);
+
+        }
+
+    );
+
+    //---------------------------------
+    // COLORI PULSANTI
+    //---------------------------------
+
+    document.getElementById("action-btn1-"+team)
+        .className =
+        "flex-1 h-[22px] bg-green-700 hover:bg-green-600 text-white rounded text-[9px] font-bold whitespace-nowrap";
+
+    document.getElementById("action-btn2-"+team)
+        .className =
+        "flex-1 h-[22px] bg-slate-600 hover:bg-slate-500 text-white rounded text-[9px] font-bold whitespace-nowrap";
+
+}
+
+//=========================================
+// CLICK PULSANTE TIRA
+//=========================================
+
+function handlePenalty7mPlayer(team,id){
+
+console.log("CLICK TIRA", team, id);
+
+    const roster =
+        team==="A"
+            ? currentRosterA.players
+            : currentRosterB.players;
+
+    const player =
+        roster.find(g => String(g.id) === String(id));
+
+  console.log(player);
+
+    if(!player)
+        return;
+
+    if(player.red)
+        return;
+
+    if(player.penaltyTaken)
+        return;
+
+    if(!player.canShoot)
+        return;
+
+    //---------------------------------
+    // MEMORIZZA TIRATORE
+    //---------------------------------
+
+    pendingPenalty = {
+
+        team: team,
+
+        player: player
+
+    };
+
+    //---------------------------------
+    // APRE IL POPUP
+    //---------------------------------
+
+ const nomeBreve =
+    player.name.length > 5
+        ? player.name.substring(0,5) + "…"
+        : player.name;
+
+showActionPanel(
+
+    team,
+
+    `
+    <div class="text-center">
+
+        <div class="text-[12px] font-bold text-blue-700">
+            ⚽ RIGORE
+        </div>
+
+<div class="flex items-center justify-center gap-1 mt-1
+            text-[10px] font-black whitespace-nowrap overflow-hidden">
+
+    <span class="shrink-0">
+        #${player.num}
+    </span>
+
+    <span class="truncate max-w-[65px]">
+        ${nomeBreve}
+    </span>
+
+</div>
+    </div>
+    `,
+
+    "⚽ GOAL",
+
+    "✖ ERRATO",
+
+    confirmPenaltyGoal,
+
+    confirmPenaltyMiss
+
+);
+
+}
+
+//---------------------------------
+// CONFERMA RIGORE REALIZZATO
+//---------------------------------
+
+function confirmPenaltyGoal(){
+
+    if(!pendingPenalty) return;
+
+    salvaSnapshotUndo(
+        `RIGORE REALIZZATO ${pendingPenalty.player.num}`
+    );
+
+    const team = pendingPenalty.team;
+    const player = pendingPenalty.player;
+
+    //---------------------------------
+    // CHIUDE IL POPUP
+    //---------------------------------
+
+    closeActionPanel(team);
+
+    //---------------------------------
+    // STATISTICHE SERIE RIGORI
+    //---------------------------------
+
+    if(team === "A"){
+
+        rigoriA++;
+
+    }else{
+
+        rigoriB++;
+
+    }
+
+    //---------------------------------
+    // STATISTICHE GIOCATORE
+    //---------------------------------
+
+    player.goals++;
+    player.penaltyTaken = true;
+    player.canShoot = false;
+
+    //---------------------------------
+    // MEMORIZZA RIGORE
+    //---------------------------------
+
+    rigori.push({
+
+        id: rigori.length + 1,
+
+        phase: faseRigori,
+
+        round: turnoCorrente + 1,
+
+        team: team,
+
+        playerNumber: player.num,
+
+        playerName: player.name,
+
+        goal: true,
+
+        scoreA: rigoriA,
+
+        scoreB: rigoriB,
+
+        timestamp: Date.now()
+
+    });
+
+    //---------------------------------
+    // REGISTRO UFFICIALE GARA
+    //---------------------------------
+
+    logMatchSystem(
+        team,
+        player.num,
+        "RIGORE REALIZZATO"
+    );
+
+    //---------------------------------
+    // AGGIORNA INTERFACCIA
+    //---------------------------------
+
+    ricostruisciRegistro();
+
+    renderTable("A");
+    renderTable("B");
+
+    updatePenaltyCountersDisplay();
+
+    aggiornaTabelloneRigori();
+
+    //---------------------------------
+    // CONTROLLA FINE SERIE
+    //---------------------------------
+
+    controllaFineRigori();
+
+    if(statoGara === STATO_GARA.PARTITA_TERMINATA){
+
+        salvaPartita();
+
+        return;
+
+    }
+
+    //---------------------------------
+    // PASSA AL TURNO SUCCESSIVO
+    //---------------------------------
+
+    turnoSuccessivo();
+
+    //---------------------------------
+    // SALVA
+    //---------------------------------
+
+    salvaPartita();
+
+}
+//---------------------------------
+// CONTROLLO FINE SERIE RIGORI
+//---------------------------------
+
+function controllaFineRigori(){
+
+    const tentativiA = rigori.filter(r => r.team === "A").length;
+    const tentativiB = rigori.filter(r => r.team === "B").length;
+
+    const golA = rigori.filter(r => r.team === "A" && r.goal).length;
+    const golB = rigori.filter(r => r.team === "B" && r.goal).length;
+
+    //---------------------------------
+    // VITTORIA ANTICIPATA (PRIMI 5)
+    //---------------------------------
+
+    if(tentativiA < 5 || tentativiB < 5){
+
+        const restantiA = 5 - tentativiA;
+        const restantiB = 5 - tentativiB;
+
+        if(golA > golB + restantiB){
+
+            serieTerminata = true;
+            motivoFineGara = "RIGORI";
+
+            terminaGaraDefinitivamente();
+            return;
+
+        }
+
+        if(golB > golA + restantiA){
+
+            serieTerminata = true;
+            motivoFineGara = "RIGORI";
+
+            terminaGaraDefinitivamente();
+            return;
+
+        }
+
+        return;
+
+    }
+
+    //---------------------------------
+    // ASPETTA CHE TIRINO ENTRAMBI
+    //---------------------------------
+
+    if(tentativiA !== tentativiB){
+
+        return;
+
+    }
+
+    //---------------------------------
+    // FINE DEI PRIMI 5
+    //---------------------------------
+
+    if(tentativiA === 5){
+
+        if(golA !== golB){
+
+            serieTerminata = true;
+            motivoFineGara = "RIGORI";
+
+            terminaGaraDefinitivamente();
+
+        }
+
+        return;
+
+    }
+
+    //---------------------------------
+    // MORTE IMPROVVISA
+    //---------------------------------
+
+    if(tentativiA > 5){
+
+        // Controlla solo dopo che hanno tirato entrambi
+
+        if(golA !== golB){
+
+            serieTerminata = true;
+            motivoFineGara = "RIGORI";
+
+            terminaGaraDefinitivamente();
+
+            return;
+
+        }
+
+    }
+
+}
+
+//=====================================
+// CONFERMA RIGORE ERRATO
+//=====================================
+
+function confirmPenaltyMiss(){
+
+    if(!pendingPenalty) return;
+
+    salvaSnapshotUndo(
+        `RIGORE ERRATO ${pendingPenalty.player.num}`
+    );
+
+    const team = pendingPenalty.team;
+    const player = pendingPenalty.player;
+
+    //---------------------------------
+    // CHIUDE IL POPUP
+    //---------------------------------
+
+    closeActionPanel(team);
+
+    //---------------------------------
+    // STATO TIRATORE
+    //---------------------------------
+
+    player.penaltyTaken = true;
+    player.canShoot = false;
+
+    //---------------------------------
+    // MEMORIZZA RIGORE
+    //---------------------------------
+
+    rigori.push({
+
+        id: rigori.length + 1,
+
+        phase: faseRigori,
+
+        round: turnoCorrente + 1,
+
+        team: team,
+
+        playerNumber: player.num,
+
+        playerName: player.name,
+
+        goal: false,
+
+        scoreA: rigoriA,
+
+        scoreB: rigoriB,
+
+        timestamp: Date.now()
+
+    });
+
+    //---------------------------------
+    // REGISTRO UFFICIALE GARA
+    //---------------------------------
+
+    logMatchSystem(
+        team,
+        player.num,
+        "RIGORE ERRATO"
+    );
+
+    //---------------------------------
+    // AGGIORNA INTERFACCIA
+    //---------------------------------
+
+    ricostruisciRegistro();
+
+    renderTable("A");
+    renderTable("B");
+
+    updatePenaltyCountersDisplay();
+
+    aggiornaTabelloneRigori();
+
+    //---------------------------------
+    // CONTROLLA FINE SERIE
+    //---------------------------------
+
+    controllaFineRigori();
+
+    if(statoGara === STATO_GARA.PARTITA_TERMINATA){
+
+        salvaPartita();
+
+        return;
+
+    }
+
+    //---------------------------------
+    // PASSA AL TURNO SUCCESSIVO
+    //---------------------------------
+
+    turnoSuccessivo();
+
+    //---------------------------------
+    // SALVA
+    //---------------------------------
+
+    salvaPartita();
+
+}
+
+
+//=========================================
+// TEMPO CORRENTE GARA
+//=========================================
+
+function getTimeString(){
+
+    const minuti = Math.floor((timerSeconds || 0) / 60);
+    const secondi = (timerSeconds || 0) % 60;
+
+    return `${String(minuti).padStart(2,"0")}:${String(secondi).padStart(2,"0")}`;
+
+}
+
+
+//=========================================
+// REGISTRO GARA UFFICIALE
+//=========================================
+
+function logMatchSystem(team, target, action){
+
+    //----------------------------------
+    // TEMPO
+    //----------------------------------
+
+    const ts = getTimeString();
+
+    //----------------------------------
+    // RISULTATO
+    //----------------------------------
+
+    let risultato;
+
+    if(action.startsWith("RIGORE")){
+
+        risultato =
+            `${String(rigoriA).padStart(2,"0")}-${String(rigoriB).padStart(2,"0")}`;
+
+    }else{
+
+        risultato =
+            `${String(scoreA).padStart(2,"0")}-${String(scoreB).padStart(2,"0")}`;
+
+    }
+
+    //----------------------------------
+    // FASE
+    //----------------------------------
+
+    let fase = "RIGORI";
+
+    //----------------------------------
+    // SALVATAGGIO
+    //----------------------------------
+
+    logEvents.push({
+
+        tempo: ts,
+
+        fase: fase,
+
+        squadra: team,
+
+        numero:
+            (action.startsWith("INIZIO") ||
+             action.startsWith("FINE"))
+            ? ""
+            : target,
+
+        evento: action,
+
+        risultato: risultato,
+
+        rigoriA: rigoriA,
+
+        rigoriB: rigoriB,
+
+        timestamp: Date.now()
+
+    });
+
+    //----------------------------------
+    // AGGIORNA
+    //----------------------------------
+
+    ricostruisciRegistro();
+
+    salvaPartita();
+
+}
+//=========================================
+// ANNULLA ULTIMA AZIONE
+//=========================================
+
+function undoLastAction(){
+
+    //=====================================
+    // NESSUNA AZIONE DA ANNULLARE
+    //=====================================
+
+    if(undoHistory.length===0){
+
+        alert("Non ci sono azioni da annullare.");
+
+        return;
+
+    }
+
+    //=====================================
+    // CONFERMA
+    //=====================================
+
+    if(!confirm("Annullare l'ultima azione?")){
+
+        return;
+
+    }
+
+    //=====================================
+    // RECUPERA SNAPSHOT
+    //=====================================
+
+   redoHistory.push(
+
+    JSON.parse(
+        JSON.stringify(
+            creaOggettoPartita()
+        )
+    )
+
+);
+
+//=====================================
+// RECUPERA STATO PRECEDENTE
+//=====================================
+
+const snapshot = undoHistory.pop();
+
+    //=====================================
+    // RIPRISTINA PARTITA
+    //=====================================
+
+    ripristinaPartita(snapshot);
+
+    //=====================================
+    // SALVA NUOVO STATO
+    //=====================================
+
+    salvaPartita();
+
+    //=====================================
+    // AGGIORNA PULSANTE UNDO
+    //=====================================
+
+    aggiornaPulsanteUndo();
+
+}
+
+//=========================================
+// CREA SNAPSHOT PER UNDO
+//=========================================
+function salvaSnapshotUndo(descrizione = "Evento") {
+
+    //=====================================
+    // UNA NUOVA AZIONE ELIMINA IL REDO
+    //=====================================
+
+    redoHistory = [];
+
+    //=====================================
+    // CREA COPIA COMPLETA DELLA GARA
+    //=====================================
+
+    const snapshot = JSON.parse(
+        JSON.stringify(
+            creaOggettoPartita()
+        )
+    );
+
+    //=====================================
+    // DESCRIZIONE EVENTO
+    //=====================================
+
+    snapshot.undoDescription = descrizione;
+
+    //=====================================
+    // SALVA NELLO STORICO
+    //=====================================
+
+    undoHistory.push(snapshot);
+
+    //=====================================
+    // AGGIORNA PULSANTE
+    //=====================================
+
+    aggiornaPulsanteUndo();
+
+}
+
+	//=========================================
+       // AGGIORNA STATO PULSANTE UNDO
+      //=========================================
+
+function aggiornaPulsanteUndo(){
+
+    const btn = document.getElementById("btn-undo");
+
+    if(!btn) return;
+
+    if(undoHistory.length===0){
+
+
+        btn.classList.remove(
+            "bg-orange-700",
+            "hover:bg-orange-600",
+            "text-white"
+        );
+
+        btn.classList.add(
+            "bg-slate-700",
+            "text-slate-500",
+            "cursor-not-allowed"
+        );
+
+    }else{
+
+        btn.disabled = false;
+
+        btn.classList.remove(
+            "bg-slate-700",
+            "text-slate-500",
+            "cursor-not-allowed"
+        );
+
+        btn.classList.add(
+            "bg-orange-700",
+            "hover:bg-orange-600",
+            "text-white"
+        );
+
+    }
+
+}
+
+
+//=========================================
+// REGISTRO GARA FIGH
+//=========================================
+
+function downloadLog(){
+
+    const partita = creaOggettoPartita();
+
+    localStorage.setItem(
+        "RegistroFIGH",
+        JSON.stringify(partita)
+    );
+
+    window.open(
+        "RegistroFIGH.html",
+        "_blank"
+    );
+
+}
+
+//=========================================
+// REGISTRO POST GARA
+//=========================================
+
+function apriRegistroPostGara(){
+
+    const partita = creaOggettoPartita();
+
+    localStorage.setItem(
+        "RegistroPostGara",
+        JSON.stringify(partita)
+    );
+
+//------------------------------------------------------
+// Apre il Registro Post Gara
+//------------------------------------------------------
+
+const finestraRegistro = window.open(
+    "RegistroPostGara.html",
+    "_blank"
+);
+
+//------------------------------------------------------
+// Se l'apertura è riuscita,
+// chiude Referto Pallamano
+//------------------------------------------------------
+
+if(finestraRegistro){
+
+    window.close();
+
+}
+
+}
+
+
+//=========================================
+// CREA OGGETTO PARTITA
+//=========================================
+
+function creaOggettoPartita(){
+
+    const partita = {
+
+        //=================================
+        // VERSIONE JSON
+        //=================================
+
+        jsonVersion: "2.0",
+
+        generatedBy: "RefertoFIGH_Rigori",
+
+        generatedAt: new Date().toISOString(),
+
+        lastUpdate: new Date().toISOString(),
+
+        //=================================
+        // STATO GARA
+        //=================================
+
+        scoreA,
+        scoreB,
+
+        penaltyScoredA,
+        penaltyTotalA,
+
+        penaltyScoredB,
+        penaltyTotalB,
+
+        timerSeconds:
+            (typeof timerSeconds !== "undefined")
+                ? timerSeconds
+                : 0,
+
+        currentHalf,
+
+        statoGara,
+
+        
+
+        //=================================
+        // PARZIALI
+        //=================================
+
+        firstHalfScoreA,
+        firstHalfScoreB,
+
+        secondHalfScoreA,
+        secondHalfScoreB,
+
+        overtime1ScoreA,
+        overtime1ScoreB,
+
+        overtime2ScoreA,
+        overtime2ScoreB,
+
+        overtime3ScoreA,
+        overtime3ScoreB,
+
+        overtime4ScoreA,
+        overtime4ScoreB,
+
+ 
+ //=================================
+// SERIE RIGORI
+//=================================
+
+penaltyShootout:{
+
+    //---------------------------------
+    // STATO
+    //---------------------------------
+
+    started: rigoriAvviati,
+
+    finished: serieTerminata,
+
+    winner: serieTerminata
+        ? (rigoriA > rigoriB ? "A"
+           : rigoriB > rigoriA ? "B"
+           : "")
+        : "",
+
+    //---------------------------------
+    // RISULTATO
+    //---------------------------------
+
+    scoreA: rigoriA,
+    scoreB: rigoriB,
+
+    //---------------------------------
+    // GESTIONE SERIE
+    //---------------------------------
+
+    firstTeam: squadraInizia,
+
+    currentTurn: turnoCorrente,
+
+    phase: faseRigori,
+
+    suddenDeath: faseRigori > 1,
+
+    //---------------------------------
+    // STATISTICHE
+    //---------------------------------
+
+    shotsA: rigori.filter(r => r.team === "A").length,
+
+    shotsB: rigori.filter(r => r.team === "B").length,
+
+    goalsA: rigori.filter(r => r.team === "A" && r.goal).length,
+
+    goalsB: rigori.filter(r => r.team === "B" && r.goal).length,
+
+    missedA: rigori.filter(r => r.team === "A" && !r.goal).length,
+
+    missedB: rigori.filter(r => r.team === "B" && !r.goal).length,
+
+    //---------------------------------
+    // ELENCO TIRI
+    //---------------------------------
+
+    shots: structuredClone(rigori)
+
+},
+
+        //=================================
+        // ROSTER
+        //=================================
+
+        currentRosterA: structuredClone(currentRosterA),
+
+        currentRosterB: structuredClone(currentRosterB),
+
+        //=================================
+        // REGISTRO EVENTI
+        //=================================
+
+        logEvents: structuredClone(logEvents),
+
+        //=================================
+        // COMPATIBILITA'
+        //=================================
+
+        rigori: structuredClone(rigori),
+
+        //=================================
+        // DATI GARA
+        //=================================
+
+        teamA: document.getElementById("team-a-name").value,
+
+        teamB: document.getElementById("team-b-name").value,
+
+        matchNumber: document.getElementById("match-num").value,
+
+        league: document.getElementById("match-league").value,
+
+        season: document.getElementById("match-season").value,
+
+        matchDate: document.getElementById("match-date").value,
+
+        matchTime: document.getElementById("match-time").value,
+
+        city: document.getElementById("match-city").value,
+
+        venue: document.getElementById("match-venue").value,
+
+        referee1: document.getElementById("referee1").value,
+
+        referee2: document.getElementById("referee2").value,
+
+        delegate1: document.getElementById("delegate1").value,
+
+        delegate2: document.getElementById("delegate2").value,
+
+        timekeeper: document.getElementById("timekeeper").value,
+
+        secretary: document.getElementById("secretary").value,
+
+        //=================================
+        // DISTINTE
+        //=================================
+
+        giocatoriA: [],
+
+        giocatoriB: []
+
+    };
+
+    //=================================
+    // GIOCATORI CASA
+    //=================================
+
+    partita.giocatoriA = (currentRosterA?.players || []).map(g => ({
+
+        numero: g.num || "",
+
+        nome: g.name || ""
+
+    }));
+
+    //=================================
+    // GIOCATORI OSPITI
+    //=================================
+
+    partita.giocatoriB = (currentRosterB?.players || []).map(g => ({
+
+        numero: g.num || "",
+
+        nome: g.name || ""
+
+    }));
+
+    //---------------------------------
+    // DEBUG
+    //---------------------------------
+
+    console.log("SALVATAGGIO PARTITA", partita);
+
+    return partita;
+
+}
+///=========================================
+// STAMPA REFERTO FIGH
+//=========================================
+
+function stampaReferto(){
+
+    //----------------------------------
+    // GARA SALVATA?
+    //----------------------------------
+
+    if(statoGara !== STATO_GARA.SALVATA){
+
+        alert("Salvare prima la gara.");
+
+        return;
+
+    }
+
+    //----------------------------------
+    // APRI REFERTO FIGH
+    //----------------------------------
+
+    window.open(
+        "RefertoFIGH web.html",
+        "_blank"
+    );
+
+}
+
+//=========================================
+// SALVA GARA SU FILE JSON
+//=========================================
+
+async function salvaGaraSuFile() {
+
+
+
+try {
+
+
+
+// Crea l'oggetto partita da salvare
+
+const partita = creaOggettoPartita();
+
+
+
+// Nome file suggerito
+
+const nomeCasa = (document.getElementById('team-a-name').value || 'CASA')
+
+.replace(/[\/:*?"<>|]/g, '_');
+
+
+
+const nomeOspiti = (document.getElementById('team-b-name').value || 'OSPITI')
+
+.replace(/[\/:*?"<>|]/g, '_');
+
+
+
+const data = document.getElementById('match-date').value || 'GARA';
+
+
+
+const nomeFile = `${data}_${nomeCasa}_${nomeOspiti}_RIGORI.json`;
+
+
+
+// APRE LA FINESTRA "SALVA CON NOME"
+
+const handle = await window.showSaveFilePicker({
+
+suggestedName: nomeFile,
+
+types: [{
+
+description: 'File Referto Rigori',
+
+accept: {
+
+'application/json': ['.json']
+
+}
+
+}]
+
+});
+
+
+
+// Scrive il file
+
+const writable = await handle.createWritable();
+
+
+
+await writable.write(
+
+JSON.stringify(partita, null, 2)
+
+);
+
+
+
+await writable.close();
+
+
+
+alert('Gara salvata correttamente');
+
+
+
+} catch (err) {
+
+
+
+// Utente ha annullato
+
+if (err.name !== 'AbortError') {
+
+console.error(err);
+
+alert('Errore durante il salvataggio');
+
+}
+
+}
+
+} 
+
+//=========================================
+// CARICA GARA DA FILE JSON
+//=========================================
+
+function apriGaraDaFile() {
+
+    const input = document.createElement("input");
+
+    input.type = "file";
+
+    input.accept = ".json";
+
+    input.onchange = function(e) {
+
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+
+            const partita = JSON.parse(event.target.result);
+
+            ripristinaPartita(partita);
+
+        };
+
+        reader.readAsText(file);
+
+    };
+
+    input.click();
+
+}
+
+//=========================================
+// RIPRISTINO PARTITA
+//=========================================
+
+function ripristinaPartita(partita){
+
+    console.trace("RIPRISTINA PARTITA");
+
+    if(!partita) return;
+
+    //---------------------------------
+    // STATO GARA
+    //---------------------------------
+
+    scoreA = partita.scoreA ?? 0;
+    scoreB = partita.scoreB ?? 0;
+
+    penaltyScoredA = partita.penaltyScoredA ?? 0;
+    penaltyTotalA  = partita.penaltyTotalA  ?? 0;
+
+    penaltyScoredB = partita.penaltyScoredB ?? 0;
+    penaltyTotalB  = partita.penaltyTotalB  ?? 0;
+
+    currentHalf = partita.currentHalf ?? 1;
+
+    statoGara = partita.statoGara ?? STATO_GARA.RIGORI;
+
+    firstHalfScoreA = partita.firstHalfScoreA ?? 0;
+    firstHalfScoreB = partita.firstHalfScoreB ?? 0;
+
+    secondHalfScoreA = partita.secondHalfScoreA ?? 0;
+    secondHalfScoreB = partita.secondHalfScoreB ?? 0;
+
+    overtime1ScoreA = partita.overtime1ScoreA ?? 0;
+    overtime1ScoreB = partita.overtime1ScoreB ?? 0;
+
+    overtime2ScoreA = partita.overtime2ScoreA ?? 0;
+    overtime2ScoreB = partita.overtime2ScoreB ?? 0;
+
+    overtime3ScoreA = partita.overtime3ScoreA ?? 0;
+    overtime3ScoreB = partita.overtime3ScoreB ?? 0;
+
+    overtime4ScoreA = partita.overtime4ScoreA ?? 0;
+    overtime4ScoreB = partita.overtime4ScoreB ?? 0;
+
+    //---------------------------------
+    // REGISTRO EVENTI
+    //---------------------------------
+
+    logEvents = structuredClone(
+        partita.logEvents || []
+    );
+
+    //---------------------------------
+    // SERIE RIGORI
+    //---------------------------------
+
+    if(partita.penaltyShootout){
+
+        rigoriA = partita.penaltyShootout.scoreA ?? 0;
+        rigoriB = partita.penaltyShootout.scoreB ?? 0;
+
+        squadraInizia = partita.penaltyShootout.firstTeam ?? "A";
+
+        turnoCorrente = partita.penaltyShootout.currentTurn ?? 0;
+
+        faseRigori = partita.penaltyShootout.phase ?? 1;
+
+        rigoriAvviati = !!partita.penaltyShootout.started;
+
+        serieTerminata = !!partita.penaltyShootout.finished;
+
+        rigori = structuredClone(
+            partita.penaltyShootout.shots || []
+        );
+
+    }else{
+
+        rigori = structuredClone(
+            partita.rigori || []
+        );
+
+        rigoriA = rigori.filter(r=>r.team==="A" && r.goal).length;
+        rigoriB = rigori.filter(r=>r.team==="B" && r.goal).length;
+
+        squadraInizia = "A";
+
+        turnoCorrente = rigori.length;
+
+        faseRigori = rigori.length >= 10 ? 2 : 1;
+
+        rigoriAvviati = rigori.length > 0;
+
+        serieTerminata = false;
+
+    }
+
+    //---------------------------------
+    // ROSTER
+    //---------------------------------
+
+    currentRosterA = structuredClone(
+        partita.currentRosterA || {
+            players:[],
+            officials:[]
+        }
+    );
+
+    currentRosterB = structuredClone(
+        partita.currentRosterB || {
+            players:[],
+            officials:[]
+        }
+    );
+
+    //---------------------------------
+    // INIZIALIZZA GIOCATORI
+    //---------------------------------
+
+    [currentRosterA,currentRosterB].forEach(roster=>{
+
+        roster.players.forEach(g=>{
+
+            g.goals ??= 0;
+            g.yellows ??= 0;
+            g.suspensions ??= 0;
+
+            g.red = !!g.red;
+
+            g.canShoot ??= !g.red;
+
+            g.penaltyTaken ??= false;
+
+        });
+
+    });
+
+    //---------------------------------
+    // DATI GARA
+    //---------------------------------
+
+    document.getElementById("team-a-name").value = partita.teamA ?? "";
+    document.getElementById("team-b-name").value = partita.teamB ?? "";
+
+    document.getElementById("match-num").value = partita.matchNumber ?? "";
+    document.getElementById("match-league").value = partita.league ?? "";
+    document.getElementById("match-season").value = partita.season ?? "";
+
+    document.getElementById("match-date").value = partita.matchDate ?? "";
+    document.getElementById("match-time").value = partita.matchTime ?? "";
+
+    document.getElementById("match-city").value = partita.city ?? "";
+    document.getElementById("match-venue").value = partita.venue ?? "";
+
+    document.getElementById("referee1").value = partita.referee1 ?? "";
+    document.getElementById("referee2").value = partita.referee2 ?? "";
+
+    document.getElementById("delegate1").value = partita.delegate1 ?? "";
+    document.getElementById("delegate2").value = partita.delegate2 ?? "";
+
+    document.getElementById("timekeeper").value = partita.timekeeper ?? "";
+    document.getElementById("secretary").value = partita.secretary ?? "";
+
+    //---------------------------------
+    // RIPRISTINA INPUT GIOCATORI
+    //---------------------------------
+
+    currentRosterA.players.forEach((g,i)=>{
+
+        const num=document.getElementById(`num-a-${i+1}`);
+        const nome=document.getElementById(`name-a-${i+1}`);
+
+        if(num) num.value = g.num ?? "";
+
+        if(nome) nome.value = g.name ?? "";
+
+    });
+
+    currentRosterB.players.forEach((g,i)=>{
+
+        const num=document.getElementById(`num-b-${i+1}`);
+        const nome=document.getElementById(`name-b-${i+1}`);
+
+        if(num) num.value = g.num ?? "";
+
+        if(nome) nome.value = g.name ?? "";
+
+    });
+
+    //---------------------------------
+    // DASHBOARD
+    //---------------------------------
+
+    ricostruisciDashboard();
+
+    renderTable("A");
+
+    renderTable("B");
+
+    updatePenaltyCountersDisplay();
+
+    ricostruisciRegistro();
+
+    if(typeof aggiornaTabelloneRigori==="function")
+        aggiornaTabelloneRigori();
+
+    aggiornaPulsanteUndo();
+
+    //---------------------------------
+    // PRIMO RIGORE
+    //---------------------------------
+
+    if(!rigoriAvviati && rigori.length===0){
+
+        mostraPopupPrimoRigore();
+
+    }
+
+}
+//=========================================
+// RICOSTRUISCE LA DASHBOARD
+//=========================================
+
+function ricostruisciDashboard(){
+
+    //=================================
+    // NOMI SQUADRE
+    //=================================
+
+    const nameA =
+        (document.getElementById("team-a-name").value || "CASA")
+        .toUpperCase();
+
+    const nameB =
+        (document.getElementById("team-b-name").value || "OSPITI")
+        .toUpperCase();
+
+    document.getElementById("dash-team-a").innerText = nameA;
+
+    document.getElementById("dash-team-b").innerText = nameB;
+
+    document.getElementById("panel-title-a").innerText = nameA;
+
+    document.getElementById("panel-title-b").innerText = nameB;
+
+    //=================================
+    // PUNTEGGIO
+    //=================================
+
+document.getElementById("updateScoreboard(scoreA, scoreB)").innerText =
+    `${String(rigoriA).padStart(2,"0")} - ${String(rigoriB).padStart(2,"0")}`;
+
+}
+
+//=========================================
+// RICOSTRUISCE REGISTRO RIGORI
+//=========================================
+
+function ricostruisciRegistro(){
+
+    const tbody = document.getElementById("rigori-table");
+
+    if(!tbody) return;
+
+    tbody.innerHTML = "";
+
+    if(!rigori || rigori.length===0){
+
+        tbody.innerHTML = `
+        <tr>
+            <td colspan="7"
+                class="text-center text-slate-500 py-3 italic">
+                Nessun rigore eseguito
+            </td>
+        </tr>`;
+
+        return;
+
+    }
+
+    for(let i=0;i<rigori.length;i+=2){
+
+        const numeroTiro = Math.floor(i/2)+1;
+
+        const tiro1 = rigori[i];
+        const tiro2 = rigori[i+1];
+
+        const tiroA =
+            tiro1 && tiro1.team==="A"
+                ? tiro1
+                : tiro2 && tiro2.team==="A"
+                    ? tiro2
+                    : null;
+
+        const tiroB =
+            tiro1 && tiro1.team==="B"
+                ? tiro1
+                : tiro2 && tiro2.team==="B"
+                    ? tiro2
+                    : null;
+
+        const tr = document.createElement("tr");
+
+        tr.className = "border-b border-slate-300";
+
+        tr.innerHTML = `
+
+<td class="text-center font-black text-blue-700 p-2">
+    ${numeroTiro}
+</td>
+
+<td class="text-center font-bold p-2">
+    ${tiroA ? tiroA.playerNumber : ""}
+</td>
+
+<td class="text-center p-2">
+    ${tiroA ? tiroA.playerName : ""}
+</td>
+
+<td class="text-center font-black p-2 ${
+    tiroA && tiroA.goal
+        ? "text-green-700"
+        : "text-red-600"
+}">
+    ${tiroA ? (tiroA.goal ? "✔" : "✖") : ""}
+</td>
+
+<td class="text-center font-black p-2 ${
+    tiroB && tiroB.goal
+        ? "text-green-700"
+        : "text-red-600"
+}">
+    ${tiroB ? (tiroB.goal ? "✔" : "✖") : ""}
+</td>
+
+<td class="text-center p-2">
+    ${tiroB ? tiroB.playerName : ""}
+</td>
+
+<td class="text-center font-bold p-2">
+    ${tiroB ? tiroB.playerNumber : ""}
+</td>
+
+`;
+
+        tbody.appendChild(tr);
+
+        //---------------------------------
+        // LINEA ROSSA DOPO I PRIMI 5 TURNI
+        //---------------------------------
+
+        if(numeroTiro===5){
+
+            const separatore = document.createElement("tr");
+
+            separatore.innerHTML = `
+                <td colspan="7"
+                    style="
+                        padding:0;
+                        border-top:3px solid #dc2626;
+                        height:6px;">
+                </td>
+            `;
+
+            tbody.appendChild(separatore);
+
+        }
+
+    }
+
+}
+ 
+ //=========================================
+// SALVATAGGIO AUTOMATICO
+//=========================================
+
+function salvaPartita() {
+
+    const partita = creaOggettoPartita();
+
+    partita.statoGara = statoGara;
+
+    //=================================
+    // SALVATAGGIO NEL BROWSER
+    //=================================
+
+    try {
+
+        localStorage.setItem(
+            "RefertoPallamano",
+            JSON.stringify(partita)
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "Errore nel salvataggio:",
+            error
+        );
+
+    }
+
+}
+
+  //=========================================
+ // startAutosave
+//=========================================
+
+function startAutosave() {
+    if (autosaveInterval) clearInterval(autosaveInterval);
+    autosaveInterval = setInterval(() => {
+        salvaPartita();
+    }, 5000); // salva ogni 5 secondi
+}
+
+  //=========================================
+  // startAutosave
+  //=========================================
+
+function stopAutosave() {
+
+    if (autosaveInterval) {
+
+        clearInterval(autosaveInterval);
+
+        autosaveInterval = null;
+
+    }
+
+}
+
+//=========================================
+// AVVISO PRIMA DI USCIRE
+//=========================================
+
+window.addEventListener("beforeunload", function (e) {
+
+    salvaPartita();
+
+    e.preventDefault();
+
+    e.returnValue = "";
+
+});
+
+//=========================================
+// AVVIO PROGRAMMA
+//=========================================
+
+window.onload = function () {
+
+    buildSetupInputs();
+
+const datiPartita = localStorage.getItem("PartitaCorrente");
+
+if (datiPartita) {
+
+    try {
+
+        partita = JSON.parse(datiPartita);
+
+        ripristinaPartita(partita);
+
+        return;
+
+    } catch (e) {
+
+        console.error(e);
+
+        localStorage.removeItem("PartitaCorrente");
+
+    }
+
+}
+
+    // Altrimenti abilita il recupero dell'ultima gara salvata
+    const dati = localStorage.getItem("RefertoPallamano");
+    const btnRecupero = document.getElementById("btn-recupero-rapido");
+
+    if (dati && btnRecupero) {
+
+        btnRecupero.classList.remove("hidden");
+
+    }
+
+};
+    </script>
+</body>
+<!-- =========================================
+     FINESTRA CONFERMA UNDO
+========================================= -->
+
+<div id="undo-modal"
+     class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+
+    <div class="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-[430px]">
+
+        <div class="bg-orange-700 text-white text-center font-bold py-2 rounded-t-xl">
+
+            ↶ ANNULLA ULTIMA AZIONE
+
+        </div>
+
+        <div class="p-5">
+
+            <div class="text-slate-300 text-sm mb-3">
+
+                Ultimo evento registrato
+
+            </div>
+
+            <div id="undo-description"
+
+                 class="bg-slate-800 border border-slate-700 rounded p-3 text-yellow-300 font-bold text-center">
+
+            </div>
+
+            <div class="mt-5 flex justify-center gap-4">
+
+                <button
+
+                    onclick="chiudiUndoModal()"
+
+                    class="bg-slate-700 hover:bg-slate-600 text-white px-6 py-2 rounded font-bold">
+
+                    Annulla
+
+                </button>
+
+              <button
+    onclick="confermaUndo()"
+    class="bg-green-700 hover:bg-green-600 text-white w-6 py-0.5 rounded font-bold text-[10px] cursor-pointer">
+
+    Conferma
+
+</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</html>
