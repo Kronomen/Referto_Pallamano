@@ -176,6 +176,32 @@ body{
         font-size:9px;
     }
 }
+
+
+/* PICCOLO TASTO CHIUDI */
+.close-browser{
+    position:fixed;
+    top:8px;
+    right:10px;
+    z-index:9999;
+    width:24px;
+    height:24px;
+    padding:0;
+    border:0;
+    border-radius:50%;
+    background:rgba(0,0,0,.35);
+    color:rgba(255,255,255,.85);
+    font-size:18px;
+    line-height:24px;
+    font-family:Arial,Helvetica,sans-serif;
+    cursor:pointer;
+    opacity:.7;
+}
+.close-browser:hover{
+    background:rgba(180,0,0,.75);
+    opacity:1;
+}
+
 </style>
 </head>
 
@@ -223,7 +249,22 @@ window.open("Referto%20Pallamano.html", "_blank");
 
 }
 
+
+
+function chiudiBrowser(){
+    window.close();
+    setTimeout(function(){
+        if(!window.closed){
+            alert("Per motivi di sicurezza il browser non permette alla pagina di chiudere questa scheda. Puoi chiuderla dal comando del browser.");
+        }
+    },200);
+}
+
 </script>
+
+
+<!-- TASTO CHIUDI -->
+<button class="close-browser" type="button" onclick="chiudiBrowser()" title="Chiudi">×</button>
 
 </body>
 </html>
