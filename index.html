@@ -2,45 +2,35 @@
 <html lang="it">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Referto Pallamano</title>
-
 </head>
 
 <body>
 
     <script>
-
         function apriReferto(){
-
-            const finestra =
-                window.open(
-                    "Referto%20Pallamano.html",
-                    "_blank",
-                    "width=1600,height=1000,resizable=yes,scrollbars=yes"
-                );
+            const finestra = window.open(
+                "Referto%20Pallamano.html",
+                "_blank",
+                "width=1600,height=1000,resizable=yes,scrollbars=yes"
+            );
 
             if(!finestra){
-
                 alert(
                     "Il browser ha bloccato l'apertura del Referto. " +
                     "Consenti i popup per questo sito."
                 );
-
                 return;
             }
 
             finestra.focus();
 
+            // Svuota la pagina corrente (simulando la chiusura)
+            window.location.replace("about:blank");
         }
-
     </script>
-
 
     <div style="
         width:100%;
