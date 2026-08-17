@@ -1,0 +1,7677 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referto Web Pallamano Ufficiale</title>
+
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Libreria Excel XLSX -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<style>
+    /* Forza la pagina a occupare esattamente tutto lo spazio visibile */
+    html, body {
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Elimina le barre di scorrimento */
+        background-color: #ffffff;
+    }
+
+    body {
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+</head>
+
+<body class="p-2 text-slate-100 flex flex-col justify-between h-screen">
+
+<!-- SCHERMATA COMPILAZIONE DISTINTE (SETUP) -->
+<div id="setup-section" class="w-full h-full bg-slate-100 p-4 rounded-2xl shadow-lg border border-slate-300 space-y-4 overflow-y-auto text-slate-800">
+
+<!-- INTESTAZIONE PRINCIPALE CON LOGHI -->
+<div class="max-w-[1400px] mx-auto">
+    <div class="bg-blue-700 text-white flex items-center justify-between py-3 px-6 rounded-xl shadow">
+        <!-- LOGO FIGH (Lato Sinistro) -->
+        <div class="flex items-center">
+            <img src="FIGH.png" alt="Logo FIGH" class="h-12 w-auto object-contain bg-white/10 p-1 rounded-lg">
+        </div>
+        <!-- TITOLO CENTRALE -->
+        <div class="text-center">
+            <h1 class="text-base font-black uppercase tracking-wider">
+                F.I.G.H. - CONFIGURAZIONE INIZIALE GARA
+            </h1>
+        </div>
+        <!-- LOGO FICR (Lato Destro) -->
+        <div class="flex items-center">
+            <img src="FICR.png" alt="Logo FICR" class="h-12 w-auto object-contain bg-white/10 p-1 rounded-lg" style="margin-left: -6px;">
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================================
+DATI GARA
+========================================================== -->
+<div class="max-w-[1400px] mx-auto bg-white p-5 rounded-2xl border-2 border-slate-300 shadow-lg space-y-4">
+    <!-- PRIMA RIGA -->
+    <div class="grid grid-cols-[80px_145px_95px_300px_150px_220px_110px] justify-center gap-3">
+        <div>
+            <label class="block text-[10px] font-black uppercase tracking-tight text-blue-700 mb-1 whitespace-nowrap">
+                NUMERO GARA
+            </label>
+            <input id="match-num" type="text" class="w-full h-10 rounded-lg border-2 border-slate-300 bg-white px-2 text-xs font-semibold text-slate-800">
+        </div>
+        <div>
+            <label class="block text-[11px] font-black uppercase text-blue-700 mb-1">Data</label>
+            <input id="match-date" type="date" class="w-full h-10 rounded-lg border-2 border-slate-300 bg-white px-2 text-xs text-slate-800">
+        </div>
+        <div>
+            <label class="block text-[11px] font-black uppercase text-blue-700 mb-1">Ora</label>
+            <input id="match-time" type="time" class="w-full h-10 rounded-lg border-2 border-slate-300 bg-white px-2 text-xs text-slate-800">
+        </div>
+        <div>
+            <label class="block text-[11px] font-black uppercase text-blue-700 mb-1">Campionato</label>
+            <input id="match-league" type="text" maxlength="30" class="w-full h-10 rounded-lg border-2 border-slate-300 bg-white px-3 text-xs text-slate-800">
+        </div>
+        <div>
+            <label class="block text-[11px] font-black uppercase text-blue-700 mb-1">Località</label>
+            <input id="match-city" type="text" maxlength="25" class="w-full h-10 rounded-lg border-2 border-slate-300 bg-white px-3 text-xs text-slate-800">
+        </div>
+        <div>
+            <label class="block text-[11px] font-black uppercase text-blue-700 mb-1">Impianto</label>
+            <input id="match-venue" type="text" maxlength="30" class="w-full h-10 rounded-lg border-2 border-slate-300 bg-white px-3 text-xs text-slate-800">
+        </div>
+        <div>
+            <label class="block text-[11px] font-black uppercase text-blue-700 mb-1">Stagione</label>
+            <input id="match-season" type="text" value="2026/2027" class="w-full h-10 rounded-lg border-2 border-slate-300 bg-slate-100 text-center text-xs font-bold text-slate-800">
+        </div>
+    </div>
+
+    <!-- ARBITRI E DELEGATI (COMPATTO) -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 max-w-[1300px] mx-auto">
+        <div>
+            <label class="block text-[10px] font-black uppercase text-blue-700 mb-1">Arbitro 1</label>
+            <input id="referee1" type="text" maxlength="30" class="w-full h-9 rounded-lg border-2 border-slate-300 bg-white px-3 text-[13px] text-slate-800">
+        </div>
+        <div>
+            <label class="block text-[10px] font-black uppercase text-blue-700 mb-1">Arbitro 2</label>
+            <input id="referee2" type="text" maxlength="30" class="w-full h-9 rounded-lg border-2 border-slate-300 bg-white px-3 text-[13px] text-slate-800">
+        </div>
+        <div>
+            <label class="block text-[10px] font-black uppercase text-blue-700 mb-1">Delegato 1</label>
+            <input id="delegate1" type="text" maxlength="30" class="w-full h-9 rounded-lg border-2 border-slate-300 bg-white px-3 text-[13px] text-slate-800">
+        </div>
+        <div>
+            <label class="block text-[10px] font-black uppercase text-blue-700 mb-1">Delegato 2</label>
+            <input id="delegate2" type="text" maxlength="30" class="w-full h-9 rounded-lg border-2 border-slate-300 bg-white px-3 text-[13px] text-slate-800">
+        </div>
+    </div>
+</div>
+
+<!-- BOX 2 & 3: SETUP SQUADRE -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-[1300px] mx-auto">
+    <!-- SQUADRA CASA -->
+    <div class="bg-white p-3 rounded-2xl border border-slate-300 shadow-md">
+        <div class="text-center mb-1">
+            <input type="text" id="team-a-name" class="w-full max-w-sm mx-auto p-2 border border-slate-300 rounded-lg font-black text-blue-700 bg-white text-xs uppercase text-center shadow-sm" value="SQUADRA CASA">
+        </div>
+        <div class="grid grid-cols-[1fr_250px] gap-4">
+            <div>
+                <div class="grid grid-cols-6 gap-2 text-[11px] font-black text-slate-700 uppercase border-b-2 border-slate-300 pb-1 mb-1">
+                    <div class="text-center w-10">N°</div>
+                    <div class="col-span-5">Atleta</div>
+                </div>
+                <div id="inputs-players-a" class="space-y-1.5"></div>
+            </div>
+            <div>
+                <div class="grid grid-cols-6 gap-2 text-[11px] font-black text-slate-700 uppercase border-b-2 border-slate-300 pb-1 mb-1">
+                    <div class="text-center w-8">Q</div>
+                    <div class="col-span-5">Nominativo</div>
+                </div>
+                <div id="inputs-officials-a" class="space-y-1.5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SQUADRA OSPITI -->
+    <div class="bg-white p-3 rounded-2xl border border-slate-300 shadow-md">
+        <div class="text-center mb-1">
+            <input type="text" id="team-b-name" class="w-full max-w-sm mx-auto p-2 border border-slate-300 rounded-lg font-black text-purple-700 bg-white text-xs uppercase text-center shadow-sm" value="SQUADRA OSPITI">
+        </div>
+        <div class="grid grid-cols-[1fr_250px] gap-4">
+            <div>
+                <div class="grid grid-cols-6 gap-2 text-[11px] font-black text-slate-700 uppercase border-b-2 border-slate-300 pb-1 mb-1">
+                    <div class="text-center w-10">N°</div>
+                    <div class="col-span-5">Atleta</div>
+                </div>
+                <div id="inputs-players-b" class="space-y-1.5"></div>
+            </div>
+            <div>
+                <div class="grid grid-cols-6 gap-2 text-[11px] font-black text-slate-700 uppercase border-b-2 border-slate-300 pb-1 mb-1">
+                    <div class="text-center w-8">Q</div>
+                    <div class="col-span-5">Nominativo</div>
+                </div>
+                <div id="inputs-officials-b" class="space-y-1.5"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BOX 4: MODALITÀ GARA -->
+<div class="bg-blue-50 max-w-[1300px] mx-auto p-3 rounded-2xl border-2 border-blue-300 shadow-lg">
+    <div class="flex items-center justify-center gap-2 mb-4">
+        <span class="text-2xl">🏁</span>
+        <h3 class="text-lg font-black uppercase tracking-wide text-blue-800">Modalità Gara</h3>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <label class="cursor-pointer">
+            <input type="radio" name="match-mode" id="cfg-singola" class="peer hidden" checked>
+            <div class="h-full rounded-2xl border-2 border-slate-300 bg-white p-4 transition-all peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:shadow-md">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-2xl">⏱️</span>
+                    <div class="font-black text-slate-800 uppercase">Singola</div>
+                </div>
+                <div class="text-xs text-slate-600 leading-relaxed">
+                    1° Tempo + 2° Tempo. La gara termina al termine del 2° tempo senza supplementari e senza rigori.
+                </div>
+            </div>
+        </label>
+        <label class="cursor-pointer">
+            <input type="radio" name="match-mode" id="cfg-supplementari" class="peer hidden">
+            <div class="h-full rounded-2xl border-2 border-slate-300 bg-white p-4 transition-all peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:shadow-md">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-2xl">🔁</span>
+                    <div class="font-black text-slate-800 uppercase">Supplementari</div>
+                </div>
+                <div class="text-xs text-slate-600 leading-relaxed">
+                    Dopo il 2° tempo si disputano i tempi supplementari. In caso di ulteriore parità si passa ai rigori.
+                </div>
+            </div>
+        </label>
+        <label class="cursor-pointer">
+            <input type="radio" name="match-mode" id="cfg-rigori" class="peer hidden">
+            <div class="h-full rounded-2xl border-2 border-slate-300 bg-white p-4 transition-all peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:shadow-md">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-2xl">🎯</span>
+                    <div class="font-black text-slate-800 uppercase">Rigori</div>
+                </div>
+                <div class="text-xs text-slate-600 leading-relaxed">
+                    Dopo il 2° tempo si va direttamente ai rigori, senza disputare tempi supplementari.
+                </div>
+            </div>
+        </label>
+    </div>
+</div>
+
+<!-- BOTTONI -->
+<div class="text-center pt-2 pb-4">
+    <div class="flex flex-wrap justify-center items-center gap-2">
+        <button onclick="avviaFullscreen(); initMatchDashboard()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
+            ✅ Referto
+        </button>
+        <button onclick="apriGaraDaFile()" class="bg-blue-700 hover:bg-blue-600 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
+            📂 Apri
+        </button>
+        <input type="file" id="importGaraXLSX" accept=".xlsx,.xls" class="hidden">
+        <button onclick="document.getElementById('importGaraXLSX').click()" class="bg-emerald-700 hover:bg-emerald-600 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
+            📥 Excel
+        </button>
+        <button id="btn-recupero-rapido" onclick="recuperaUltimaGara()" class="hidden bg-orange-600 hover:bg-orange-500 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
+            🔄 Recupero
+        </button>
+        <button onclick="apriPopupDurata()" class="bg-slate-700 hover:bg-slate-800 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
+            ⏱️ Durata: <span id="durataLabel">30'</span>
+        </button>
+        <button onclick="window.close()" class="bg-red-600 hover:bg-red-700 text-white text-[11px] font-black uppercase py-2 px-4 rounded-lg shadow-sm transition">
+            ✖ Chiudi
+        </button>
+    </div>
+</div>
+
+<!-- POPUP DURATA TEMPI -->
+<div id="popupDurata" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 w-[340px] text-slate-800">
+        <h3 class="text-xl font-black mb-4">Durata tempi</h3>
+        <p class="text-sm text-slate-600 mb-4">Inserisci la durata del 1° e 2° tempo.</p>
+        <div class="flex items-center gap-2">
+            <input id="inputDurata" type="number" min="1" max="60" value="30" class="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-lg font-bold text-center">
+            <span class="font-black text-lg">min</span>
+        </div>
+        <div class="flex justify-end gap-3 mt-5">
+            <button type="button" onclick="chiudiPopupDurata()" class="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 font-bold">Annulla</button>
+            <button type="button" onclick="salvaDurata()" class="px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-bold">Salva</button>
+        </div>
+    </div>
+</div>
+
+</div> <!-- Fine setup-section -->
+
+<!-- ==========================================================
+DASHBOARD GARA
+=========================================================== -->
+<div id="match-section" class="hidden flex-1 flex flex-col gap-3 w-full p-4 relative">
+    <img src="FIGH.png" alt="Logo FIGH" class="absolute top-1 left-2 h-90 w-auto object-contain z-20 pointer-events-none">
+    <img src="FICR.png" alt="Logo FICR" class="absolute top-20 right-2 h-40 w-auto object-contain z-20 pointer-events-none">
+
+    <!-- TABELLONE SUPERIORE -->
+    <div class="w-full bg-white rounded-2xl border border-slate-300 shadow-lg px-2 py-2">
+        <div class="grid grid-cols-[260px_420px_auto_420px_260px] items-center gap-3 justify-center">
+            <div></div>
+            <!-- CASA -->
+            <div class="relative flex justify-end items-center">
+                <h2 id="dash-team-a" class="text-2xl font-black text-blue-700 uppercase text-right truncate">CASA</h2>
+                <div id="action-panel-A" class="hidden absolute right-full mr-4 top-1/2 -translate-y-1/2 w-[260px] bg-white rounded-2xl p-4 border-2 border-slate-400 shadow-2xl z-50">
+                    <div id="action-title-A" class="text-center text-slate-800 text-xl font-black mb-4 leading-tight"></div>
+                    <div class="flex gap-3">
+                        <button id="action-btn1-A" onclick="confirmPenaltyGoal()" class="flex-1 h-12 bg-green-600 hover:bg-green-700 text-white rounded-xl text-lg font-black shadow-lg transition">⚽ GOAL</button>
+                        <button id="action-btn2-A" onclick="confirmPenaltyMiss()" class="flex-1 h-12 bg-red-600 hover:bg-red-700 text-white rounded-xl text-lg font-black shadow-lg transition">✖ ERRATO</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RISULTATO -->
+            <div id="game-score" class="bg-black border-4 border-yellow-500 rounded-2xl px-8 py-3 text-6xl font-mono font-black tracking-widest text-yellow-300 shadow-xl">00 - 00</div>
+
+            <!-- OSPITI -->
+            <div class="relative flex justify-start items-center">
+                <h2 id="dash-team-b" class="text-2xl font-black text-purple-700 uppercase text-left truncate">OSPITI</h2>
+                <div id="action-panel-B" class="hidden absolute left-full ml-4 top-1/2 -translate-y-1/2 w-[260px] bg-white rounded-2xl p-4 border-2 border-slate-400 shadow-2xl z-50">
+                    <div id="action-title-B" class="text-center text-slate-800 text-xl font-black mb-4 leading-tight"></div>
+                    <div class="flex gap-3">
+                        <button id="action-btn1-B" onclick="confirmPenaltyGoal()" class="flex-1 h-12 bg-green-600 hover:bg-green-700 text-white rounded-xl text-lg font-black shadow-lg transition">⚽ GOAL</button>
+                        <button id="action-btn2-B" onclick="confirmPenaltyMiss()" class="flex-1 h-12 bg-red-600 hover:bg-red-700 text-white rounded-xl text-lg font-black shadow-lg transition">✖ ERRATO</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stato Gara -->
+        <div class="flex justify-center mt-0">
+            <div id="half-display" class="bg-slate-100 border border-slate-300 rounded-full px-6 py-1.5 shadow-sm">
+                <div id="half-content" class="text-xs font-bold tracking-[3px] uppercase text-slate-700">1° TEMPO</div>
+            </div>
+        </div>
+
+        <!-- Parziale Primo Tempo -->
+        <div id="first-half-score" class="text-center text-xs font-bold text-slate-600 mt-2 mb-2 min-h-[20px]"></div>
+
+        <!-- Barra Comandi -->
+        <div class="grid grid-cols-[1fr_auto_1fr] items-center mt-1">
+            <div class="flex justify-end items-center gap-3 pr-8">
+                <button id="btn-edit-setup" onclick="returnToSetup()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold px-5 py-2 rounded-xl shadow">✏️ Modifica</button>
+                <button id="btn-toggle-clock" onclick="toggleClock()" class="bg-green-600 hover:bg-green-700 text-white font-black px-6 py-2 rounded-xl shadow">▶ START</button>
+                <button onclick="adjustTimer(-1)" class="w-12 h-12 bg-slate-200 hover:bg-slate-300 text-slate-700 font-black rounded-xl border shadow">−1</button>
+            </div>
+            <div id="game-timer" class="bg-black border-4 border-yellow-500 rounded-2xl min-w-[260px] text-center text-7xl font-mono font-black text-yellow-300 px-6 py-3 shadow-xl">00:00</div>
+            <div class="flex justify-start items-center gap-3 pl-8">
+                <button onclick="adjustTimer(1)" class="w-12 h-12 bg-slate-200 hover:bg-slate-300 text-slate-700 font-black rounded-xl border shadow">+1</button>
+                <button id="btn-test-time" onclick="testJumpTime()" class="hidden bg-purple-700 hover:bg-purple-600 text-white font-black px-5 py-2 rounded-xl shadow">⏩ TEST</button>
+                <button id="btn-next-half" onclick="requestNextHalf()" class="bg-blue-700 hover:bg-blue-800 text-white font-bold px-5 py-2 rounded-xl shadow">Fine 1° Tempo</button>
+                <button id="btn-exit" onclick="esciProgramma()" class="hidden bg-red-700 hover:bg-red-800 text-white font-bold px-5 py-2 rounded-xl shadow">Esci</button>
+            </div>
+        </div>
+
+        <!-- Time-Out -->
+        <div class="flex justify-center mt-2">
+            <div id="timeout-timer-display" class="hidden bg-red-50 border border-red-300 rounded-xl px-5 py-2 text-purple-700 font-black shadow">T.O. 60s</div>
+        </div>
+
+        <!-- Sospensioni -->
+        <div id="active-penalties-section" class="mt-2 pt-2 border-t border-slate-300 min-h-[42px]">
+            <div id="penalties-container" class="flex justify-center items-center flex-wrap gap-3 h-[32px] text-slate-400 text-sm">Nessuna esclusione attiva</div>
+        </div>
+    </div>
+
+    <!-- BLOCCO CENTRALE -->
+    <div class="flex-1 grid grid-cols-[260px_1fr_380px_1fr_260px] gap-3 items-start w-full max-w-[1700px] mx-auto px-2">
+        <div class="col-span-2 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 shadow-sm">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div id="panel-title-a" class="text-2xl font-black text-blue-700 uppercase">CASA</div>
+                    <div class="mt-1 flex gap-4">
+                        <div id="penalty-counter-a" class="text-xs font-bold text-slate-700">Rigori: 0/0</div>
+                        <div id="timeout-counter-a" class="text-xs font-bold text-cyan-700">Time Out: 0/3</div>
+                    </div>
+                </div>
+                <button id="btn-timeout-a" onclick="triggerTimeout('A')" class="px-4 h-9 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold shadow transition">TIME OUT</button>
+            </div>
+        </div>
+
+        <div></div>
+
+        <div class="col-span-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 shadow-sm">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div id="panel-title-b" class="text-2xl font-black text-purple-700 uppercase">OSPITI</div>
+                    <div class="mt-1 flex gap-4">
+                        <div id="penalty-counter-b" class="text-xs font-bold text-slate-700">Rigori: 0/0</div>
+                        <div id="timeout-counter-b" class="text-xs font-bold text-cyan-700">Time Out: 0/3</div>
+                    </div>
+                </div>
+                <button id="btn-timeout-b" onclick="triggerTimeout('B')" class="px-4 h-9 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold shadow transition">TIME OUT</button>
+            </div>
+        </div>
+
+        <!-- DIRIGENTI CASA -->
+        <div id="officialsA" class="bg-white border border-slate-300 rounded-2xl shadow-lg p-3 flex flex-col h-[680px] overflow-y-auto"></div>
+
+        <!-- GIOCATORI CASA -->
+        <div class="bg-white border border-slate-300 rounded-2xl shadow-lg p-3 flex flex-col h-[680px]">
+            <div class="flex-1">
+                <table class="w-full border-collapse bg-white rounded-xl overflow-hidden">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 uppercase text-[11px] border-b border-slate-300">
+                            <th class="w-8 text-center py-1">N°</th>
+                            <th class="text-left px-1">Giocatore</th>
+                            <th class="w-8 text-center text-blue-600">G</th>
+                            <th class="w-8 text-center text-green-600">R</th>
+                            <th class="w-8 text-center text-yellow-600">A</th>
+                            <th class="w-10 text-center text-orange-600">2'</th>
+                            <th class="w-8 text-center text-red-600">E</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body-a" class="divide-y divide-slate-200"></tbody>
+                </table>
+            </div>
+        </div> 
+
+        <!-- REGISTRO GARA -->
+        <div class="bg-sky-50 border border-sky-300 rounded-2xl shadow-lg flex flex-col overflow-hidden p-3 h-[680px]">
+            <div class="border-b border-slate-300 pb-2 mb-2">
+                <div class="text-center text-sm font-black uppercase tracking-widest text-blue-800">📜 REGISTRO GARA</div>
+                <div class="flex justify-center items-center gap-2 mt-2">
+                    <button id="btn-undo" onclick="undoLastAction()" class="px-3 h-8 bg-orange-700 hover:bg-orange-600 text-white text-[11px] font-bold rounded-xl transition">↩ UNDO</button>
+                    <button id="btn-save-game" onclick="salvaGaraSuFile()" class="px-3 h-8 bg-green-700 hover:bg-green-600 text-white text-[11px] font-bold rounded-xl transition">💾 SALVA</button>
+                    <button id="btn-post-game" onclick="apriRegistroPostGara()" class="px-3 h-8 bg-blue-700 hover:bg-blue-600 text-white text-[11px] font-bold rounded-xl transition hidden">📝 REGISTRO</button>
+                </div>
+            </div>
+            <div class="overflow-y-auto bg-sky-50 rounded-xl border border-sky-300 shadow-inner flex-1">
+                <table class="w-full table-fixed border-collapse">
+                    <thead>
+                        <tr class="bg-sky-200 text-[11px] text-slate-800 uppercase font-black border-b-2 border-sky-400">
+                            <th class="w-[45px] text-center">Tempo</th>
+                            <th class="w-[25px] text-center">Sq</th>
+                            <th class="w-[30px] text-center">N°</th>
+                            <th class="text-left py-1 px-1">EVENTO</th>
+                            <th class="w-[45px] text-center">Ris.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="log-table-body" class="bg-slate-900 text-white divide-y divide-slate-700 text-[12px]"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- GIOCATORI OSPITI -->
+        <div class="bg-white border border-slate-300 rounded-2xl shadow-lg overflow-hidden p-3 flex flex-col h-[680px]">
+            <div class="flex-1">
+                <table class="w-full border-collapse bg-white rounded-xl overflow-hidden">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 uppercase text-[11px] border-b border-slate-300">
+                            <th class="w-8 text-center py-1">N°</th>
+                            <th class="text-left px-1">Giocatore</th>
+                            <th class="w-8 text-center text-blue-600">G</th>
+                            <th class="w-8 text-center text-green-600">R</th>
+                            <th class="w-8 text-center text-yellow-600">A</th>
+                            <th class="w-10 text-center text-orange-600">2'</th>
+                            <th class="w-8 text-center text-red-600">E</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body-b" class="divide-y divide-slate-200"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- DIRIGENTI OSPITI -->
+        <div id="officialsB" class="bg-white border border-slate-300 rounded-2xl shadow-lg p-3 flex flex-col h-[680px] overflow-y-auto"></div>
+    </div>
+</div>
+
+<!-- EDITOR EVENTO REGISTRO -->
+<div id="editor-evento" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+  <div class="bg-white rounded-2xl shadow-2xl w-[420px] p-5 space-y-4">
+    <div class="text-lg font-black text-slate-800 text-center uppercase">Modifica Evento</div>
+    <div>
+      <label class="text-sm font-bold text-slate-700">Tempo</label>
+      <input id="edit-time" type="text" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-800">
+    </div>
+    <div>
+      <label class="text-sm font-bold text-slate-700">Squadra</label>
+      <select id="edit-team" onchange="aggiornaNumeriEditor()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-800">
+        <option value="A">A</option>
+        <option value="B">B</option>
+      </select>
+    </div>
+    <div>
+      <label class="text-sm font-bold text-slate-700">Numero</label>
+      <select id="edit-num" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-800"></select>
+    </div>
+    <div class="flex justify-end space-x-2 pt-3">
+      <button onclick="chiudiEditorEvento()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-bold text-sm cursor-pointer">Annulla</button>
+      <button onclick="salvaModificaEvento()" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-bold text-sm cursor-pointer">Salva</button>
+    </div>
+  </div>
+</div>
+
+<!-- FINESTRA CONFERMA UNDO -->
+<div id="undo-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <div class="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-[430px]">
+        <div class="bg-orange-700 text-white text-center font-bold py-2 rounded-t-xl">↶ ANNULLA ULTIMA AZIONE</div>
+        <div class="p-5">
+            <div class="text-slate-300 text-sm mb-3">Ultimo evento registrato</div>
+            <div id="undo-description" class="bg-slate-800 border border-slate-700 rounded p-3 text-yellow-300 font-bold text-center"></div>
+            <div class="mt-5 flex justify-center gap-4">
+                <button onclick="chiudiUndoModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-6 py-2 rounded font-bold">Annulla</button>
+                <button onclick="confermaUndo()" class="bg-green-700 hover:bg-green-600 text-white px-4 py-2 rounded font-bold cursor-pointer">Conferma</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT LOGICA APPLICAZIONE -->
+<script>
+    function avviaFullscreen() {
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen().catch(err => {
+                console.log("Fullscreen richiesto tramite interazione.");
+            });
+        }
+    }
+
+//=========================================
+// IMPORT CSV SQUADRE
+//=========================================
+function leggiCSVConFallback(file, callback){
+    const reader = new FileReader();
+    reader.onload = function(e){
+        const bytes = new Uint8Array(e.target.result);
+        let testo = "";
+        try{
+            testo = new TextDecoder('utf-8').decode(bytes);
+            if(testo.includes('\uFFFD')) throw new Error('utf8');
+        }catch(err){
+            testo = new TextDecoder('windows-1252').decode(bytes);
+        }
+        callback(testo);
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function importaDaCSV(team){
+    const inputId = team === 'A' ? 'importCasaCSV' : 'importOspitiCSV';
+    const prefix = team === 'A' ? 'a' : 'b';
+    const file = document.getElementById(inputId).files[0];
+
+    if(!file){
+        alert('Seleziona il file CSV');
+        return;
+    }
+
+    leggiCSVConFallback(file, function(testo){
+
+        const righe = testo
+            .split(/\r?\n/)
+            .map(r => r.split(';'));
+
+        const teamRow = righe.find(r => (r[0] || '').trim() === `TEAM_${team}`);
+
+        if(teamRow && teamRow[2]){
+            document.getElementById(`team-${prefix}-name`).value = teamRow[2].trim();
+        }
+
+        for(let i=1;i<=16;i++){
+            document.getElementById(`num-${prefix}-${i}`).value = '';
+            document.getElementById(`name-${prefix}-${i}`).value = '';
+        }
+
+        ['A','B','C','D','E'].forEach(l=>{
+            document.getElementById(`off-letter-${prefix}-${l}`).value = l;
+            document.getElementById(`off-name-${prefix}-${l}`).value = '';
+        });
+
+        const players = righe.filter(r => (r[0] || '').trim() === `PLAYER_${team}`);
+
+        players.forEach((r, idx)=>{
+            if(idx < 16){
+                document.getElementById(`num-${prefix}-${idx+1}`).value = (r[1] || '').trim();
+                document.getElementById(`name-${prefix}-${idx+1}`).value = (r[2] || '').trim();
+            }
+        });
+
+        const officials = righe.filter(r => (r[0] || '').trim() === `OFFICIAL_${team}`);
+
+        officials.forEach(r=>{
+            const lettera = (r[1] || '').trim().toUpperCase();
+            if(['A','B','C','D','E'].includes(lettera)){
+                document.getElementById(`off-name-${prefix}-${lettera}`).value = (r[2] || '').trim();
+            }
+        });
+
+        alert(`Squadra ${team === 'A' ? 'di casa' : 'ospite'} importata correttamente`);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+    const casa = document.getElementById('importCasaCSV');
+    const ospiti = document.getElementById('importOspitiCSV');
+
+    if(casa){
+        casa.addEventListener('change', () => importaDaCSV('A'));
+    }
+
+    if(ospiti){
+        ospiti.addEventListener('change', () => importaDaCSV('B'));
+    }
+
+const garaExcel = document.getElementById('importGaraXLSX'); if(garaExcel){ garaExcel.addEventListener('change', function(){ if(this.files[0]){ importaGaraExcel(this.files[0]); 
+} 
+});
+ }
+
+});
+
+//=========================================
+// IMPORT EXCEL GARA COMPLETA
+//=========================================
+
+function importaGaraExcel(file){
+
+const reader = new FileReader();
+reader.onload = function(e){
+const data = new Uint8Array(e.target.result);
+const workbook = XLSX.read(data, { type: 'array' });
+
+// Cerca il foglio GARA
+
+let sheetName = workbook.SheetNames.find(
+
+n => n.trim().toUpperCase() === 'GARA' || n.trim().toUpperCase() === 'GARA'
+
+);
+
+if(!sheetName){
+
+alert('Foglio GARA non trovato');
+
+return;
+
+}
+
+const sheet = workbook.Sheets[sheetName];
+
+const righe = XLSX.utils.sheet_to_json(sheet, {
+
+header: 1,
+
+defval: ''
+
+});
+
+ importaDatiGara(righe);
+ importaRigheExcel(righe, 'A');
+ importaRigheExcel(righe, 'B');
+
+alert('Gara importata correttamente dal foglio GARA');
+
+};
+
+reader.readAsArrayBuffer(file);
+
+}
+
+//=========================================
+// Importa dati gara
+//=========================================
+
+function importaDatiGara(righe){
+
+    const getValue = (categoria, campo) => {
+
+        const r = righe.find(x =>
+
+            (x[0] || '').toString().trim().toUpperCase() === categoria &&
+            (x[1] || '').toString().trim().toUpperCase() === campo
+
+        );
+
+        return r ? (r[2] || '').toString().trim() : '';
+
+    };
+
+//---------------------------------
+// Dati gara
+//---------------------------------
+
+document.getElementById('match-num').value = getValue('MATCH','NUMERO');
+
+//---------------------------------
+// DATA
+//---------------------------------
+
+let dataGara =
+    getValue('MATCH','DATA') ||
+    getValue('MATCH','DATE');
+
+// Se Excel restituisce un numero (es. 46246)
+if (dataGara && !isNaN(dataGara)) {
+
+    const excelDate = parseFloat(dataGara);
+
+    const jsDate = new Date((excelDate - 25569) * 86400 * 1000);
+
+    const yyyy = jsDate.getFullYear();
+    const mm = String(jsDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(jsDate.getDate()).padStart(2, '0');
+
+    dataGara = `${yyyy}-${mm}-${dd}`;
+
+}
+
+// Se arriva come testo 12/08/2026
+else if (dataGara && dataGara.includes('/')) {
+
+    const [gg, mm, aaaa] = dataGara.split('/');
+
+    dataGara = `${aaaa}-${mm}-${gg}`;
+
+}
+
+// Se arriva in formato ISO con T
+if (dataGara && dataGara.includes('T')) {
+
+    dataGara = dataGara.split('T')[0];
+
+}
+
+document.getElementById('match-date').value = dataGara;
+
+//---------------------------------
+// ORA
+//---------------------------------
+
+let oraGara =
+    getValue('MATCH','ORA') ||
+    getValue('MATCH','TIME');
+
+// Se Excel restituisce un numero (es. 0.5)
+if (oraGara && !isNaN(oraGara)) {
+
+    const totalMinutes = Math.round(parseFloat(oraGara) * 24 * 60);
+
+    const hh = String(Math.floor(totalMinutes / 60)).padStart(2, '0');
+    const mm = String(totalMinutes % 60).padStart(2, '0');
+
+    oraGara = `${hh}:${mm}`;
+
+}
+
+document.getElementById('match-time').value = oraGara;
+
+    //---------------------------------
+    // Altri dati gara
+    //---------------------------------
+
+    document.getElementById('match-league').value = getValue('MATCH','CAMPIONATO');
+
+    document.getElementById('match-city').value = getValue('MATCH','LOCALITA');
+
+    document.getElementById('match-venue').value = getValue('MATCH','IMPIANTO');
+
+    document.getElementById('match-season').value = getValue('MATCH','STAGIONE');
+
+    //---------------------------------
+    // Arbitri e delegati
+    //---------------------------------
+
+    document.getElementById('referee1').value = getValue('OFFICIALS','ARBITRO1');
+
+    document.getElementById('referee2').value = getValue('OFFICIALS','ARBITRO2');
+
+    document.getElementById('delegate1').value = getValue('OFFICIALS','DELEGATO1');
+
+    document.getElementById('delegate2').value = getValue('OFFICIALS','DELEGATO2');
+
+}
+//=========================================
+// Importa tighe excel
+//=========================================
+
+function importaRigheExcel(righe, team){
+const prefix = team === 'A' ? 'a' : 'b';
+
+// Nuovo layout del foglio Gara:
+// CASA nelle colonne E-F-G (indici 4-5-6)
+// OSPITI nelle colonne I-J-K (indici 8-9-10)
+
+const c0 = team === 'A' ? 4 : 8;
+const c1 = team === 'A' ? 5 : 9;
+const c2 = team === 'A' ? 6 : 10;
+
+const teamRow = righe.find(r => (r[c0] || '').toString().trim() === `TEAM_${team}`);
+
+if(teamRow && teamRow[c2]){
+document.getElementById(`team-${prefix}-name`).value =
+teamRow[c2].toString().trim();
+}
+
+// Pulisce giocatrici
+for(let i=1;i<=16;i++){
+document.getElementById(`num-${prefix}-${i}`).value = '';
+document.getElementById(`name-${prefix}-${i}`).value = '';
+}
+
+// Pulisce dirigenti
+['A','B','C','D','E'].forEach(l => {
+document.getElementById(`off-letter-${prefix}-${l}`).value = l;
+document.getElementById(`off-name-${prefix}-${l}`).value = '';
+});
+
+// Giocatrici
+const players = righe.filter(r => (r[c0] || '').toString().trim() === `PLAYER_${team}`);
+
+players.forEach((r, idx) => {
+if(idx < 16){
+document.getElementById(`num-${prefix}-${idx+1}`).value =
+(r[c1] || '').toString().trim();
+
+document.getElementById(`name-${prefix}-${idx+1}`).value =
+(r[c2] || '').toString().trim();
+}
+});
+
+// Dirigenti
+const officials = righe.filter(r => (r[c0] || '').toString().trim() === `OFFICIAL_${team}`);
+
+officials.forEach(r => {
+const lettera = (r[c1] || '').toString().trim().toUpperCase();
+
+if(['A','B','C','D','E'].includes(lettera)){
+document.getElementById(`off-name-${prefix}-${lettera}`).value =
+(r[c2] || '').toString().trim();
+}
+});
+} 
+
+//=========================================
+// Dichiarazioni variabili
+//=========================================
+
+let scoreA = 0;
+let scoreB = 0;
+
+let firstHalfScoreA = 0;
+let firstHalfScoreB = 0;
+
+let secondHalfScoreA = 0;
+let secondHalfScoreB = 0;
+
+let overtime1ScoreA = 0;
+let overtime1ScoreB = 0;
+
+let overtime2ScoreA = 0;
+let overtime2ScoreB = 0;
+
+let overtime3ScoreA = 0;
+let overtime3ScoreB = 0;
+
+let overtime4ScoreA = 0;
+let overtime4ScoreB = 0;
+
+
+let penaltyScoredA = 0, penaltyTotalA = 0;
+let penaltyScoredB = 0, penaltyTotalB = 0;
+
+let timeoutsA = { first: 0, second: 0, total: 0 };
+let timeoutsB = { first: 0, second: 0, total: 0 };
+
+let timerSeconds = 0;
+let timerInterval = null;
+
+let timeoutSecondsLeft = 0;
+let timeout50Beep = false;
+let timeoutInterval = null;
+
+//=========================================
+// GESTIONE GARA
+//=========================================
+
+let usaTempiSupplementari = false;
+let usaRigori = false;
+
+//=========================================
+// STATO TIME OUT
+//=========================================
+
+let timeoutRunning = false;
+
+let autosaveInterval = null;
+
+let savedRosterDataA = { players: {}, officials: {} };
+let savedRosterDataB = { players: {}, officials: {} };
+
+let currentRosterA = { players: [], officials: [] };
+let currentRosterB = { players: [], officials: [] };
+
+let activePenalties = [];
+
+let logEvents = [];
+
+//========================================= 
+// EDITOR EVENTI REGISTRO 
+//========================================= 
+let eventoInModifica = -1;
+let editorEventoAperto = false;
+
+
+//=========================================
+// STATI DELLA GARA
+//=========================================
+
+const STATO_GARA = {
+
+    PREPARTITA: "PREPARTITA",
+
+    PRIMO_TEMPO: "PRIMO_TEMPO",
+
+    INTERVALLO: "INTERVALLO",
+
+    SECONDO_TEMPO: "SECONDO_TEMPO",
+
+    FINE_GARA_DA_CONFERMARE: "FINE_GARA_DA_CONFERMARE",
+
+ //==============================
+// 1ª SERIE TEMPI SUPPLEMENTARI
+//==============================
+
+SUPPLEMENTARE1_PRIMO: "SUPPLEMENTARE1_PRIMO",
+
+INTERVALLO_SUPPLEMENTARE1: "INTERVALLO_SUPPLEMENTARE1",
+
+SUPPLEMENTARE1_SECONDO: "SUPPLEMENTARE1_SECONDO",
+
+//==============================
+// 2ª SERIE TEMPI SUPPLEMENTARI
+//==============================
+
+SUPPLEMENTARE2_PRIMO: "SUPPLEMENTARE2_PRIMO",
+
+INTERVALLO_SUPPLEMENTARE2: "INTERVALLO_SUPPLEMENTARE2",
+
+SUPPLEMENTARE2_SECONDO: "SUPPLEMENTARE2_SECONDO",
+
+//==============================
+
+RIGORI: "RIGORI",
+
+PARTITA_TERMINATA: "PARTITA_TERMINATA",
+
+EDIT_POST_GARA: "EDIT_POST_GARA",
+
+SALVATA: "SALVATA",
+
+CERTIFICATA: "CERTIFICATA"
+
+};
+
+//=========================================
+// STATO ATTUALE
+//=========================================
+
+let statoGara = STATO_GARA.PREPARTITA;
+
+//=========================================
+// GARA DEFINITIVA
+//=========================================
+
+let partitaDefinitiva = false;
+
+//=================================
+// ESITO GARA
+//=================================
+
+let motivoFineGara = "";
+
+//=================================
+// 
+//=================================
+
+let penaltyShootout = {
+
+    played: false,
+
+    started: false,
+
+    finished: false,
+
+    scoreA: 0,
+
+    scoreB: 0,
+
+    winner: "",
+
+    currentRound: 1,
+
+    suddenDeath: false,
+
+    sequence: []
+
+};
+
+//=========================================
+// RIFERIMENTO PULSANTE FINE TEMPO
+//=========================================
+
+function getNextHalfButton(){
+
+    return document.getElementById("btn-next-half");
+
+}
+
+//=========================================
+// VISIBILITA' PULSANTE FINE TEMPO
+//=========================================
+
+function mostraPulsanteFineTempo(mostra){
+
+    const btn = getNextHalfButton();
+
+    if(!btn) return;
+
+    btn.classList.toggle("hidden", !mostra);
+
+}
+
+//=========================================
+// VISIBILITA' PULSANTE ESCI
+//=========================================
+
+function updateExitButton(){
+
+    const btn = document.getElementById("btn-exit");
+
+    if(!btn) return;
+
+    btn.classList.toggle("hidden", timerInterval !== null);
+
+}
+
+
+//=========================================
+// CONFIGURA PULSANTE FINE GARA
+//=========================================
+
+function configuraPulsanteFineGara(testo, colore, handler, disabilitato = false){
+
+    const btn = getNextHalfButton();
+
+    if(!btn) return;
+
+    btn.textContent = testo;
+
+    btn.disabled = disabilitato;
+
+    btn.onclick = (disabilitato || !handler) ? null : handler;
+
+    btn.classList.remove(
+        "bg-indigo-600",
+        "bg-blue-700",
+        "bg-red-700",
+        "bg-slate-500",
+        "bg-slate-700",
+        "bg-green-700",
+        "text-white"
+    );
+
+    btn.classList.add(colore);
+
+    if(colore === "bg-green-700"){
+        btn.classList.add("text-white");
+    }
+
+    updateNextHalfButton();
+
+}
+
+//=========================================
+// CAMBIA STATO GARA
+//=========================================
+
+function cambiaStatoGara(nuovoStato){
+
+    statoGara = nuovoStato;
+
+    switch(statoGara){
+
+        case STATO_GARA.PREPARTITA:
+
+            configuraPulsanteFineGara(
+                "Fine 1° Tempo",
+                "bg-indigo-600",
+                requestNextHalf
+            );
+
+            break;
+
+
+        case STATO_GARA.PRIMO_TEMPO:
+
+            configuraPulsanteFineGara(
+                "Fine 1° Tempo",
+                "bg-indigo-600",
+                requestNextHalf
+            );
+
+            break;
+
+
+        case STATO_GARA.SECONDO_TEMPO:
+
+            configuraPulsanteFineGara(
+                "Fine 2° Tempo",
+                "bg-red-700",
+                requestEndMatch
+            );
+
+            break;
+
+
+        case STATO_GARA.SUPPLEMENTARE1_PRIMO:
+
+            configuraPulsanteFineGara(
+                "Fine 1° TEMPO SUPPLEMENTARE",
+                "bg-blue-700",
+                endFirstOvertime
+            );
+
+            break;
+
+
+        case STATO_GARA.SUPPLEMENTARE1_SECONDO:
+
+            configuraPulsanteFineGara(
+                "Fine 2° TEMPO SUPPLEMENTARE",
+                "bg-red-700",
+                endSecondOvertime
+            );
+
+            break;
+
+
+        case STATO_GARA.SUPPLEMENTARE2_PRIMO:
+
+            configuraPulsanteFineGara(
+                "Fine 3° TEMPO SUPPLEMENTARE",
+                "bg-blue-700",
+                endThirdOvertime
+            );
+
+            break;
+
+
+        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+
+            configuraPulsanteFineGara(
+                "Fine 4° TEMPO SUPPLEMENTARE",
+                "bg-red-700",
+                endFourthOvertime
+            );
+
+            break;
+
+
+        case STATO_GARA.FINE_GARA_DA_CONFERMARE:
+
+            if(servonoSupplementari()){
+
+                configuraPulsanteFineGara(
+                    "TEMPI SUPPLEMENTARI",
+                    "bg-slate-500",
+                    null
+                );
+
+            }else{
+
+                configuraPulsanteFineGara(
+                    "GARA TERMINATA",
+                    "bg-slate-700",
+                    terminaGaraDefinitivamente
+                );
+
+            }
+
+            break;
+
+
+        case STATO_GARA.PARTITA_TERMINATA:
+
+            configuraPulsanteFineGara(
+                "✓ GARA TERMINATA",
+                "bg-green-700",
+                null,
+                true
+            );
+
+            //----------------------------------
+            // PULSANTE REGISTRO POST GARA
+            //----------------------------------
+
+            const btnRegistro =
+                document.getElementById("btn-post-game");
+
+            if(btnRegistro){
+
+                btnRegistro.classList.remove("hidden");
+
+            }
+
+            //----------------------------------
+            // PULSANTE STAMPA REFERTO
+            //----------------------------------
+
+            const btnReferto =
+                document.getElementById("btn-print-report");
+
+            if(btnReferto){
+
+                btnReferto.disabled = false;
+
+                btnReferto.classList.remove(
+                    "opacity-50",
+                    "cursor-not-allowed"
+                );
+
+            }
+
+            //----------------------------------
+            // PULSANTE SALVA GARA
+            //----------------------------------
+
+            const btnSalva =
+                document.getElementById("btn-save-game");
+
+            if(btnSalva){
+
+                btnSalva.disabled = false;
+
+                btnSalva.classList.remove(
+                    "opacity-50",
+                    "cursor-not-allowed"
+                );
+
+            }
+
+            break;
+
+    }
+
+}
+
+  //=========================================
+ // STORICO AZIONI (UNDO)
+//=========================================
+        let undoHistory = [];
+
+	//=========================================
+       // STORICO REDO
+      //=========================================
+
+        let redoHistory = [];
+
+        let isFirstInit = true;
+	let currentHalf = 1; // 1 per primo tempo, 2 per secondo tempo
+
+// Durata regolamentare di ogni tempo
+
+let matchDurationMinutes = 30;
+
+function apriPopupDurata(){
+
+document.getElementById('inputDurata').value = matchDurationMinutes;
+
+document.getElementById('popupDurata').classList.remove('hidden');
+
+}
+
+
+
+function chiudiPopupDurata(){
+
+document.getElementById('popupDurata').classList.add('hidden');
+
+}
+
+
+
+function salvaDurata(){
+
+
+
+const minuti = parseInt(
+
+document.getElementById('inputDurata').value,
+
+10
+
+);
+
+
+
+if(isNaN(minuti) || minuti < 1 || minuti > 60){
+
+alert('Inserisci un valore tra 1 e 60 minuti');
+
+return;
+
+}
+
+
+
+matchDurationMinutes = minuti;
+
+
+
+document.getElementById('durataLabel').textContent =
+
+minuti + "'";
+
+
+
+chiudiPopupDurata();
+
+
+
+salvaPartita();
+
+}
+
+
+
+
+
+
+
+  //=========================================
+ // 
+//=========================================
+
+function getHalfDurationSeconds(){
+
+return matchDurationMinutes * 60;
+
+}
+
+  //=========================================
+ // 
+//=========================================
+
+
+function getMatchDurationSeconds(){
+
+return getHalfDurationSeconds() * 2;
+
+} 
+
+
+
+//=========================================
+// TEMPI SUPPLEMENTARI
+//=========================================
+
+// 0 = tempi regolamentari
+// 1 = prima serie supplementari
+// 2 = seconda serie supplementari
+
+let overtimeSeries = 0;
+
+// 0 = nessun supplementare
+// 1 = primo tempo supplementare
+// 2 = secondo tempo supplementare
+
+let overtimeHalf = 0;
+
+//=========================================
+// 
+//=========================================
+
+        function buildSetupInputs() {
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            const fillInputs = (containerId, prefix, offset=0) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                for(let i=1; i<=16; i++) {
+                    container.innerHTML += `
+<div class="flex gap-1 items-center h-7">
+
+    <input
+        type="text"
+        id="num-${prefix}-${i}"
+        class="w-11 h-6 text-center border border-blue-300 rounded bg-white text-blue-700 text-[15px] font-black font-mono"
+        placeholder="#"
+        value="${i+offset}">
+
+    <input
+        type="text"
+        id="name-${prefix}-${i}"
+        class="flex-1 h-6 px-2 border border-slate-300 rounded bg-white text-blue-700 text-[15px] font-bold"
+        placeholder="Atleta ${i}">
+
+</div>`;
+                }
+            };
+const fillOfficials = (containerId, prefix) => {
+
+    const container = document.getElementById(containerId);
+
+    container.innerHTML = "";
+
+    letters.forEach(l => {
+
+        container.innerHTML += `
+<div class="flex gap-1 items-center h-7">
+
+    <input
+        type="text"
+        id="off-letter-${prefix}-${l}"
+        class="w-8 h-6 border border-blue-300 rounded bg-white text-blue-700 text-[15px] font-black text-center"
+        value="${l}">
+
+    <input
+        type="text"
+        id="off-name-${prefix}-${l}"
+        class="flex-1 h-6 px-2 border border-slate-300 rounded bg-white text-blue-700 text-[15px] font-bold"
+        placeholder="Dirigente ${l}">
+
+</div>`;
+
+    });
+
+};
+
+fillInputs('inputs-players-a', 'a', 0);
+fillOfficials('inputs-officials-a', 'a');
+
+fillInputs('inputs-players-b', 'b', 10);
+fillOfficials('inputs-officials-b', 'b');        }
+
+//=========================================
+// GARA MODIFICABILE
+//=========================================
+
+function garaModificabile(messaggio = true){
+
+    //----------------------------------
+    // GARA DEFINITIVA
+    //----------------------------------
+
+    if(partitaDefinitiva){
+
+        if(messaggio){
+
+            alert(
+                "La gara è definitiva.\n" +
+                "Non è più possibile modificarla."
+            );
+
+        }
+
+        return false;
+
+    }
+
+    //----------------------------------
+    // STATI MODIFICABILI
+    //----------------------------------
+
+    switch(statoGara){
+
+        case STATO_GARA.PREPARTITA:
+
+        case STATO_GARA.PRIMO_TEMPO:
+
+        case STATO_GARA.INTERVALLO:
+
+        case STATO_GARA.SECONDO_TEMPO:
+
+        case STATO_GARA.FINE_GARA_DA_CONFERMARE:
+
+        case STATO_GARA.SUPPLEMENTARE1_PRIMO:
+
+        case STATO_GARA.INTERVALLO_SUPPLEMENTARE1:
+
+        case STATO_GARA.SUPPLEMENTARE1_SECONDO:
+
+        case STATO_GARA.SUPPLEMENTARE2_PRIMO:
+
+        case STATO_GARA.INTERVALLO_SUPPLEMENTARE2:
+
+        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+
+        case STATO_GARA.RIGORI:
+
+        case STATO_GARA.PARTITA_TERMINATA:
+
+            return true;
+
+    }
+
+    //----------------------------------
+    // ALTRI STATI
+    //----------------------------------
+
+    if(messaggio){
+
+        alert(
+            "La gara non è modificabile."
+        );
+
+    }
+
+    return false;
+
+}
+
+//=========================================
+// CONTROLLA NUMERI DUPLICATI
+//=========================================
+
+function controllaNumeriDuplicati(prefisso){
+
+    const numeri = {};
+    let errore = false;
+
+    for(let i=1;i<=16;i++){
+
+        const input = document.getElementById(`num-${prefisso}-${i}`);
+
+        if(!input) continue;
+
+        input.classList.remove(
+            "border-red-600",
+            "bg-red-100"
+        );
+
+        const valore = input.value.trim();
+
+        if(valore==="") continue;
+
+        if(numeri[valore]){
+
+            errore = true;
+
+            input.classList.add(
+                "border-red-600",
+                "bg-red-100"
+            );
+
+            numeri[valore].classList.add(
+                "border-red-600",
+                "bg-red-100"
+            );
+
+        }else{
+
+            numeri[valore] = input;
+
+        }
+
+    }
+
+    return !errore;
+
+}
+
+  //=========================================
+ // Modalità gara
+//=========================================
+
+function getModalitaGara(){
+
+    if(document.getElementById('cfg-singola').checked){
+
+        return 'SINGOLA';
+    }
+    if(document.getElementById('cfg-supplementari').checked){
+
+        return 'SUPPLEMENTARI';
+    }
+    if(document.getElementById('cfg-rigori').checked){
+
+        return 'RIGORI';
+    }
+    return null;
+}
+
+
+  //=========================================
+ // initMatchDashboard
+//=========================================
+
+function initMatchDashboard() {
+
+// Controllo modalità gara
+
+const modalita = getModalitaGara();
+
+if(!modalita){
+
+    alert('Seleziona una modalità gara prima di continuare.');
+
+    return;
+
+}
+
+//=================================
+// INIZIALIZZA MODALITÀ GARA
+//=================================
+
+usaTempiSupplementari = (modalita === 'SUPPLEMENTARI');
+
+usaRigori = (
+    modalita === 'SUPPLEMENTARI' ||
+    modalita === 'RIGORI'
+);
+
+const processRoster = (prefix, targetRoster, savedState) => {
+
+    const newPlayers = [];
+    const newOfficials = [];
+    const numeriUsati = new Set();
+// Ripulisce eventuali errori precedenti
+for(let j=1;j<=16;j++){
+
+    const campo = document.getElementById(`num-${prefix}-${j}`);
+
+    if(campo){
+
+        campo.classList.remove(
+            "border-red-600",
+            "bg-red-100",
+            "ring-2",
+            "ring-red-600"
+        );
+
+    }
+
+}        
+
+
+         // ==========================
+        // GIOCATORI
+        // ==========================
+
+        for (let i = 1; i <= 16; i++) {
+
+            let num = document.getElementById(`num-${prefix}-${i}`).value.trim();
+            let name = document.getElementById(`name-${prefix}-${i}`).value.trim();
+
+console.log(
+    `Squadra ${prefix} - Riga ${i}`,
+    "Numero:", num,
+    "Nome:", name
+);
+
+
+            if (num !== "") {
+
+//=========================================
+// CONTROLLO NUMERO DUPLICATO
+//=========================================
+
+const inputNumero = document.getElementById(`num-${prefix}-${i}`);
+
+// ripristina colore normale
+inputNumero.classList.remove(
+    "border-red-600",
+    "bg-red-100",
+    "ring-2",
+    "ring-red-600"
+);
+
+if(numeriUsati.has(num)){
+    inputNumero.classList.add(
+        "border-red-600",
+        "bg-red-100",
+        "ring-2",
+        "ring-red-600"
+    );
+    inputNumero.focus();
+    alert(`Attenzione: il numero di maglia ${num} è duplicato nella stessa squadra!`);
+    return false;
+}
+
+numeriUsati.add(num);
+
+                let finalName = name ? name.toUpperCase() : `ATLETA #${num}`;
+                let key = `p_${num}`;
+
+                let old = savedState.players[key] || {
+                    goals: 0,
+                    yellows: 0,
+                    suspensions: 0,
+                    red: false
+                };
+
+let pObj = {
+    ...old,
+    id: key,
+    num: num,
+    name: finalName,
+    type: "G"
+};
+
+                savedState.players[key] = pObj;
+                newPlayers.push(pObj);
+            }
+        }
+
+        // Ordina i giocatori per numero di maglia
+        newPlayers.sort((a, b) => parseInt(a.num, 10) - parseInt(b.num, 10));
+
+        // ==========================
+        // DIRIGENTI
+        // ==========================
+
+        ["A", "B", "C", "D", "E"].forEach(lettera => {
+
+            let letter = document.getElementById(`off-letter-${prefix}-${lettera}`).value.trim();
+            let name = document.getElementById(`off-name-${prefix}-${lettera}`).value.trim();
+
+            if (letter !== "") {
+
+                let finalName = name ? name.toUpperCase() : `DIRIGENTE ${letter}`;
+                let key = `o_${lettera}`;
+
+                let old = savedState.officials[key] || {
+                    goals: 0,
+                    yellows: 0,
+                    suspensions: 0,
+                    red: false
+                };
+let oObj = {
+    ...old,
+    id: key,
+    num: letter,
+    name: finalName,
+    type: "D"
+};
+
+                savedState.officials[key] = oObj;
+                newOfficials.push(oObj);
+            }
+        });
+
+        targetRoster.players = newPlayers;
+        targetRoster.officials = newOfficials;
+
+        return true;
+    };
+
+    // Controllo squadra A
+    if (!processRoster("a", currentRosterA, savedRosterDataA)) return;
+
+    // Controllo squadra B
+    if (!processRoster("b", currentRosterB, savedRosterDataB)) return;
+
+    const nameA = document.getElementById("team-a-name").value.toUpperCase() || "CASA";
+    const nameB = document.getElementById("team-b-name").value.toUpperCase() || "OSPITI";
+
+    document.getElementById("dash-team-a").innerText = nameA;
+    document.getElementById("dash-team-b").innerText = nameB;
+    document.getElementById("panel-title-a").innerText = nameA;
+    document.getElementById("panel-title-b").innerText = nameB;
+
+    renderTable("A");
+    renderTable("B");
+
+    updatePenaltyCountersDisplay();
+    updateTimeoutCountersDisplay();
+    updateClockDisplay();
+    updateHalfDisplay();
+
+    document.getElementById("setup-section").classList.add("hidden");
+    document.getElementById("match-section").classList.remove("hidden");
+
+    //=========================================
+    // GESTIONE PULSANTI
+    //=========================================
+
+    // Modifica disponibile solo prima dell'inizio gara
+    if (timerSeconds === 0) {
+        document.getElementById("btn-edit-setup").classList.remove("hidden");
+    } else {
+        document.getElementById("btn-edit-setup").classList.add("hidden");
+    }
+
+    //=========================================
+    // STATO INIZIALE DELLA GARA
+    //=========================================
+
+    cambiaStatoGara(STATO_GARA.PREPARTITA);
+
+    salvaPartita();
+
+    startAutosave();
+
+    if (isFirstInit) {
+        isFirstInit = false;
+    }
+}
+
+     //=========================================
+    // returnToSetup
+   //=========================================
+
+        function returnToSetup() {
+            if (timerSeconds > 0 && timerInterval !== null) {
+                alert("Metti in pausa il cronometro prima di poter modificare la distinta!");
+                return;
+            }
+            document.getElementById('match-section').classList.add('hidden');
+            document.getElementById('setup-section').classList.remove('hidden');
+        }
+
+     //=========================================
+    // 
+   //=========================================
+
+function abbreviaNome(nome, max = 12){
+    if(!nome) return '';
+    nome = nome.toUpperCase().trim();
+
+    return nome.length > max
+        ? nome.substring(0, max) + '..'
+        : nome;
+}
+
+//=========================================
+// RENDER TABELLA GARA
+//=========================================
+
+function renderTable(team) {
+
+    const tbody = document.getElementById(
+        `table-body-${team.toLowerCase()}`
+    );
+
+    if (!tbody) return;
+
+    const roster = team === "A"
+        ? currentRosterA
+        : currentRosterB;
+
+    roster.players = roster.players
+        .filter(p => p.num !== "")
+        .sort((a, b) => Number(a.num) - Number(b.num));
+
+    tbody.innerHTML = "";
+
+    const row = (item) => {
+
+        //---------------------------------
+        // GIOCATORE ESPULSO
+        //---------------------------------
+
+        const isRed = item.red
+            ? "bg-red-100 opacity-80"
+            : "";
+
+        //---------------------------------
+        // GOAL
+        //---------------------------------
+
+        const goalBtn =
+            item.type === "G"
+                ? (
+                    item.red
+
+                        ? `<div class="w-8 h-8 min-w-8 max-w-8 min-h-8 max-h-8
+                                   flex items-center justify-center
+                                   bg-red-200 text-red-800
+                                   rounded font-bold text-[11px]
+                                   leading-none overflow-hidden shrink-0">
+                                ${item.goals}
+                           </div>`
+
+                        : `<button
+                                onclick="handleGoal('${team}','${item.id}')"
+                                class="w-8 h-8
+                                       bg-blue-600 hover:bg-blue-500
+                                       text-white rounded
+                                       text-[11px] font-bold
+                                       cursor-pointer">
+                                ${item.goals}
+                           </button>`
+                )
+                : "-";
+
+        //---------------------------------
+        // RIGORE
+        //---------------------------------
+
+        const penaltyBtn =
+            item.type === "G"
+                ? (
+                    item.red
+
+                        ? `<div class="w-8 h-8 min-w-8 max-w-8 min-h-8 max-h-8
+                                   flex items-center justify-center
+                                   bg-red-200 text-red-800
+                                   rounded font-bold text-[11px]
+                                   leading-none overflow-hidden shrink-0">
+                                R
+                           </div>`
+
+                        : `<button
+                                onclick="handlePenalty7mPlayer('${team}','${item.id}')"
+                                class="w-8 h-8
+                                       bg-green-700 hover:bg-green-600
+                                       text-white rounded
+                                       text-[11px] font-bold
+                                       cursor-pointer">
+                                R
+                           </button>`
+                )
+                : "-";
+
+        //---------------------------------
+        // AMMONIZIONE
+        //---------------------------------
+
+        const yellowBtn =
+            item.red
+
+                ? `<div class="w-8 h-8 min-w-8 max-w-8 min-h-8 max-h-8
+                           flex items-center justify-center
+                           bg-red-200 text-red-800
+                           rounded font-bold text-[11px]
+                           leading-none overflow-hidden shrink-0">
+                        ${item.yellows}
+                   </div>`
+
+                : `<button
+                        onclick="handleYellow('${team}','${item.id}','${item.type}')"
+                        class="w-8 h-8
+                               rounded text-[11px]
+                               cursor-pointer
+                               ${
+                                   item.yellows > 0
+                                   ? "bg-yellow-500 text-black font-bold"
+                                   : "bg-slate-800 text-slate-400"
+                               }">
+                        ${item.yellows}
+                   </button>`;
+
+        //---------------------------------
+        // 2 MINUTI
+        //---------------------------------
+
+        const suspensionBtn =
+            item.red
+
+                ? `<div class="w-10 h-8 min-w-10 max-w-10 min-h-8 max-h-8
+                           flex items-center justify-center
+                           bg-red-600 text-white
+                           rounded font-bold text-[11px]
+                           leading-none overflow-hidden shrink-0">
+                        ${item.suspensions}/3
+                   </div>`
+
+                : `<button
+                        onclick="handleSuspension('${team}','${item.id}','${item.type}')"
+                        class="w-10 h-8
+                               rounded text-[11px]
+                               cursor-pointer
+                               ${
+                                   item.suspensions > 0
+                                   ? "bg-orange-500 text-white font-bold"
+                                   : "bg-slate-800 text-slate-400"
+                               }">
+                        ${item.suspensions}/3
+                   </button>`;
+
+        //---------------------------------
+        // ESPULSIONE
+        //---------------------------------
+
+        const redBtn =
+            item.red
+
+                ? `<div class="w-8 h-8 min-w-8 max-w-8 min-h-8 max-h-8
+                           flex items-center justify-center
+                           bg-red-700 text-white
+                           rounded font-bold text-[11px]
+                           leading-none overflow-hidden shrink-0">
+                        ESP
+                   </div>`
+
+                : `<button
+                        onclick="handleRedCard('${team}','${item.id}','${item.type}')"
+                        class="w-8 h-8
+                               rounded text-[11px]
+                               bg-red-700 hover:bg-red-600
+                               text-white font-bold
+                               cursor-pointer">
+                        E
+                   </button>`;
+
+        //---------------------------------
+        // RIGA FISSA
+        //---------------------------------
+
+        return `
+        <tr
+            class="h-10 border-b border-slate-200 ${isRed}"
+            style="height:40px; max-height:40px;"
+        >
+
+            <td class="h-10 p-1 text-center
+                       font-black font-mono text-[22px]
+                       leading-none tracking-wide text-blue-800
+                       overflow-hidden">
+                ${item.num}
+            </td>
+
+            <td class="h-10 p-1
+                       text-[10px] text-blue-900
+                       font-semibold truncate
+                       max-w-[150px]
+                       overflow-hidden">
+                ${abbreviaNome(item.name, 10)}
+
+                <span class="text-[8px]
+                             text-blue-800
+                             font-extrabold">
+                    ${item.type}
+                </span>
+            </td>
+
+            <td class="h-10 p-0.5 text-center overflow-hidden">
+                ${goalBtn}
+            </td>
+
+            <td class="h-10 p-0.5 text-center overflow-hidden">
+                ${penaltyBtn}
+            </td>
+
+            <td class="h-10 p-0.5 text-center overflow-hidden">
+                ${yellowBtn}
+            </td>
+
+            <td class="h-10 p-0.5 text-center overflow-hidden">
+                ${suspensionBtn}
+            </td>
+
+            <td class="h-10 p-0.5 text-center overflow-hidden">
+                ${redBtn}
+            </td>
+
+        </tr>`;
+    };
+
+    //---------------------------------
+    // GIOCATORI
+    //---------------------------------
+
+    roster.players.forEach(player => {
+
+        tbody.innerHTML += row(player);
+
+    });
+
+    //---------------------------------
+    // DIRIGENTI
+    //---------------------------------
+
+    if (typeof renderOfficials === "function") {
+
+        renderOfficials(team);
+
+    }
+}
+
+
+//=========================================
+// RENDER GIOCATORI
+//=========================================
+//
+// Questa funzione utilizza lo stesso rendering
+// di renderTable(), evitando che le due funzioni
+// abbiano dimensioni differenti.
+//
+
+function renderPlayers(team) {
+
+    renderTable(team);
+
+}
+
+//=========================================
+// RENDER DIRIGENTI (Entrambe le squadre)
+//=========================================
+
+function renderOfficials(team){
+
+    const panel = document.getElementById(team === "A" ? "officialsA" : "officialsB");
+    if(!panel) return;
+
+    const roster = team === "A" ? currentRosterA : currentRosterB;
+
+    let html = `
+    
+
+<div class="grid grid-cols-[48px_1fr_44px_44px_44px] items-center text-[11px] font-black uppercase text-slate-700 border-b border-slate-300 pb-1">
+    <div></div>
+    <div></div>
+    <div class="text-center text-yellow-600">A</div>
+    <div class="text-center text-orange-600">2'</div>
+    <div class="text-center text-red-600">E</div>
+</div>
+    <div class="flex-1 overflow-y-auto space-y-1">
+    `;
+
+    const lettere = ["A", "B", "C", "D", "E"];
+    const officialsList = roster && roster.officials ? roster.officials : [];
+
+    officialsList.forEach((item, index)=>{
+        const lettera = lettere[index] || "";
+        
+        // Lettura dinamica del nome del dirigente dalla configurazione
+        const officialName = (item.name && item.name.trim() !== "") ? item.name : 
+                             (item.nome && item.nome.trim() !== "") ? item.nome : 
+                             `DIRIGENTE ${lettera}`;
+
+        const isRed = item.red ? "bg-red-100 opacity-80" : "bg-white";
+
+        const yellowBtn = item.red
+            ? `<div class="w-8 h-8 flex items-center justify-center bg-red-200 text-red-800 rounded font-bold text-xs">${item.yellows}</div>`
+            : `<button onclick="handleYellow('${team}','${item.id}','${item.type}')" class="w-8 h-8 rounded text-xs ${item.yellows > 0 ? "bg-yellow-500 text-black font-bold" : "bg-slate-800 text-slate-400"}">${item.yellows}</button>`;
+
+        const suspensionBtn = item.red
+            ? `<div class="w-10 h-8 flex items-center justify-center bg-red-600 text-white rounded font-bold text-xs">${item.suspensions}/3</div>`
+            : `<button onclick="handleSuspension('${team}','${item.id}','${item.type}')" class="w-10 h-8 rounded text-xs ${item.suspensions > 0 ? "bg-orange-500 text-white font-bold" : "bg-slate-800 text-slate-400"}">${item.suspensions}/3</button>`;
+
+        const redBtn = item.red
+            ? `<div class="w-8 h-8 flex items-center justify-center bg-red-700 text-white rounded font-bold text-xs">E</div>`
+            : `<button onclick="handleRedCard('${team}','${item.id}','${item.type}')" class="w-8 h-8 rounded bg-red-700 hover:bg-red-600 text-white font-bold text-xs">E</button>`;
+
+        html += `
+        <div class="flex items-center border-b border-slate-200 ${isRed} py-1.5 px-1">
+            <div class="w-12 text-center ${team === "A" ? "text-blue-700" : "text-rose-500"} font-black text-xl leading-none">
+                ${lettera}
+            </div>
+            <div class="w-[210px] px-1 truncate">
+                <div class="font-bold text-[10px] text-slate-900 leading-tight">
+                    ${abbreviaNome(officialName, 10)}
+                </div>
+            </div>
+            <div class="flex items-center gap-1 ml-auto">
+                ${yellowBtn}
+                ${suspensionBtn}
+                ${redBtn}
+            </div>
+        </div>
+        `;
+    });
+
+    html += `</div>`;
+    panel.innerHTML = html;
+}
+
+//=========================================
+// PAUSA CRONOMETRO PER SANZIONE
+//=========================================
+
+function pausaCronometroPerSanzione(){
+
+    if(!timerInterval)
+        return;
+
+    clearInterval(timerInterval);
+
+    timerInterval = null;
+
+    document.getElementById("btn-toggle-clock").innerText = "▶ START";
+
+    if(timerSeconds === 0){
+
+        document.getElementById("btn-edit-setup").classList.remove("hidden");
+
+    }else{
+
+        document.getElementById("btn-edit-setup").classList.add("hidden");
+
+    }
+
+    updateExitButton();
+
+    salvaPartita();
+
+}
+
+//=====================================
+// Arresto cronometro a fine tempo
+//=====================================
+
+function arrestaCronometroFineTempo(){
+
+    //---------------------------------
+    // Ferma il timer
+    //---------------------------------
+
+    clearInterval(timerInterval);
+
+    timerInterval = null;
+
+    //---------------------------------
+    // Stato fermo
+    //---------------------------------
+
+    isRunning = false;
+
+    //---------------------------------
+    // Forza il tempo esatto
+    //---------------------------------
+
+    switch(statoGara){
+
+        case STATO_GARA.PRIMO_TEMPO:
+            timerSeconds = getHalfDurationSeconds();
+            break;
+
+        case STATO_GARA.SECONDO_TEMPO:
+            timerSeconds = getMatchDurationSeconds();
+            break;
+
+        case STATO_GARA.SUPPLEMENTARE1_PRIMO:
+            timerSeconds = 3900;
+            break;
+
+        case STATO_GARA.SUPPLEMENTARE1_SECONDO:
+            timerSeconds = 4200;
+            break;
+
+        case STATO_GARA.SUPPLEMENTARE2_PRIMO:
+            timerSeconds = 4500;
+            break;
+
+        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+            timerSeconds = 4800;
+            break;
+    }
+
+    //---------------------------------
+    // Aggiorna display
+    //---------------------------------
+
+    updateClockDisplay();
+
+    //---------------------------------
+    // Pulsante torna START
+    //---------------------------------
+
+    const btn = document.getElementById('btn-toggle-clock');
+
+    if(btn){
+
+        btn.innerText = 'START';
+
+    }
+
+    //---------------------------------
+    // Pulsante modifica resta nascosto
+    //---------------------------------
+
+    document.getElementById('btn-edit-setup').classList.add('hidden');
+
+    //---------------------------------
+    // Aggiorna interfaccia
+    //---------------------------------
+
+    updateExitButton();
+
+    updateNextHalfButton();
+
+    //---------------------------------
+    // Salva
+    //---------------------------------
+
+    salvaPartita();
+}
+
+//=========================================
+// USCITA COMPLETA DAL REFERTO
+//=========================================
+
+function esciProgramma(){
+
+    //-----------------------------------------
+    // IL CRONOMETRO DEVE ESSERE FERMO
+    //-----------------------------------------
+
+    if(timerInterval !== null){
+
+        alert("Ferma il cronometro prima di uscire.");
+
+        return;
+    }
+
+    //-----------------------------------------
+    // SALVA LA GARA
+    //-----------------------------------------
+
+    salvaPartita();
+
+    //-----------------------------------------
+    // CHIUDE COMPLETAMENTE IL REFERTO
+    //-----------------------------------------
+
+    window.close();
+
+}
+
+//=====================================
+// Timer
+//=====================================
+
+function toggleClock() {
+
+
+//---------------------------------
+// GARA MODIFICABILE?
+//---------------------------------
+
+if(!garaModificabile()){
+
+    return;
+
+}
+
+console.log('toggleClock chiamata');
+console.log('stato attuale:', statoGara);
+console.log('timerInterval:', timerInterval);
+console.log('timerSeconds:', timerSeconds);
+
+if(!garaModificabile()){
+
+    console.log('bloccata da garaModificabile');
+
+    return;
+
+}
+
+if (statoGara === STATO_GARA.PREPARTITA) {
+
+    console.log('passaggio a PRIMO_TEMPO');
+
+    cambiaStatoGara(STATO_GARA.PRIMO_TEMPO);
+
+    statoGara = STATO_GARA.PRIMO_TEMPO;
+
+}
+    //-------------------------------------
+    // INTERRUZIONE ANTICIPATA TIME OUT
+    //-------------------------------------
+
+    if(timeoutRunning){
+
+        clearInterval(timeoutInterval);
+
+        timeoutInterval = null;
+
+        timeoutRunning = false;
+
+        timeoutSecondsLeft = 0;
+
+        timeout50Beep = false;
+
+        document
+            .getElementById("timeout-timer-display")
+            .classList.add("hidden");
+
+    }
+
+    //=====================================
+    // PAUSA CRONOMETRO
+    //=====================================
+
+    if (timerInterval) {
+
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+        document.getElementById("btn-toggle-clock").innerText = "START";
+
+        // Il pulsante Modifica compare SOLO se la gara non è iniziata
+        if (timerSeconds === 0) {
+
+            document.getElementById("btn-edit-setup").classList.remove("hidden");
+
+        } else {
+
+            document.getElementById("btn-edit-setup").classList.add("hidden");
+
+        }
+
+        // ESCI VISIBILE
+
+        updateExitButton();
+
+        salvaPartita();
+
+        return;
+
+    }
+
+//=====================================
+// CONTROLLI TEMPO
+//=====================================
+
+if (
+    statoGara === STATO_GARA.PRIMO_TEMPO &&
+    timerSeconds >= getHalfDurationSeconds()
+){
+
+    alert("Il 1° tempo è terminato.");
+    return;
+
+}
+
+if (
+    statoGara === STATO_GARA.SECONDO_TEMPO &&
+    timerSeconds >= getMatchDurationSeconds()
+){
+
+    alert("La partita è terminata.");
+    return;
+
+}
+
+if (
+    statoGara === STATO_GARA.SUPPLEMENTARE1_PRIMO &&
+    timerSeconds >= 3900
+){
+
+    alert("Il 1° Tempo Supplementare è terminato.");
+    return;
+
+}
+
+if (
+    statoGara === STATO_GARA.SUPPLEMENTARE1_SECONDO &&
+    timerSeconds >= 4200
+){
+
+    alert("Il 2° Tempo Supplementare è terminato.");
+    return;
+
+}
+
+if (
+    statoGara === STATO_GARA.SUPPLEMENTARE2_PRIMO &&
+    timerSeconds >= 4500
+){
+
+    alert("Il 3° Tempo Supplementare è terminato.");
+    return;
+
+}
+
+if (
+    statoGara === STATO_GARA.SUPPLEMENTARE2_SECONDO &&
+    timerSeconds >= 4800
+){
+
+    alert("Il 4° Tempo Supplementare è terminato.");
+    return;
+
+}
+
+//=====================================
+// AVVIO CRONOMETRO
+//=====================================
+
+// Lo stato della gara è già gestito dalle
+// funzioni di transizione.
+
+// ESCI NASCOSTO
+
+updateExitButton();
+
+mostraPulsanteFineTempo(false);
+
+// Chiude qualsiasi popup aperto
+
+closeActionPanel("A");
+closeActionPanel("B");
+hideHalfConfirm();
+console.log('avvio setInterval');
+timerInterval = setInterval(() => {
+        timerSeconds++;
+console.log('timer:', timerSeconds);
+
+        updateClockDisplay();
+
+        updateActivePenalties();
+
+        salvaPartita();
+
+//=========================
+// FINE 1° TEMPO
+//=========================
+
+if (
+    statoGara === STATO_GARA.PRIMO_TEMPO &&
+    timerSeconds >= getHalfDurationSeconds()
+){
+
+arrestaCronometroFineTempo();
+
+    try {
+
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "square";
+        osc.frequency.value = 900;
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.80);
+
+    } catch(e){}
+
+    stopTimerWarning();
+
+    updateNextHalfButton();
+
+    alert("Fine 1° Tempo!");
+
+    document.getElementById("game-timer").classList.remove("timer-warning");
+
+    updateNextHalfButton();
+
+    return;
+
+}
+     
+        //=========================
+        // FINE GARA
+        //=========================
+
+        if (
+    statoGara === STATO_GARA.SECONDO_TEMPO &&
+    timerSeconds >= getMatchDurationSeconds()
+){
+
+           arrestaCronometroFineTempo();
+
+            try {
+
+           const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+ //=========================
+// Beep
+//=========================
+
+                function beep(delay){
+
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+
+                    osc.type = "square";
+                    osc.frequency.value = 900;
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    gain.gain.setValueAtTime(0.25, ctx.currentTime + delay);
+
+                    osc.start(ctx.currentTime + delay);
+                    osc.stop(ctx.currentTime + delay + 0.18);
+
+                }
+
+                // Tre bip di fine gara
+                beep(0.00);
+                beep(0.30);
+                beep(0.60);
+
+            } catch(e){}
+
+            stopTimerWarning();
+
+            mostraPulsanteFineTempo(true);
+
+            endMatch();
+
+            return;
+
+        }
+
+ //=========================
+// FINE 1° TEMPO SUPPLEMENTARE
+//=========================
+
+if (
+    statoGara === STATO_GARA.SUPPLEMENTARE1_PRIMO &&
+    timerSeconds >= 3900
+){
+
+   arrestaCronometroFineTempo();
+    endFirstOvertime();
+
+    return;
+
+}
+
+//=========================
+// FINE 2° TEMPO SUPPLEMENTARE
+//=========================
+
+if (
+    statoGara === STATO_GARA.SUPPLEMENTARE1_SECONDO &&
+    timerSeconds >= 4200
+){
+
+    arrestaCronometroFineTempo();
+    endSecondOvertime();
+
+    return;
+
+}
+
+//=========================
+// FINE 3° TEMPO SUPPLEMENTARE
+//=========================
+
+if (
+    statoGara === STATO_GARA.SUPPLEMENTARE2_PRIMO &&
+    timerSeconds >= 4500
+){
+
+    arrestaCronometroFineTempo();
+
+    endThirdOvertime();
+
+    return;
+
+}
+
+//=========================
+// FINE 4° TEMPO SUPPLEMENTARE
+//=========================
+
+if (
+    statoGara === STATO_GARA.SUPPLEMENTARE2_SECONDO &&
+    timerSeconds >= 4800
+){
+
+    arrestaCronometroFineTempo();
+
+updateNextHalfButton();
+
+    stopTimerWarning();
+
+    mostraPulsanteFineTempo(true);
+
+    endFourthOvertime();
+
+    return;
+
+}
+
+    },1000);
+
+updateExitButton();
+    document.getElementById("btn-toggle-clock").innerText = "PAUSA";
+
+    document.getElementById("btn-edit-setup").classList.add("hidden");
+
+    salvaPartita();
+
+}
+
+//=========================================
+// PASSAGGIO TEMPO
+//=========================================
+
+function nextHalf(){
+
+    //---------------------------------
+    // CRONOMETRO IN PAUSA
+    //---------------------------------
+
+    if(timerInterval){
+
+        alert("Mettere il cronometro in PAUSA prima di chiudere il 1° Tempo.");
+
+        return;
+
+    }
+
+    //---------------------------------
+    // CONSENTITO SOLO DAL 1° TEMPO
+    //---------------------------------
+
+    if(statoGara !== STATO_GARA.PRIMO_TEMPO)
+        return;
+
+    //---------------------------------
+    // MEMORIZZA PARZIALE
+    //---------------------------------
+
+    firstHalfScoreA = scoreA;
+    firstHalfScoreB = scoreB;
+
+    aggiornaParziali();
+
+    //---------------------------------
+    // PASSAGGIO AL 2° TEMPO
+    //---------------------------------
+
+    currentHalf = 2;
+
+    timerSeconds = getHalfDurationSeconds();
+
+    //---------------------------------
+    // IL NUOVO TEMPO PARTE FERMO
+    //---------------------------------
+
+    clearInterval(timerInterval);
+
+    timerInterval = null;
+
+    //---------------------------------
+    // CAMBIA STATO
+    //---------------------------------
+
+    cambiaStatoGara(STATO_GARA.SECONDO_TEMPO);
+
+    //---------------------------------
+    // PULSANTE START
+    //---------------------------------
+
+    const btn = document.getElementById("btn-toggle-clock");
+
+    if(btn){
+
+        btn.innerText = "▶ START";
+
+    }
+
+    //---------------------------------
+    // AGGIORNA INTERFACCIA
+    //---------------------------------
+
+    refreshDashboard();
+
+    updateExitButton();
+
+    //---------------------------------
+    // REGISTRO
+    //---------------------------------
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        `FINE 1° TEMPO (${firstHalfScoreA}-${firstHalfScoreB})`
+    );
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        "INIZIO 2° TEMPO"
+    );
+
+    //---------------------------------
+    // DASHBOARD
+    //---------------------------------
+
+    renderTable("A");
+
+    renderTable("B");
+
+    hideHalfConfirm();
+
+    //---------------------------------
+    // SALVA
+    //---------------------------------
+
+    salvaPartita();
+
+}
+
+//=========================================
+// RICHIESTA PASSAGGIO AL 2° TEMPO
+//=========================================
+
+function requestNextHalf(){
+
+    if(timerInterval){
+
+        alert("Mettere il cronometro in PAUSA prima di chiudere il 1° Tempo.");
+
+        return;
+
+    }
+
+    nextHalf();
+
+}
+
+//=========================================
+// RICHIESTA FINE GARA
+//=========================================
+
+function requestEndMatch(){
+
+    if(timerInterval){
+
+        alert("Mettere il cronometro in PAUSA prima di terminare il 2° Tempo.");
+
+        return;
+
+    }
+
+    showHalfConfirm(
+        "Terminare il 2° Tempo?",
+        endMatch
+    );
+
+}
+
+//=========================================
+// ANNULLA RICHIESTA FINE TEMPO
+//=========================================
+
+function annullaRichiestaHalf(){
+
+    let testo = "";
+
+    switch(statoGara){
+
+        case STATO_GARA.PREPARTITA:
+        case STATO_GARA.PRIMO_TEMPO:
+            testo = "1° TEMPO";
+            break;
+
+        case STATO_GARA.INTERVALLO:
+        case STATO_GARA.SECONDO_TEMPO:
+            testo = "2° TEMPO";
+            break;
+
+        case STATO_GARA.SUPPLEMENTARE1_PRIMO:
+            testo = "1° TEMPO SUPPLEMENTARE";
+            break;
+
+        case STATO_GARA.INTERVALLO_SUPPLEMENTARE1:
+        case STATO_GARA.SUPPLEMENTARE1_SECONDO:
+            testo = "2° TEMPO SUPPLEMENTARE";
+            break;
+
+        case STATO_GARA.SUPPLEMENTARE2_PRIMO:
+            testo = "3° TEMPO SUPPLEMENTARE";
+            break;
+
+        case STATO_GARA.INTERVALLO_SUPPLEMENTARE2:
+        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+            testo = "4° TEMPO SUPPLEMENTARE";
+            break;
+
+        case STATO_GARA.RIGORI:
+            testo = "RIGORI";
+            break;
+
+        case STATO_GARA.PARTITA_TERMINATA:
+            testo = "GARA TERMINATA";
+            break;
+
+    }
+
+    document.getElementById("half-content").innerHTML = testo;
+
+}
+
+//=========================================
+// CONFERMA CAMBIO TEMPO / FINE GARA
+//=========================================
+
+function showHalfConfirm(testo, callbackSi, callbackNo = null){
+
+    window.pendingHalfCallback = callbackSi;
+    window.pendingHalfCancelCallback = callbackNo;
+
+    document.getElementById("half-content").innerHTML = `
+
+        <div class="flex items-center justify-center gap-2 w-full">
+
+            <span class="text-[11px] font-extrabold text-blue-900 whitespace-nowrap tracking-wide">
+
+                ${testo}
+
+            </span>
+
+            <button
+                onclick="confirmHalfAction()"
+                class="bg-green-700 hover:bg-green-600 text-white rounded px-2 py-0 text-[9px] font-bold">
+
+                ✓
+
+            </button>
+
+            <button
+                onclick="cancelHalfAction()"
+                class="bg-slate-600 hover:bg-slate-500 text-white rounded px-2 py-0 text-[9px] font-bold">
+
+                ✕
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+//=========================================
+// ANNULLA AZIONE
+//=========================================
+
+function cancelHalfAction(){
+
+    const callback = window.pendingHalfCancelCallback;
+
+    window.pendingHalfCallback = null;
+    window.pendingHalfCancelCallback = null;
+
+    if(callback){
+
+        callback();
+
+    }else{
+
+        hideHalfConfirm();
+
+    }
+
+}
+
+
+
+//=========================================
+// NASCONDE CONFERMA
+//=========================================
+
+function hideHalfConfirm(){
+
+    let testo = "";
+
+    switch(statoGara){
+
+        case STATO_GARA.PREPARTITA:
+        case STATO_GARA.PRIMO_TEMPO:
+            testo = "1° TEMPO";
+            break;
+
+        case STATO_GARA.INTERVALLO:
+        case STATO_GARA.SECONDO_TEMPO:
+            testo = "2° TEMPO";
+            break;
+
+        case STATO_GARA.SUPPLEMENTARE1_PRIMO:
+            testo = "1° TEMPO SUPPLEMENTARE";
+            break;
+
+        case STATO_GARA.INTERVALLO_SUPPLEMENTARE1:
+        case STATO_GARA.SUPPLEMENTARE1_SECONDO:
+            testo = "2° TEMPO SUPPLEMENTARE.";
+            break;
+
+        case STATO_GARA.SUPPLEMENTARE2_PRIMO:
+            testo = "3° TEMPO SUPPLEMENTARE";
+            break;
+
+        case STATO_GARA.INTERVALLO_SUPPLEMENTARE2:
+        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+            testo = "4° TEMPO SUPPLEMENTARE";
+            break;
+
+        case STATO_GARA.RIGORI:
+            testo = "RIGORI";
+            break;
+
+        case STATO_GARA.PARTITA_TERMINATA:
+            testo = "GARA TERMINATA";
+            break;
+
+        default:
+            testo = "";
+            break;
+
+    }
+
+    document.getElementById("half-content").innerHTML = testo;
+
+}
+
+//=========================================
+// CONFERMA AZIONE
+//=========================================
+
+function confirmHalfAction(){
+
+    const callback = window.pendingHalfCallback;
+
+    window.pendingHalfCallback = null;
+
+    if(callback){
+
+        callback();
+
+    }
+
+}
+
+//=========================================
+// BLOCCA DEFINITIVAMENTE LA GARA
+//=========================================
+
+function bloccaGara(){
+
+    //----------------------------------
+    // CRONOMETRO
+    //----------------------------------
+
+    if(timerInterval){
+
+        clearInterval(timerInterval);
+
+        timerInterval = null;
+
+    }
+
+//----------------------------------
+// BLOCCA CORREZIONE TEMPO
+//----------------------------------
+
+const meno =
+    document.querySelector('button[onclick="adjustTimer(-1)"]');
+
+const piu =
+    document.querySelector('button[onclick="adjustTimer(1)"]');
+
+if(meno){
+
+    meno.disabled = true;
+
+    meno.classList.add("opacity-50");
+
+}
+
+if(piu){
+
+    piu.disabled = true;
+
+    piu.classList.add("opacity-50");
+
+}
+
+//----------------------------------
+// BLOCCA MODIFICA DATI GARA
+//----------------------------------
+
+const modifica =
+    document.getElementById("btn-edit-setup");
+
+if(modifica){
+
+    modifica.disabled = true;
+
+    modifica.classList.add(
+        "opacity-50",
+        "cursor-not-allowed"
+    );
+
+}
+
+    //----------------------------------
+    // TIME-OUT
+    //----------------------------------
+
+    if(timeoutInterval){
+
+        clearInterval(timeoutInterval);
+
+        timeoutInterval = null;
+
+    }
+
+    timeoutRunning = false;
+
+    //----------------------------------
+    // PULSANTE START
+    //----------------------------------
+
+    const startBtn =
+        document.getElementById("btn-toggle-clock");
+
+    if(startBtn){
+
+        startBtn.disabled = true;
+
+        startBtn.classList.add(
+            "opacity-50",
+            "cursor-not-allowed"
+        );
+
+    }
+
+}
+
+
+//=========================================
+// CHIUSURA DEFINITIVA DELLA GARA
+//=========================================
+
+function terminaGaraDefinitivamente(){
+
+    //----------------------------------
+    // DETERMINA COME È TERMINATA LA GARA
+    //----------------------------------
+
+    if(motivoFineGara === ""){
+
+        switch(currentHalf){
+
+            case 2:
+                motivoFineGara = "TEMPI_REGOLAMENTARI";
+                break;
+
+            case 4:
+                motivoFineGara = "2_TEMPI_SUPPLEMENTARI";
+                break;
+
+            case 6:
+                motivoFineGara = "4_TEMPI_SUPPLEMENTARI";
+                break;
+
+        }
+
+    }
+
+    //----------------------------------
+    // STATO GARA
+    //----------------------------------
+
+    cambiaStatoGara(STATO_GARA.PARTITA_TERMINATA);
+
+//----------------------------------
+// BLOCCA SOLO SE LA GARA È DEFINITIVA
+//----------------------------------
+
+if(partitaDefinitiva){
+
+    bloccaGara();
+
+}
+    //----------------------------------
+    // PORTA IL CRONOMETRO AL TEMPO CORRETTO
+    //----------------------------------
+
+    switch(currentHalf){
+
+        case 2:
+            if(timerSeconds < getMatchDurationSeconds()) timerSeconds = getMatchDurationSeconds();
+            break;
+
+        case 4:
+            if(timerSeconds < 4200) timerSeconds = 4200;
+            break;
+
+        case 6:
+            if(timerSeconds < 4800) timerSeconds = 4800;
+            break;
+
+    }
+
+    updateClockDisplay();
+
+    //----------------------------------
+    // REGISTRO EVENTI
+    //----------------------------------
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        `FINE GARA (${String(scoreA).padStart(2,"0")} - ${String(scoreB).padStart(2,"0")})`
+    );
+
+    //----------------------------------
+    // SALVA STATO DELLA PARTITA
+    //----------------------------------
+
+    salvaPartita();
+
+    //----------------------------------
+    // ETICHETTA CENTRALE
+    //----------------------------------
+
+    document.getElementById("half-content").innerHTML =
+        "GARA TERMINATA";
+
+    //----------------------------------
+    // ABILITA REGISTRO POST GARA
+    //----------------------------------
+
+    const btnRegistro = document.getElementById("btn-post-game");
+
+    if(btnRegistro){
+
+        btnRegistro.classList.remove("hidden");
+
+    }
+
+}
+
+//=========================================
+// APRE MODULO RIGORI
+//=========================================
+
+function vaiAiRigori(){
+
+    salvaPartita();
+
+    localStorage.setItem(
+
+        "PartitaCorrente",
+
+        JSON.stringify(creaOggettoPartita())
+
+    );
+
+    window.location.href = "RefertoFIGH_Rigori.html";
+
+}
+
+//=========================================
+// VERIFICA SE SERVONO I SUPPLEMENTARI
+//=========================================
+
+function servonoSupplementari(){
+
+    return usaTempiSupplementari && scoreA === scoreB;
+
+}
+
+//=========================================
+// AVVIO 1ª SERIE TEMPI SUPPLEMENTARI
+//=========================================
+
+function requestSupplementaryTime(){
+
+    showHalfConfirm(
+
+        "Iniziare i Tempi Supplementari?",
+
+        startFirstOvertime
+
+    );
+
+}
+
+//=========================================
+// INIZIO 1° TEMPO SUPPLEMENTARE
+//=========================================
+
+function startFirstOvertime(){
+
+    //----------------------------------
+    // CONSENTITO SOLO DOPO LA FINE DEI
+    // TEMPI REGOLAMENTARI
+    //----------------------------------
+
+    if(statoGara !== STATO_GARA.FINE_GARA_DA_CONFERMARE)
+        return;
+
+    //----------------------------------
+    // Prima serie supplementari
+    //----------------------------------
+
+    overtimeSeries = 1;
+    overtimeHalf = 1;
+
+    currentHalf = 3;      // Variabile di servizio del cronometro
+
+    //----------------------------------
+    // Stato gara
+    //----------------------------------
+
+    cambiaStatoGara(
+        STATO_GARA.SUPPLEMENTARE1_PRIMO
+    );
+
+    //----------------------------------
+    // Cronometro
+    //----------------------------------
+
+    timerSeconds = getMatchDurationSeconds();
+
+    //----------------------------------
+    // Aggiornamento dashboard
+    //----------------------------------
+
+refreshDashboard();
+
+    //----------------------------------
+    // Registro eventi
+    //----------------------------------
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        "INIZIO 1° TEMPO SUPPLEMENTARE"
+    );
+
+    //----------------------------------
+    // Chiude eventuali popup
+    //----------------------------------
+
+    hideHalfConfirm();
+
+    //----------------------------------
+    // Salvataggio
+    //----------------------------------
+
+    salvaPartita();
+
+}
+
+//=========================================
+// FINE 1° TEMPO SUPPLEMENTARE
+//=========================================
+
+function endFirstOvertime(){
+
+    //----------------------------------
+    // PASSA AL 2° TEMPO SUPPLEMENTARE
+    //----------------------------------
+
+    currentHalf = 4;
+
+overtime1ScoreA = scoreA;
+overtime1ScoreB = scoreB;
+
+aggiornaParziali();
+
+    overtimeHalf = 2;
+
+    cambiaStatoGara(
+        STATO_GARA.SUPPLEMENTARE1_SECONDO
+    );
+
+    //----------------------------------
+    // AGGIORNA DASHBOARD
+    //----------------------------------
+
+refreshDashboard();
+
+    //----------------------------------
+    // REGISTRO
+    //----------------------------------
+
+    logMatchSystem(
+    "SYS",
+    "-",
+    "INTERVALLO TEMPO SUPPLEMENTARE"
+);
+
+configuraPulsanteFineGara(
+    "INIZIA 2° T.S.",
+    "bg-blue-700",
+    startSecondOvertime
+);
+
+salvaPartita();
+
+}
+//=========================================
+// INIZIO 2° TEMPO SUPPLEMENTARE
+//=========================================
+
+function startSecondOvertime(){
+
+    overtimeHalf = 2;
+
+    currentHalf = 4;
+
+    cambiaStatoGara(
+        STATO_GARA.SUPPLEMENTARE1_SECONDO
+    );
+
+    timerSeconds = 3900;
+
+refreshDashboard();
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        "INIZIO 2° TEMPO SUPPLEMENTARE"
+    );
+
+    hideHalfConfirm();
+
+    salvaPartita();
+
+}
+
+//=========================================
+// FINE 2° TEMPO SUPPLEMENTARE
+//=========================================
+
+function endSecondOvertime(){
+
+    //----------------------------------
+    // CRONOMETRO IN PAUSA
+    //----------------------------------
+
+    if(timerInterval){
+
+        alert("Mettere il cronometro in PAUSA prima di terminare il 2° Tempo Supplementare.");
+
+        return;
+
+    }
+
+    //----------------------------------
+    // RICHIESTA CONFERMA
+    //----------------------------------
+
+    showHalfConfirm(
+
+        "Terminare il 2° Tempo Supplementare?",
+
+        function(){
+
+            //----------------------------------
+            // MEMORIZZA PARZIALE
+            //----------------------------------
+
+            overtime2ScoreA = scoreA;
+            overtime2ScoreB = scoreB;
+
+            aggiornaParziali();
+
+            //----------------------------------
+            // REGISTRO EVENTI
+            //----------------------------------
+
+            logMatchSystem(
+                "SYS",
+                "-",
+                "FINE 2° TEMPO SUPPLEMENTARE"
+            );
+
+            //----------------------------------
+            // DECISIONE
+            //----------------------------------
+
+            if(scoreA !== scoreB){
+
+                motivoFineGara = "2_TEMPI_SUPPLEMENTARI";
+
+                cambiaStatoGara(
+                    STATO_GARA.FINE_GARA_DA_CONFERMARE
+                );
+
+                terminaGaraDefinitivamente();
+
+            }else{
+
+                //----------------------------------
+                // PARITÀ:
+                // CHIEDI SE INIZIARE IL 3° T.S.
+                //----------------------------------
+
+salvaPartita();
+
+startThirdOvertime();
+
+return;
+            }
+
+            salvaPartita();
+
+        }
+
+    );
+
+}
+
+//=========================================
+// 
+//=========================================
+
+function confirmSecondOvertimeEnd(){
+
+    overtime2ScoreA = scoreA;
+    overtime2ScoreB = scoreB;
+
+    aggiornaParziali();
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        "FINE 2° TEMPO SUPPLEMENTARE"
+    );
+
+    if(scoreA !== scoreB){
+
+        motivoFineGara = "2_TEMPI_SUPPLEMENTARI";
+
+        terminaGaraDefinitivamente();
+
+    }else{
+
+cambiaStatoGara(
+    STATO_GARA.INTERVALLO_SUPPLEMENTARE2
+);
+
+refreshDashboard();
+
+showHalfConfirm(
+    "Iniziare il 3° Tempo Supplementare?",
+    startThirdOvertime
+);
+    }
+
+    salvaPartita();
+
+}
+
+
+//=========================================
+// INIZIO 3° TEMPO SUPPLEMENTARE
+//=========================================
+
+function startThirdOvertime(){
+
+    overtimeSeries = 2;
+    overtimeHalf = 1;
+
+    currentHalf = 5;
+
+    cambiaStatoGara(
+        STATO_GARA.SUPPLEMENTARE2_PRIMO
+    );
+
+    timerSeconds = 4200;
+
+    updateClockDisplay();
+    updateHalfDisplay();
+    updateNextHalfButton();
+    updateActivePenalties();
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        "INIZIO 3° TEMPO SUPPLEMENTARE"
+    );
+
+    hideHalfConfirm();
+
+    salvaPartita();
+
+}
+
+//=========================================
+// FINE 3° TEMPO SUPPLEMENTARE
+//=========================================
+
+function endThirdOvertime(){
+
+    //----------------------------------
+    // MEMORIZZA PARZIALE
+    //----------------------------------
+
+    overtime3ScoreA = scoreA;
+    overtime3ScoreB = scoreB;
+
+    aggiornaParziali();
+
+    //----------------------------------
+    // REGISTRO EVENTI
+    //----------------------------------
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        "FINE 3° TEMPO SUPPLEMENTARE"
+    );
+
+    //----------------------------------
+    // PASSAGGIO DIRETTO AL 4° T.S.
+    //----------------------------------
+
+    currentHalf = 6;
+
+    overtimeHalf = 2;
+
+    cambiaStatoGara(
+        STATO_GARA.SUPPLEMENTARE2_SECONDO
+    );
+
+    refreshDashboard();
+
+    configuraPulsanteFineGara(
+        "INIZIA 4° TEMPO SUPPLEMENTARE",
+        "bg-blue-700",
+        startFourthOvertime
+    );
+
+    salvaPartita();
+
+}
+//=========================================
+// INIZIO 4° TEMPO SUPPLEMENTARE
+//=========================================
+
+function startFourthOvertime(){
+
+    overtimeSeries = 2;
+    overtimeHalf = 2;
+
+    currentHalf = 6;
+
+    cambiaStatoGara(
+        STATO_GARA.SUPPLEMENTARE2_SECONDO
+    );
+
+    timerSeconds = 4500;
+
+    updateClockDisplay();
+    updateHalfDisplay();
+    updateNextHalfButton();
+    updateActivePenalties();
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        "INIZIO 4° TEMPO SUPPLEMENTARE"
+    );
+
+    hideHalfConfirm();
+
+    salvaPartita();
+
+}
+
+//=========================================
+// FINE 4° TEMPO SUPPLEMENTARE
+//=========================================
+
+function endFourthOvertime(){
+
+    //----------------------------------
+    // MEMORIZZA PARZIALE
+    //----------------------------------
+
+    overtime4ScoreA = scoreA;
+    overtime4ScoreB = scoreB;
+
+    aggiornaParziali();
+
+    //----------------------------------
+    // REGISTRO EVENTI
+    //----------------------------------
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        "FINE 4° TEMPO SUPPLEMENTARE"
+    );
+
+    //----------------------------------
+    // SALVA STATO
+    //----------------------------------
+
+    salvaPartita();
+
+    //----------------------------------
+    // DECISIONE FINALE
+    //----------------------------------
+
+    if(scoreA === scoreB){
+
+        motivoFineGara = "RIGORI";
+
+        penaltyShootout.played = true;
+
+        showHalfConfirm(
+
+            "Parità dopo il 4° Tempo Supplementare.\nProcedere ai Rigori?",
+
+            vaiAiRigori
+
+        );
+
+    }
+    else{
+
+        motivoFineGara = "4_TEMPI_SUPPLEMENTARI";
+
+        showHalfConfirm(
+
+            "Terminare definitivamente la gara?",
+
+            terminaGaraDefinitivamente
+
+        );
+
+    }
+
+}
+
+//=========================================
+// FINE 2° TEMPO
+//=========================================
+
+function endMatch(){
+
+    //----------------------------------
+    // CRONOMETRO IN PAUSA
+    //----------------------------------
+
+    if(timerInterval){
+
+        alert("Mettere il cronometro in PAUSA prima di terminare il 2° Tempo.");
+
+        return;
+
+    }
+
+    //----------------------------------
+    // CONSENTITO SOLO DAL 2° TEMPO
+    //----------------------------------
+
+    if(statoGara !== STATO_GARA.SECONDO_TEMPO)
+        return;
+
+    //----------------------------------
+    // IL 2° TEMPO NON È ANCORA TERMINATO
+    //----------------------------------
+
+    if(timerSeconds < getMatchDurationSeconds()){
+
+        alert("Il 2° Tempo non è ancora terminato.");
+
+        hideHalfConfirm();
+
+        return;
+
+    }
+
+    //----------------------------------
+    // STATO GARA
+    //----------------------------------
+
+    cambiaStatoGara(STATO_GARA.FINE_GARA_DA_CONFERMARE);
+
+    //----------------------------------
+    // PARZIALI
+    //----------------------------------
+
+    secondHalfScoreA = scoreA;
+    secondHalfScoreB = scoreB;
+
+    aggiornaParziali();
+
+    //----------------------------------
+    // REGISTRO EVENTI
+    //----------------------------------
+
+    logMatchSystem(
+        "SYS",
+        "-",
+        "FINE 2° TEMPO"
+    );
+
+    //----------------------------------
+    // DECISIONE
+    //----------------------------------
+
+    if(scoreA !== scoreB){
+
+        //----------------------------------
+        // Vittoria nei tempi regolamentari
+        //----------------------------------
+
+        motivoFineGara = "TEMPI_REGOLAMENTARI";
+
+        terminaGaraDefinitivamente();
+
+    }
+    else{
+
+        //----------------------------------
+        // PARITÀ
+        //----------------------------------
+
+        if(usaTempiSupplementari){
+
+            motivoFineGara = "";
+
+            //----------------------------------
+            // CHIEDE CONFERMA
+            //----------------------------------
+
+            showHalfConfirm(
+
+                "INIZIARE IL 1° TEMPO SUPPLEMENTARE?",
+
+                function(){
+
+                    hideHalfConfirm();
+
+                    startFirstOvertime();
+
+                },
+
+                function(){
+
+                    hideHalfConfirm();
+
+                }
+
+            );
+
+            salvaPartita();
+
+            return;
+
+        }
+        else if(usaRigori){
+
+            motivoFineGara = "RIGORI";
+
+            penaltyShootout.played = true;
+
+            vaiAiRigori();
+
+        }
+        else{
+
+            motivoFineGara = "TEMPI_REGOLAMENTARI";
+
+            terminaGaraDefinitivamente();
+
+        }
+
+    }
+
+    //----------------------------------
+    // SALVA
+    //----------------------------------
+
+    salvaPartita();
+
+}
+
+//=========================================
+// adjustTimer
+//=========================================
+
+        function adjustTimer(value) {
+
+//---------------------------------
+// GARA MODIFICABILE?
+//---------------------------------
+
+if(!garaModificabile()){
+
+    return;
+
+}
+            let old = timerSeconds;
+            timerSeconds += value;
+            if (timerSeconds < 0) timerSeconds = 0;
+            activePenalties.forEach(p => p.endTime += (timerSeconds - old));
+            updateClockDisplay();
+            updateActivePenalties();
+        }
+
+//=========================================
+// TEST - SALTO TEMPO
+//=========================================
+
+function testJumpTime(){
+
+    if(timerInterval){
+
+        alert("Mettere il cronometro in pausa.");
+
+        return;
+
+    }
+
+    if(timerSeconds < getHalfDurationSeconds()){
+
+        timerSeconds = getHalfDurationSeconds();
+        currentHalf = 1;
+        cambiaStatoGara(STATO_GARA.PRIMO_TEMPO);
+
+    }else if(timerSeconds < getMatchDurationSeconds()){
+
+        timerSeconds = getMatchDurationSeconds();
+        currentHalf = 2;
+        cambiaStatoGara(STATO_GARA.SECONDO_TEMPO);
+
+    }else if(timerSeconds < 3900){
+
+        timerSeconds = 3900;
+        currentHalf = 3;
+        cambiaStatoGara(STATO_GARA.SUPPLEMENTARE1_PRIMO);
+
+    }else if(timerSeconds < 4200){
+
+        timerSeconds = 4200;
+        currentHalf = 4;
+        cambiaStatoGara(STATO_GARA.SUPPLEMENTARE1_SECONDO);
+
+    }else if(timerSeconds < 4500){
+
+        timerSeconds = 4500;
+        currentHalf = 5;
+        cambiaStatoGara(STATO_GARA.SUPPLEMENTARE2_PRIMO);
+
+    }else if(timerSeconds < 4800){
+
+        timerSeconds = 4800;
+        currentHalf = 6;
+        cambiaStatoGara(STATO_GARA.SUPPLEMENTARE2_SECONDO);
+
+    }else{
+
+        timerSeconds = 0;
+        currentHalf = 1;
+        cambiaStatoGara(STATO_GARA.PREPARTITA);
+
+    }
+
+    updateClockDisplay();
+    updateActivePenalties();
+
+    salvaPartita();
+
+}
+
+//=========================================
+// triggerTimeout
+//=========================================
+
+function triggerTimeout(team){
+
+//---------------------------------
+// GARA MODIFICABILE?
+//---------------------------------
+
+if(!garaModificabile()){
+    return;
+}
+
+//---------------------------------
+// BLOCCO NEI SUPPLEMENTARI
+//---------------------------------
+
+const supplementare =
+    statoGara === STATO_GARA.SUPPLEMENTARE1_PRIMO ||
+    statoGara === STATO_GARA.SUPPLEMENTARE1_SECONDO ||
+    statoGara === STATO_GARA.SUPPLEMENTARE2_PRIMO ||
+    statoGara === STATO_GARA.SUPPLEMENTARE2_SECONDO;
+
+if(supplementare){
+
+    alert("Nei tempi supplementari non è possibile richiedere Time-Out.");
+
+    return;
+
+}
+
+//---------------------------------
+// INIZIALIZZA CONTATORI
+//---------------------------------
+
+if(!timeoutsA || typeof timeoutsA !== "object"){
+    timeoutsA = {
+        first:0,
+        second:0,
+        total:0
+    };
+}
+
+if(!timeoutsB || typeof timeoutsB !== "object"){
+    timeoutsB = {
+        first:0,
+        second:0,
+        total:0
+    };
+}
+
+const tData = team === "A" ? timeoutsA : timeoutsB;
+
+//---------------------------------
+// LIMITE TOTALE
+//---------------------------------
+
+if(tData.total >= 3){
+
+    alert(`La squadra ${team} ha già esaurito i 3 Time-Out disponibili.`);
+
+    return;
+
+}
+
+//---------------------------------
+// LIMITI PER TEMPO (uguali per A e B)
+//---------------------------------
+
+const nelPrimoTempo =
+    statoGara === STATO_GARA.PRIMO_TEMPO;
+
+const nelSecondoTempo =
+    statoGara === STATO_GARA.SECONDO_TEMPO;
+
+// massimo 2 nel 1° tempo
+if(nelPrimoTempo && (tData.first || 0) >= 2){
+
+    alert(`La squadra ${team} ha già effettuato 2 Time-Out nel 1° tempo.`);
+
+    return;
+
+}
+
+// massimo 2 nel 2° tempo
+if(nelSecondoTempo && (tData.second || 0) >= 2){
+
+    alert(`La squadra ${team} ha già effettuato 2 Time-Out nel 2° tempo.`);
+
+    return;
+
+}
+//---------------------------------
+// UNDO
+//---------------------------------
+
+salvaSnapshotUndo(`TIME-OUT - ${team}`);
+
+//---------------------------------
+// CONTATORI
+//---------------------------------
+
+if(statoGara === STATO_GARA.PRIMO_TEMPO){
+
+    tData.first++;
+
+}
+else if(statoGara === STATO_GARA.SECONDO_TEMPO){
+
+    tData.second++;
+
+}
+
+tData.total++;
+
+//---------------------------------
+// MEMORIZZA ORARIO TIMEOUT
+//---------------------------------
+
+const tempoTimeout = timerSeconds;
+
+if(tData.firstTime == null){
+
+    tData.firstTime = tempoTimeout;
+
+}
+else if(tData.secondTime == null){
+
+    tData.secondTime = tempoTimeout;
+
+}
+else if(tData.thirdTime == null){
+
+    tData.thirdTime = tempoTimeout;
+
+}
+
+//---------------------------------
+// AGGIORNA DISPLAY E PULSANTI
+//---------------------------------
+
+updateTimeoutCountersDisplay();
+
+if(typeof updateTimeoutButtons === "function"){
+    updateTimeoutButtons();
+}
+
+//---------------------------------
+// PAUSA GARA
+//---------------------------------
+
+pausaCronometroPerSanzione();
+
+//---------------------------------
+// RESET EVENTUALE TIMEOUT ATTIVO
+//---------------------------------
+
+if(timeoutInterval){
+
+    clearInterval(timeoutInterval);
+
+}
+
+timeoutInterval = null;
+
+timeoutSecondsLeft = 60;
+
+timeout50Beep = false;
+
+timeoutRunning = true;
+
+//---------------------------------
+// NOME SQUADRA
+//---------------------------------
+
+const nomeSquadra =
+    team === "A"
+    ? document.getElementById("team-a-name").value
+    : document.getElementById("team-b-name").value;
+
+//---------------------------------
+// POPUP TIMEOUT
+//---------------------------------
+
+showActionPanel(
+
+    team,
+
+    `<div class="text-center">
+        <div class="text-lg font-black text-green-700">TIME OUT</div>
+        <div class="text-sm font-semibold mt-1">${nomeSquadra}</div>
+        <div id="timeout-countdown-${team}"
+             class="text-3xl font-black mt-2 text-slate-900 tabular-nums">
+             01:00
+        </div>
+    </div>`,
+
+    "",
+
+    "",
+
+    ()=>{},
+
+    ()=>{}
+
+);
+
+//---------------------------------
+// NASCONDE PULSANTI
+//---------------------------------
+
+document.getElementById("action-btn1-"+team).classList.add("hidden");
+
+document.getElementById("action-btn2-"+team).classList.add("hidden");
+
+//---------------------------------
+// REGISTRO
+//---------------------------------
+
+logMatchSystem(team,"-","TIME-OUT RICHIESTO");
+
+//---------------------------------
+// SALVA PARTITA
+//---------------------------------
+
+salvaPartita();
+
+//---------------------------------
+// TIMER TIMEOUT
+//---------------------------------
+
+timeoutInterval = setInterval(()=>{
+
+    timeoutSecondsLeft--;
+
+    //---------------------------------
+    // AVVISO 10 SECONDI
+    //---------------------------------
+
+    if(timeoutSecondsLeft === 10 && !timeout50Beep){
+
+        timeout50Beep = true;
+
+        try{
+
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+            const osc = ctx.createOscillator();
+
+            osc.connect(ctx.destination);
+
+            osc.start();
+
+            osc.stop(ctx.currentTime + 0.30);
+
+        }catch(e){}
+
+    }
+
+    //---------------------------------
+    // FINE TIMEOUT
+    //---------------------------------
+
+    if(timeoutSecondsLeft < 0){
+
+        clearInterval(timeoutInterval);
+
+        timeoutInterval = null;
+
+        timeoutRunning = false;
+
+        closeActionPanel(team);
+
+        try{
+
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+            const osc = ctx.createOscillator();
+
+            osc.connect(ctx.destination);
+
+            osc.start();
+
+            osc.stop(ctx.currentTime + 0.60);
+
+        }catch(e){}
+
+        alert(`Fine del Time-Out per la squadra ${team}!`);
+
+        return;
+
+    }
+
+    //---------------------------------
+    // AGGIORNA COUNTDOWN
+    //---------------------------------
+
+    const min = String(Math.floor(timeoutSecondsLeft / 60)).padStart(2,"0");
+
+    const sec = String(timeoutSecondsLeft % 60).padStart(2,"0");
+
+    const countdown =
+        document.getElementById("timeout-countdown-"+team);
+
+    if(countdown){
+
+        countdown.innerText = `${min}:${sec}`;
+
+    }
+
+},1000);
+
+}
+
+//=========================================
+// 
+//=========================================
+
+        function updatePenaltyCountersDisplay() {
+            document.getElementById('penalty-counter-a').innerText = `Rigori: ${penaltyScoredA}/${penaltyTotalA}`;
+            document.getElementById('penalty-counter-b').innerText = `Rigori: ${penaltyScoredB}/${penaltyTotalB}`;
+        }
+
+
+//=========================================
+// 
+//=========================================
+
+	function updateTimeoutCountersDisplay() {
+
+    document.getElementById('timeout-counter-a').innerText =
+    `Time Out: ${timeoutsA.total}/3`;
+
+document.getElementById('timeout-counter-b').innerText =
+    `Time Out: ${timeoutsB.total}/3`;
+}
+
+//=========================================
+// 
+//=========================================
+
+    function updateTimeoutButtons(){
+
+        const btnA = document.getElementById('btn-timeout-a');
+        const btnB = document.getElementById('btn-timeout-b');
+
+        if(!btnA || !btnB) return;
+
+        const supplementare =
+            statoGara === STATO_GARA.SUPPLEMENTARE1_PRIMO ||
+            statoGara === STATO_GARA.SUPPLEMENTARE1_SECONDO ||
+            statoGara === STATO_GARA.SUPPLEMENTARE2_PRIMO ||
+            statoGara === STATO_GARA.SUPPLEMENTARE2_SECONDO;
+
+        [btnA, btnB].forEach(btn => {
+
+            btn.disabled = supplementare;
+
+            if(supplementare){
+
+                btn.classList.remove(
+                    'bg-green-600',
+                    'hover:bg-green-700'
+                );
+
+                btn.classList.add(
+                    'bg-slate-400',
+                    'cursor-not-allowed'
+                );
+
+            }else{
+
+                btn.classList.remove(
+                    'bg-slate-400',
+                    'cursor-not-allowed'
+                );
+
+                btn.classList.add(
+                    'bg-green-600',
+                    'hover:bg-green-700'
+                );
+
+            }
+
+        });
+
+    }
+
+
+//=========================================
+// AGGIORNA DISPLAY CRONOMETRO
+//=========================================
+
+function updateClockDisplay() {
+
+    const timer = document.getElementById('game-timer');
+
+    if (!timer) return;
+
+
+    //---------------------------------
+    // FORMATTazione tempo
+    //---------------------------------
+
+    const minuti = Math.floor(timerSeconds / 60);
+
+    const secondi = timerSeconds % 60;
+
+    timer.textContent =
+        `${String(minuti).padStart(2, '0')}:${String(secondi).padStart(2, '0')}`;
+
+
+    //---------------------------------
+    // CALCOLO FINE DEL TEMPO CORRENTE
+    //---------------------------------
+
+    let fineTempo = null;
+
+
+    switch (statoGara) {
+
+        //=============================
+        // 1° TEMPO
+        //=============================
+
+        case STATO_GARA.PRIMO_TEMPO:
+
+            fineTempo = getHalfDurationSeconds();
+
+            break;
+
+        //=============================
+        // 2° TEMPO
+        //=============================
+
+        case STATO_GARA.SECONDO_TEMPO:
+
+            fineTempo = getMatchDurationSeconds();
+
+            break;
+
+        //=============================
+        // 1° TEMPO SUPPLEMENTARE
+        //=============================
+
+        case STATO_GARA.SUPPLEMENTARE1_PRIMO:
+
+            fineTempo = 3900;
+
+            break;
+
+
+        //=============================
+        // 2° TEMPO SUPPLEMENTARE
+        //=============================
+
+        case STATO_GARA.SUPPLEMENTARE1_SECONDO:
+
+            fineTempo = 4200;
+
+            break;
+
+        //=============================
+        // 3° TEMPO SUPPLEMENTARE
+        //=============================
+
+        case STATO_GARA.SUPPLEMENTARE2_PRIMO:
+
+            fineTempo = 4500;
+
+            break;
+
+        //=============================
+        // 4° TEMPO SUPPLEMENTARE
+        //=============================
+
+        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+
+            fineTempo = 4800;
+
+            break;
+
+
+        default:
+
+            fineTempo = null;
+
+            break;
+    }
+
+
+    //---------------------------------
+    // LAMPEGGIO ULTIMI 30 SECONDI
+    //---------------------------------
+
+    const ultimi30 =
+        fineTempo !== null &&
+        timerSeconds >= (fineTempo - 30) &&
+        timerSeconds < fineTempo;
+
+
+    //---------------------------------
+    // CRONOMETRO IN FUNZIONE
+    //
+    // Usiamo timerInterval perché è
+    // quello che realmente controlla
+    // il funzionamento del cronometro.
+    //---------------------------------
+
+    const cronometroInFunzione =
+        timerInterval !== null;
+
+
+    //---------------------------------
+    // APPLICA / RIMUOVE LAMPEGGIO
+    //---------------------------------
+
+    if (ultimi30 && cronometroInFunzione) {
+
+        timer.classList.add(
+            'timer-warning',
+            'animate-pulse',
+            'text-red-600'
+        );
+
+    } else {
+
+        timer.classList.remove(
+            'timer-warning',
+            'animate-pulse',
+            'text-red-600'
+        );
+
+    }
+
+
+    //---------------------------------
+    // AGGIORNA PULSANTE TEMPO SUCCESSIVO
+    //---------------------------------
+
+    updateNextHalfButton();
+
+
+    //---------------------------------
+    // AGGIORNA ESCLUSIONI ATTIVE
+    //---------------------------------
+
+    if (activePenalties.length === 0) {
+
+        updateActivePenalties();
+
+    }
+
+}
+//=========================================
+// VISIBILITA' PULSANTE FINE TEMPO
+//=========================================
+
+function updateNextHalfButton(){
+
+    const btn = getNextHalfButton();
+
+    if(!btn) return;
+
+    switch(statoGara){
+
+        case STATO_GARA.PREPARTITA:
+        case STATO_GARA.PRIMO_TEMPO:
+
+            mostraPulsanteFineTempo(
+                timerSeconds === getHalfDurationSeconds() && !timerInterval
+            );
+            return;
+
+        case STATO_GARA.SECONDO_TEMPO:
+
+            mostraPulsanteFineTempo(
+                timerSeconds === getMatchDurationSeconds() && !timerInterval
+            );
+            return;
+
+        case STATO_GARA.SUPPLEMENTARE1_PRIMO:
+
+            mostraPulsanteFineTempo(
+                timerSeconds === 3900 && !timerInterval
+            );
+            return;
+
+        case STATO_GARA.SUPPLEMENTARE1_SECONDO:
+
+            mostraPulsanteFineTempo(
+                timerSeconds === 4200 && !timerInterval
+            );
+            return;
+
+        case STATO_GARA.SUPPLEMENTARE2_PRIMO:
+
+            mostraPulsanteFineTempo(
+                timerSeconds === 4500 && !timerInterval
+            );
+            return;
+
+        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+
+            mostraPulsanteFineTempo(
+                timerSeconds === 4800 && !timerInterval
+            );
+            return;
+
+        default:
+
+            mostraPulsanteFineTempo(false);
+            return;
+
+    }
+
+}
+
+//=========================================
+// FERMA LAMPEGGIO TIMER
+//=========================================
+
+function stopTimerWarning(){
+
+    const timer = document.getElementById("game-timer");
+
+    if(timer){
+
+        timer.classList.remove("timer-warning");
+
+    }
+
+}
+
+//=========================================
+// AGGIORNA INDICAZIONE TEMPO DI GIOCO
+//=========================================
+
+function updateHalfDisplay(){
+
+    const halfContent = document.getElementById("half-content");
+
+    if(!halfContent) return;
+
+    switch(statoGara){
+
+        case STATO_GARA.PREPARTITA:
+        case STATO_GARA.PRIMO_TEMPO:
+
+            halfContent.textContent = "1° TEMPO";
+            break;
+
+
+        case STATO_GARA.INTERVALLO:
+
+            halfContent.textContent = "INTERVALLO";
+            break;
+
+
+        case STATO_GARA.SECONDO_TEMPO:
+
+            halfContent.textContent = "2° TEMPO";
+            break;
+
+
+        case STATO_GARA.FINE_GARA_DA_CONFERMARE:
+
+            halfContent.textContent = "FINE GARA";
+            break;
+
+
+        case STATO_GARA.SUPPLEMENTARE1_PRIMO:
+
+            halfContent.textContent = "1° TEMPO SUPPLEMENTARE";
+            break;
+
+
+        case STATO_GARA.INTERVALLO_SUPPLEMENTARE1:
+
+            halfContent.textContent = "INTERVALLO T.S.";
+            break;
+
+
+        case STATO_GARA.SUPPLEMENTARE1_SECONDO:
+
+            halfContent.textContent = "2° TEMPO SUPPLEMENTARE";
+            break;
+
+
+        case STATO_GARA.SUPPLEMENTARE2_PRIMO:
+
+            halfContent.textContent = "3° TEMPO SUPPLEMENTARE";
+            break;
+
+
+        case STATO_GARA.INTERVALLO_SUPPLEMENTARE2:
+
+            halfContent.textContent = "INTERVALLO T.S.";
+            break;
+
+
+        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+
+            halfContent.textContent = "4° TEMPO SUPPLEMENTARE";
+            break;
+
+
+        case STATO_GARA.RIGORI:
+
+            halfContent.textContent = "RIGORI";
+            break;
+
+
+        case STATO_GARA.PARTITA_TERMINATA:
+
+            halfContent.textContent = "GARA TERMINATA";
+            break;
+
+
+        default:
+
+            halfContent.textContent = "";
+            break;
+
+    }
+
+    aggiornaParziali();
+
+} 
+   
+//=========================================
+// 
+//=========================================
+
+        function getTimeString() {
+            let min = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+            let sec = String(timerSeconds % 60).padStart(2, '0');
+            return `${min}:${sec}`;
+        }
+
+//=========================================
+// STAMPA CARTELLINO ESCLUSIONE / ROSSO
+//=========================================
+
+function stampaCartellino(team, numero, tipo) {
+
+    const minuti = Math.floor((timerSeconds + 120) / 60);
+    const secondi = (timerSeconds + 120) % 60;
+
+    const tempoRientro =
+        String(minuti).padStart(2,"0") +
+        ":" +
+        String(secondi).padStart(2,"0");
+
+    const dati = {
+
+        squadra: team,
+
+        numero: numero,
+
+        tipo: tipo,
+
+        tempoGara: getTimeString(),
+
+        tempoRientro: tempoRientro
+
+    };
+
+    localStorage.setItem(
+        "CartellinoFIGH",
+        JSON.stringify(dati)
+    );
+
+    window.open(
+        "Esclusione2Minuti.html",
+        "_blank"
+    );
+
+}
+
+//=========================================
+// GESTIONE RETE
+//=========================================
+
+function handleGoal(team, id){
+
+    //---------------------------------
+    // GARA MODIFICABILE?
+    //---------------------------------
+
+    if(!garaModificabile()){
+
+        return;
+
+    }
+
+    //---------------------------------
+    // RECUPERA GIOCATORE
+    //---------------------------------
+
+    const roster =
+        team==="A"
+        ? currentRosterA
+        : currentRosterB;
+
+    const item =
+        roster.players.find(x=>x.id===id);
+
+    if(!item) return;
+
+    //---------------------------------
+    // GIOCATORE ESPULSO
+    //---------------------------------
+
+    if(item.red){
+
+        alert("Giocatore già squalificato.");
+
+        return;
+
+    }
+
+    //---------------------------------
+    // UNDO
+    //---------------------------------
+
+    salvaSnapshotUndo(
+        `RETE - ${team} - #${item.num} ${item.name}`
+    );
+
+    //---------------------------------
+    // AGGIORNA DATI
+    //---------------------------------
+
+    item.goals++;
+
+    if(team==="A"){
+
+        scoreA++;
+
+    }
+    else{
+
+        scoreB++;
+
+    }
+
+    //---------------------------------
+    // AGGIORNA PUNTEGGIO
+    //---------------------------------
+
+    document.getElementById("game-score").innerText =
+        `${String(scoreA).padStart(2,"0")} - ${String(scoreB).padStart(2,"0")}`;
+
+    //---------------------------------
+    // REGISTRO GARA
+    //---------------------------------
+
+    logMatchSystem(
+        team,
+        item.num,
+        "RETE"
+    );
+
+    //---------------------------------
+    // AGGIORNA TABELLE
+    //---------------------------------
+
+    renderTable(team);
+
+    //---------------------------------
+    // AGGIORNA DASHBOARD
+    //---------------------------------
+
+    refreshDashboard();
+
+    //---------------------------------
+    // SALVA PARTITA
+    //---------------------------------
+
+    salvaPartita();
+
+}
+
+    //=========================================
+    // Aggiorna Parziali
+    //=========================================
+
+function aggiornaParziali(){
+
+    const div = document.getElementById("first-half-score");
+
+    let testo = "";
+
+    if(firstHalfScoreA || firstHalfScoreB)
+        testo += `1T ${firstHalfScoreA}-${firstHalfScoreB}`;
+
+    if(secondHalfScoreA || secondHalfScoreB)
+        testo += `${testo ? " | " : ""}2T ${secondHalfScoreA}-${secondHalfScoreB}`;
+
+    if(overtime1ScoreA || overtime1ScoreB)
+        testo += `${testo ? " | " : ""}TS1 ${overtime1ScoreA}-${overtime1ScoreB}`;
+
+    if(overtime2ScoreA || overtime2ScoreB)
+        testo += `${testo ? " | " : ""}TS2 ${overtime2ScoreA}-${overtime2ScoreB}`;
+
+    if(overtime3ScoreA || overtime3ScoreB)
+        testo += `${testo ? " | " : ""}TS3 ${overtime3ScoreA}-${overtime3ScoreB}`;
+
+    if(overtime4ScoreA || overtime4ScoreB)
+        testo += `${testo ? " | " : ""}TS4 ${overtime4ScoreA}-${overtime4ScoreB}`;
+
+    div.innerText = testo;
+
+}
+
+//=========================================
+// APRE PANNELLO AZIONI - RIGORE
+//=========================================
+
+function handlePenalty7mPlayer(team,id){
+
+    //---------------------------------
+    // GARA MODIFICABILE?
+    //---------------------------------
+
+    if(!garaModificabile()){
+
+        return;
+
+    }
+
+    const roster =
+        team === "A"
+        ? currentRosterA
+        : currentRosterB;
+
+    const player =
+        roster.players.find(p => p.id === id);
+
+    if(!player) return;
+
+    if(player.red){
+
+        alert("Giocatore squalificato.");
+
+        return;
+
+    }
+
+    //---------------------------------
+    // MEMORIZZA RIGORE
+    //---------------------------------
+
+    pendingPenalty = {
+
+        team: team,
+
+        player: player
+
+    };
+
+    //---------------------------------
+    // APRE PANNELLO AZIONI
+    //---------------------------------
+
+const nomeBreve =
+    player.name.length > 10
+        ? player.name.substring(0,8) + "…"
+        : player.name;
+
+showActionPanel(
+
+        team,
+
+        `⚽ #${player.num} | ${nomeBreve}`,
+
+        "GOAL",
+
+        "ERRATO",
+
+        confirmPenaltyGoal,
+
+        confirmPenaltyMiss
+
+    );
+
+}
+
+///=========================================
+// CHIUDE PANNELLO AZIONI
+//=========================================
+
+function closeActionPanel(team){
+
+    //---------------------------------
+    // NASCONDE IL PANNELLO
+    //---------------------------------
+
+    document
+        .getElementById("action-panel-"+team)
+        .classList.add("hidden");
+
+    //---------------------------------
+    // PULISCE IL TITOLO
+    //---------------------------------
+
+    document
+        .getElementById("action-title-"+team)
+        .innerHTML = "";
+
+    //---------------------------------
+    // AZZERA AZIONE IN CORSO
+    //---------------------------------
+
+    pendingPenalty = null;
+
+}
+
+
+//=========================================
+// PANNELLO AZIONI
+//=========================================
+
+function showActionPanel(
+    team,
+    titolo,
+    testo1,
+    testo2,
+    callback1,
+    callback2
+){
+
+    const panel =
+        document.getElementById("action-panel-"+team);
+
+    const title =
+        document.getElementById("action-title-"+team);
+
+    const b1 =
+        document.getElementById("action-btn1-"+team);
+
+    const b2 =
+        document.getElementById("action-btn2-"+team);
+
+    //---------------------------------
+    // TITOLO
+    //---------------------------------
+
+    title.innerHTML = titolo;
+
+    //---------------------------------
+// TESTO PULSANTI
+//---------------------------------
+
+b1.innerHTML = testo1;
+b2.innerHTML = testo2;
+
+//---------------------------------
+// RIMOSTRA I PULSANTI
+//---------------------------------
+
+b1.classList.remove("hidden");
+b2.classList.remove("hidden");
+
+    //---------------------------------
+    // CALLBACK
+    //---------------------------------
+
+    b1.onclick = callback1;
+    b2.onclick = callback2;
+
+    //---------------------------------
+    // COLORE BORDO
+    //---------------------------------
+
+    panel.classList.remove(
+        "border-green-600",
+        "border-orange-500",
+        "border-red-600"
+    );
+
+    if(titolo.includes("⚽")){
+
+        panel.classList.add("border-green-600");
+
+    }
+    else if(titolo.includes("🟧")){
+
+        panel.classList.add("border-orange-500");
+
+    }
+    else if(titolo.includes("🟥")){
+
+        panel.classList.add("border-red-600");
+
+    }
+
+    //---------------------------------
+    // MOSTRA PANNELLO
+    //---------------------------------
+
+    panel.classList.remove("hidden");
+
+}
+
+//=========================================
+// PANNELLO STAMPA CARTELLINO
+//=========================================
+
+function showCardPrintPanel(team,item,tipo){
+
+    const icona =
+        tipo==="ROSSO"
+        ? "🟥"
+        : "🟧";
+
+//---------------------------------
+// NOME MAX 10 CARATTERI
+//---------------------------------
+
+const nomeBreve =
+    item.name.length > 10
+    ? item.name.substring(0,8) + "…"
+    : item.name;
+
+    showActionPanel(
+
+        team,
+
+        `
+            <div class="text-center">
+
+<div class="text-[18px] font-black ${
+    tipo === "ROSSO"
+        ? "text-purple-700"
+        : "text-orange-600"
+}">
+
+    ${icona} ${item.num} | ${nomeBreve}
+
+</div>
+                <div class="text-[15px] text-purple-700 font-bold mt-2">
+
+                    Stampare il cartellino?
+
+                </div>
+
+            </div>
+        `,
+
+        "🖨 SI",
+
+        "NO",
+
+        ()=>{
+
+            stampaCartellino(
+                team,
+                item.num,
+                tipo
+            );
+
+            closeActionPanel(team);
+
+        },
+
+        ()=>{
+
+            closeActionPanel(team);
+
+        }
+
+    );
+
+    //---------------------------------
+    // COLORI PULSANTI
+    //---------------------------------
+
+    document.getElementById("action-btn1-"+team)
+        .className =
+        "flex-1 h-[42px] bg-green-700 hover:bg-green-600 text-white rounded-xl text-[15px] font-black";
+
+    document.getElementById("action-btn2-"+team)
+        .className =
+        "flex-1 h-[42px] bg-red-600 hover:bg-red-500 text-white rounded-xl text-[15px] font-black";
+
+}
+
+
+//=========================================
+// RIGORE REALIZZATO
+//=========================================
+
+function confirmPenaltyGoal(){
+
+    if(!pendingPenalty) return;
+
+    salvaSnapshotUndo(
+        `RIGORE REALIZZATO ${pendingPenalty.player.num}`
+    );
+
+    const team = pendingPenalty.team;
+
+    const player = pendingPenalty.player;
+
+    //---------------------------------
+    // STATISTICHE
+    //---------------------------------
+
+    if(team==="A"){
+
+        penaltyTotalA++;
+        penaltyScoredA++;
+        scoreA++;
+
+    }
+    else{
+
+        penaltyTotalB++;
+        penaltyScoredB++;
+        scoreB++;
+
+    }
+
+    //---------------------------------
+    // GOL GIOCATORE
+    //---------------------------------
+
+    player.goals++;
+
+    //---------------------------------
+    // REGISTRO
+    //---------------------------------
+
+    logMatchSystem(
+        team,
+        player.num,
+        "RIGORE REALIZZATO"
+    );
+
+    //---------------------------------
+    // AGGIORNA DASHBOARD
+    //---------------------------------
+
+    renderTable(team);
+
+    updatePenaltyCountersDisplay();
+
+    document.getElementById("game-score").innerText =
+        `${String(scoreA).padStart(2,"0")} - ${String(scoreB).padStart(2,"0")}`;
+
+    //---------------------------------
+    // CHIUDE PANNELLO
+    //---------------------------------
+
+    closeActionPanel(team);
+
+    //---------------------------------
+    // SALVA
+    //---------------------------------
+
+    salvaPartita();
+
+}
+
+//=========================================
+// RIGORE ERRATO
+//=========================================
+
+function confirmPenaltyMiss(){
+
+    if(!pendingPenalty) return;
+
+    salvaSnapshotUndo(
+        `RIGORE ERRATO ${pendingPenalty.player.num}`
+    );
+
+    const team = pendingPenalty.team;
+
+    const player = pendingPenalty.player;
+
+    //---------------------------------
+    // STATISTICHE
+    //---------------------------------
+
+    if(team==="A"){
+
+        penaltyTotalA++;
+
+    }
+    else{
+
+        penaltyTotalB++;
+
+    }
+
+    //---------------------------------
+    // REGISTRO
+    //---------------------------------
+
+    logMatchSystem(
+        team,
+        player.num,
+        "RIGORE ERRATO"
+    );
+
+    //---------------------------------
+    // AGGIORNA DASHBOARD
+    //---------------------------------
+
+    updatePenaltyCountersDisplay();
+
+    //---------------------------------
+    // CHIUDE PANNELLO
+    //---------------------------------
+
+    closeActionPanel(team);
+
+    //---------------------------------
+    // SALVA
+    //---------------------------------
+
+    salvaPartita();
+
+}
+
+
+    //=========================================
+   // AMMONIZIONE (CON CONTROLLO LIMITE)
+  //=========================================
+function handleYellow(team, id, type) {
+
+    //---------------------------------
+    // GARA MODIFICABILE?
+    //---------------------------------
+
+    if(!garaModificabile()){
+
+        return;
+
+    }
+
+const roster = team === "A"
+    ? currentRosterA
+    : currentRosterB;
+
+const item = type === "G"
+    ? roster.players.find(x => x.id === id)
+    : roster.officials.find(x => x.id === id);
+
+if (!item) return;
+
+if (item.red) {
+
+    alert("Giocatore già squalificato.");
+
+    return;
+
+}
+
+    if (item.yellows >= 1) return; // Già ammonito
+
+    // --- NUOVO CONTROLLO: Limite 3 ammonizioni di squadra ---
+    const totalYellows = roster.players.filter(p => p.yellows > 0).length + 
+                         roster.officials.filter(o => o.yellows > 0).length;
+
+    if (totalYellows >= 3) {
+        alert("ATTENZIONE: Raggiunto il limite massimo di 3 ammonizioni per questa squadra!");
+        return;
+    }
+    // -------------------------------------------------------
+
+    // SALVA STATO PER UNDO
+    salvaSnapshotUndo(`AMMONIZIONE - ${team} - #${item.num} ${item.name}`);
+
+    // AGGIORNA DATI
+    item.yellows++;
+
+item.yellowTime = getTimeString();
+
+    logMatchSystem(team, item.num, `AMMONIZIONE GIALLO (${item.name})`);
+    renderTable(team);
+    salvaPartita();
+}
+
+//=========================================
+// AVVIO ESCLUSIONE (2')
+//=========================================
+
+//=========================================
+// AVVIO ESCLUSIONE (2')
+//=========================================
+
+function avviaEsclusione(team,item){
+
+    //---------------------------------
+    // Ogni esclusione genera SEMPRE
+    // un nuovo countdown indipendente
+    //---------------------------------
+
+    activePenalties.push({
+
+        id: Date.now() + "_" + Math.random(),
+
+        team: team,
+
+        num: item.num,
+
+        endTime: timerSeconds + 120
+
+    });
+
+    //---------------------------------
+    // Aggiorna dashboard
+    //---------------------------------
+
+    updateActivePenalties();
+
+    renderTable(team);
+
+    salvaPartita();
+
+}
+
+//=========================================
+// SOSPENSIONE 2 MINUTI
+//=========================================
+
+function handleSuspension(team,id,type){
+
+    //---------------------------------
+    // GARA MODIFICABILE?
+    //---------------------------------
+
+    if(!garaModificabile()){
+        return;
+    }
+
+    const roster =
+        team==="A"
+        ? currentRosterA
+        : currentRosterB;
+
+    const item =
+        type==="G"
+        ? roster.players.find(x=>x.id===id)
+        : roster.officials.find(x=>x.id===id);
+
+    if(!item) return;
+
+    //---------------------------------
+    // GIA' SQUALIFICATO
+    //---------------------------------
+
+    if(item.red){
+        alert("Giocatore già squalificato.");
+        return;
+    }
+
+    //---------------------------------
+    // LIMITE SOSPENSIONI
+    //---------------------------------
+
+    if(type==="G" && item.suspensions>=3){
+        return;
+    }
+
+    //---------------------------------
+    // UNDO
+    //---------------------------------
+
+    salvaSnapshotUndo(
+        `2 MINUTI - ${team} - #${item.num} ${item.name}`
+    );
+
+    //---------------------------------
+    // REGISTRA SOSPENSIONE
+    //---------------------------------
+
+    item.suspensions++;
+
+    const ora = getTimeString();
+
+    if(item.suspensions===1){
+        item.susp1Time = ora;
+    }
+    else if(item.suspensions===2){
+        item.susp2Time = ora;
+    }
+    else if(item.suspensions===3){
+        item.susp3Time = ora;
+    }
+
+   logMatchSystem(
+    team,
+    item.num,
+    `SOSPENSIONE 2 MINUTI (${item.name})`
+);
+
+    //---------------------------------
+    // TERZA SOSPENSIONE = SQUALIFICA
+    //---------------------------------
+
+    if(type==="G" && item.suspensions>=3){
+
+        item.suspensions = 3;
+        item.red = true;
+        item.redTime = ora;
+        item.directRed = false;
+        item.directRedTime = "";
+
+        logMatchSystem(
+            team,
+            item.num,
+            "SQUALIFICA AUTOMATICA (3° 2')"
+        );
+
+    }
+
+    //---------------------------------
+    // AVVIA COUNTDOWN 2'
+    //---------------------------------
+
+    avviaEsclusione(team,item);
+
+//---------------------------------
+// PAUSA AUTOMATICA DEL CRONOMETRO
+//---------------------------------
+
+pausaCronometroPerSanzione();
+
+    //---------------------------------
+    // AGGIORNA INTERFACCIA
+    //---------------------------------
+
+    renderTable(team);
+    updateActivePenalties();
+    salvaPartita();
+
+    //---------------------------------
+    // PANNELLO AZIONI
+    //---------------------------------
+
+    showCardPrintPanel(
+        team,
+        item,
+        "2MIN"
+    );
+
+}
+
+//=========================================
+// CARTELLINO ROSSO
+//=========================================
+
+function handleRedCard(team,id,type){
+
+    //---------------------------------
+    // GARA MODIFICABILE?
+    //---------------------------------
+
+    if(!garaModificabile()){
+
+        return;
+
+    }
+
+    //---------------------------------
+    // RECUPERA GIOCATORE / DIRIGENTE
+    //---------------------------------
+
+    const roster =
+        team==="A"
+        ? currentRosterA
+        : currentRosterB;
+
+    const item =
+        type==="G"
+        ? roster.players.find(x=>x.id===id)
+        : roster.officials.find(x=>x.id===id);
+
+    if(!item) return;
+
+    //---------------------------------
+    // GIÀ ESPULSO
+    //---------------------------------
+
+    if(item.red){
+
+        alert("Tesserato già espulso.");
+
+        return;
+
+    }
+
+    //---------------------------------
+    // SALVA STATO PER UNDO
+    //---------------------------------
+
+    salvaSnapshotUndo(
+        `ROSSO - ${team} - #${item.num} ${item.name}`
+    );
+
+    //---------------------------------
+    // APPLICA ESPULSIONE
+    //---------------------------------
+
+    const ora = getTimeString();
+
+    item.red = true;
+
+    item.redTime = ora;
+
+    item.directRed = true;
+
+    item.directRedTime = ora;
+
+    //---------------------------------
+    // REGISTRO GARA
+    //---------------------------------
+
+    logMatchSystem(
+        team,
+        item.num,
+        "ESPULSIONE"
+    );
+
+    //---------------------------------
+    // AVVIA ESCLUSIONE
+    //---------------------------------
+
+    avviaEsclusione(team,item);
+
+    //---------------------------------
+    // AGGIORNA TABELLE
+    //---------------------------------
+
+    renderTable(team);
+
+    //---------------------------------
+    // AGGIORNA DASHBOARD
+    //---------------------------------
+
+    refreshDashboard();
+
+    //---------------------------------
+    // SALVA PARTITA
+    //---------------------------------
+
+    salvaPartita();
+
+    //---------------------------------
+    // STAMPA CARTELLINO
+    //---------------------------------
+
+    showCardPrintPanel(
+        team,
+        item,
+        "RED"
+    );
+
+    //---------------------------------
+    // PAUSA CRONOMETRO
+    //---------------------------------
+
+    pausaCronometroPerSanzione();
+
+}
+
+//---------------------------------
+// Attive Penalties
+//---------------------------------
+
+function updateActivePenalties(){
+
+    activePenalties = activePenalties.filter(
+        p => (p.endTime - timerSeconds) >= 0
+    );
+
+    const section =
+        document.getElementById('active-penalties-section');
+
+    const container =
+        document.getElementById('penalties-container');
+
+    //---------------------------------
+    // Nessuna esclusione
+    //---------------------------------
+
+    if(activePenalties.length === 0){
+
+        section.classList.remove('hidden');
+
+        const modalita = getModalitaGara();
+
+        let testo = '';
+
+        if(modalita === 'SINGOLA'){
+
+            testo = 'Gara Singola';
+
+        }
+        else if(modalita === 'SUPPLEMENTARI'){
+
+            testo = 'Gara con Supplementari + Rigori';
+
+        }
+        else if(modalita === 'RIGORI'){
+
+            testo = 'Gara con Rigori';
+
+        }
+
+        container.innerHTML = `
+            <span class="text-slate-500 text-sm font-semibold italic">
+                ${testo}
+            </span>
+        `;
+
+        return;
+
+    }
+
+    //---------------------------------
+    // Esclusioni attive
+    //---------------------------------
+
+    section.classList.remove('hidden');
+
+    container.innerHTML = '';
+
+    //---------------------------------
+    // Numerazione esclusioni per atleta
+    //---------------------------------
+
+    const contatore = {};
+
+    activePenalties.forEach(p => {
+
+        const chiave = `${p.team}_${p.num}`;
+
+        contatore[chiave] = (contatore[chiave] || 0) + 1;
+
+        const indice = contatore[chiave];
+
+        const simboli = [
+            '',
+            '①',
+            '②',
+            '③',
+            '④',
+            '⑤'
+        ];
+
+        const badge = simboli[indice] || `(${indice})`;
+
+        const diff = p.endTime - timerSeconds;
+
+        const m = String(
+            Math.floor(diff / 60)
+        ).padStart(2, '0');
+
+        const s = String(
+            diff % 60
+        ).padStart(2, '0');
+
+const countdownClass = diff <= 10
+    ? 'penalty-flash bg-red-600 text-white animate-pulse'
+    : 'bg-red-600 text-white';
+        container.innerHTML += `
+
+        <div class="px-2 py-1 rounded-md text-sm font-black flex items-center justify-between gap-2 min-w-[120px] shadow-sm
+            bg-slate-800 text-slate-100 border border-slate-700">
+
+            <span class="whitespace-nowrap">
+                ${p.team} #${p.num} ${badge}
+            </span>
+
+            <span class="${countdownClass} px-2 py-0.5 rounded tabular-nums leading-none">
+                ${m}:${s}
+            </span>
+
+        </div>`;
+
+    });
+
+}
+
+
+//=========================================
+// SALVATAGGIO SNAPSHOT PER UNDO
+//=========================================
+function salvaSnapshotUndo(descrizione = "") {
+    // Salva uno stato completo prima di ogni azione
+    const snapshot = {
+        scoreA,
+        scoreB,
+        firstHalfScoreA,
+        firstHalfScoreB,
+        secondHalfScoreA,
+        secondHalfScoreB,
+        overtime1ScoreA,
+        overtime1ScoreB,
+        overtime2ScoreA,
+        overtime2ScoreB,
+        overtime3ScoreA,
+        overtime3ScoreB,
+        overtime4ScoreA,
+        overtime4ScoreB,
+        penaltyScoredA,
+        penaltyTotalA,
+        penaltyScoredB,
+        penaltyTotalB,
+        timeoutsA: JSON.parse(JSON.stringify(timeoutsA)),
+        timeoutsB: JSON.parse(JSON.stringify(timeoutsB)),
+        currentRosterA: JSON.parse(JSON.stringify(currentRosterA)),
+        currentRosterB: JSON.parse(JSON.stringify(currentRosterB)),
+        activePenalties: JSON.parse(JSON.stringify(activePenalties)),
+        logEvents: JSON.parse(JSON.stringify(logEvents)),
+        timerSeconds,
+        statoGara,
+        currentHalf,
+        descrizione
+    };
+
+    undoHistory.push(snapshot);
+    // Mantiene uno storico fino a 30 azioni
+    if (undoHistory.length > 30) undoHistory.shift();
+}
+
+//=========================================
+// FUNZIONE UNDO (ANNULLA ULTIMA AZIONE)
+//=========================================
+function undoLastAction() {
+    if (!garaModificabile()) return;
+
+    if (undoHistory.length === 0) {
+        alert("Nessuna azione da annullare.");
+        return;
+    }
+
+    // Estrae l'ultimo stato salvato
+    const lastState = undoHistory.pop();
+
+    // Ripristina lo stato delle variabili
+    scoreA = lastState.scoreA;
+    scoreB = lastState.scoreB;
+    firstHalfScoreA = lastState.firstHalfScoreA;
+    firstHalfScoreB = lastState.firstHalfScoreB;
+    secondHalfScoreA = lastState.secondHalfScoreA;
+    secondHalfScoreB = lastState.secondHalfScoreB;
+    overtime1ScoreA = lastState.overtime1ScoreA;
+    overtime1ScoreB = lastState.overtime1ScoreB;
+    overtime2ScoreA = lastState.overtime2ScoreA;
+    overtime2ScoreB = lastState.overtime2ScoreB;
+    overtime3ScoreA = lastState.overtime3ScoreA;
+    overtime3ScoreB = lastState.overtime3ScoreB;
+    overtime4ScoreA = lastState.overtime4ScoreA;
+    overtime4ScoreB = lastState.overtime4ScoreB;
+    penaltyScoredA = lastState.penaltyScoredA;
+    penaltyTotalA = lastState.penaltyTotalA;
+    penaltyScoredB = lastState.penaltyScoredB;
+    penaltyTotalB = lastState.penaltyTotalB;
+    timeoutsA = lastState.timeoutsA;
+    timeoutsB = lastState.timeoutsB;
+    currentRosterA = lastState.currentRosterA;
+    currentRosterB = lastState.currentRosterB;
+    activePenalties = lastState.activePenalties;
+    logEvents = lastState.logEvents;
+    timerSeconds = lastState.timerSeconds;
+    statoGara = lastState.statoGara;
+    currentHalf = lastState.currentHalf;
+
+    // Chiude eventuali pannelli o popup aperti
+    closeActionPanel("A");
+    closeActionPanel("B");
+
+    // ==========================================
+    // AGGIORNAMENTO IMMEDIATO DELL'INTERFACCIA
+    // ==========================================
+    refreshDashboard();
+    
+    // Salva il nuovo stato ripristinato in locale
+    salvaPartita();
+}
+
+//=========================================
+// REFRESH COMPLETO DASHBOARD E REGISTRO
+//=========================================
+function refreshDashboard() {
+
+    // 1. Aggiorna il Tabellone Punteggio
+    document.getElementById("game-score").innerText =
+        `${String(scoreA).padStart(2,"0")} - ${String(scoreB).padStart(2,"0")}`;
+
+    // 2. Ridisegna le tabelle giocatori e dirigenti
+    renderTable("A");
+    renderTable("B");
+
+    // 3. Ridisegna il Registro Eventi
+    renderLogTable();
+
+    // 4. Aggiorna contatori, timer e indicatore tempo
+        updatePenaltyCountersDisplay();
+        updateTimeoutCountersDisplay();
+        updateTimeoutButtons();
+        updateClockDisplay();
+        updateHalfDisplay();
+        updateActivePenalties();
+}
+
+// =========================================
+// RICALCOLO COMPLETO DA REGISTRO EVENTI
+// =========================================
+function ricalcolaGaraDaRegistro() {
+
+    // ---------------------------------
+    // AZZERA PUNTEGGIO
+    // ---------------------------------
+
+    scoreA = 0;
+    scoreB = 0;
+
+    penaltyScoredA = 0;
+    penaltyTotalA  = 0;
+
+    penaltyScoredB = 0;
+    penaltyTotalB  = 0;
+
+    timeoutsA = {
+        first: 0,
+        second: 0,
+        total: 0
+    };
+
+    timeoutsB = {
+        first: 0,
+        second: 0,
+        total: 0
+    };
+
+
+    // ---------------------------------
+    // AZZERA GIOCATORI
+    // ---------------------------------
+
+    [currentRosterA, currentRosterB].forEach(roster => {
+
+        roster.players.forEach(p => {
+
+            p.goals = 0;
+            p.yellows = 0;
+            p.suspensions = 0;
+            p.red = false;
+
+        });
+
+        roster.officials.forEach(o => {
+
+            o.yellows = 0;
+            o.suspensions = 0;
+            o.red = false;
+
+        });
+
+    });
+
+
+    // ---------------------------------
+    // AZZERA ESCLUSIONI ATTIVE
+    // ---------------------------------
+
+    activePenalties = [];
+
+
+    // ---------------------------------
+    // RILEGGE TUTTI GLI EVENTI
+    // ---------------------------------
+
+    logEvents.forEach(evt => {
+
+        const team = evt.team;
+
+        const num = String(evt.num);
+
+        const evento =
+            String(evt.desc || "").toUpperCase();
+
+
+        const roster =
+            team === "A"
+                ? currentRosterA
+                : currentRosterB;
+
+
+        const player =
+            roster.players.find(
+                p => String(p.num) === num
+            );
+
+
+        const official =
+            roster.officials.find(
+                o => String(o.num) === num
+            );
+
+
+        const item = player || official;
+
+
+        // ---------------------------------
+        // RETE
+        // ---------------------------------
+
+        if (
+            evento.includes("RETE") &&
+            !evento.includes("RIGORE")
+        ) {
+
+            if (team === "A")
+                scoreA++;
+            else
+                scoreB++;
+
+            if (player)
+                player.goals++;
+        }
+
+
+        // ---------------------------------
+        // RIGORE REALIZZATO
+        // ---------------------------------
+
+        else if (
+            evento.includes("RIGORE REALIZZATO")
+        ) {
+
+            if (team === "A") {
+
+                scoreA++;
+                penaltyTotalA++;
+                penaltyScoredA++;
+
+            } else {
+
+                scoreB++;
+                penaltyTotalB++;
+                penaltyScoredB++;
+
+            }
+
+            if (player)
+                player.goals++;
+        }
+
+
+        // ---------------------------------
+        // RIGORE ERRATO
+        // ---------------------------------
+
+        else if (
+            evento.includes("RIGORE ERRATO")
+        ) {
+
+            if (team === "A")
+                penaltyTotalA++;
+            else
+                penaltyTotalB++;
+        }
+
+
+        // ---------------------------------
+        // AMMONIZIONE
+        // ---------------------------------
+
+        else if (
+            evento.includes("AMMONIZIONE")
+        ) {
+
+            if (item)
+                item.yellows = 1;
+        }
+
+
+        // ---------------------------------
+        // SQUALIFICA AUTOMATICA
+        // 3° 2'
+        //
+        // IMPORTANTE:
+        // DEVE ESSERE PRIMA DEL 2 MINUTI
+        // perché contiene "2'"
+        // ---------------------------------
+
+        else if (
+            evento.includes("SQUALIFICA AUTOMATICA")
+        ) {
+
+            if (item) {
+
+                item.suspensions = 3;
+                item.red = true;
+            }
+        }
+
+        // ---------------------------------
+        // ESPULSIONE
+        // ---------------------------------
+
+        else if (
+            evento.includes("ESPULSIONE") ||
+            evento.includes("SQUALIFICA")
+        ) {
+
+            if (item)
+                item.red = true;
+        }
+
+        // ---------------------------------
+        // 2 MINUTI
+        // ---------------------------------
+
+        else if (
+            evento.includes("2 MINUTI") ||
+            evento.includes("2'")
+        ) {
+
+            if (item)
+                item.suspensions++;
+        }
+
+
+        // ---------------------------------
+        // TIME OUT
+        // ---------------------------------
+
+        else if (
+            evento.includes("TIME OUT")
+        ) {
+
+            if (team === "A")
+                timeoutsA++;
+            else
+                timeoutsB++;
+        }
+
+    });
+
+
+    // ---------------------------------
+    // AGGIORNA SCORE IN OGNI EVENTO
+    // ---------------------------------
+
+    let sa = 0;
+    let sb = 0;
+
+    logEvents.forEach(evt => {
+        const e =
+            String(evt.desc || "").toUpperCase();
+
+
+        // ---------------------------------
+        // RETE
+        // ---------------------------------
+
+        if (
+            e.includes("RETE") &&
+            !e.includes("RIGORE")
+        ) {
+
+            if (evt.team === "A")
+                sa++;
+            else
+                sb++;
+        }
+
+
+        // ---------------------------------
+        // RIGORE REALIZZATO
+        // ---------------------------------
+
+        else if (
+            e.includes("RIGORE REALIZZATO")
+        ) {
+            if (evt.team === "A")
+                sa++;
+            else
+                sb++;
+        }
+
+
+        // ---------------------------------
+        // SALVA PUNTEGGIO DELL'EVENTO
+        // ---------------------------------
+
+        evt.score =
+            `${String(sa).padStart(2, "0")}-${String(sb).padStart(2, "0")}`;
+    });
+
+    // ---------------------------------
+    // REFRESH COMPLETO
+    // ---------------------------------
+
+    refreshDashboard();
+
+    salvaPartita();
+}
+//=========================================
+    // RICOSTRUISCE LE ESCLUSIONI ATTIVE
+    //=========================================
+
+    function ricostruisciEsclusioniAttive(){
+
+        activePenalties = [];
+
+        logEvents.forEach(evt => {
+
+            const desc = (evt.desc || "").toUpperCase();
+
+            if(
+                desc.includes("SOSPENSIONE") ||
+                desc.includes("2 MIN") ||
+                desc.includes("2'")
+            ){
+
+                //---------------------------------
+                // Converte mm:ss in secondi
+                //---------------------------------
+
+                const parts = (evt.time || "00:00").split(":");
+
+                const start =
+                    parseInt(parts[0] || 0) * 60 +
+                    parseInt(parts[1] || 0);
+                const end = start + 120;
+
+                //---------------------------------
+                // Se l'esclusione è ancora attiva
+                //---------------------------------
+
+                if(end > timerSeconds){
+                    activePenalties.push({
+                        id: Date.now() + Math.random(),
+                        team: evt.team,
+                        num: evt.num,
+                        endTime: end
+                    });
+                }
+            }
+        });
+
+        updateActivePenalties();
+    }
+
+
+
+
+// =========================================
+// APRI EDITOR EVENTO
+// =========================================
+function apriEditorEvento(index) {
+    if (timerInterval !== null) {
+        alert("Metti in pausa il cronometro prima di modificare un evento.");
+        return;
+    }
+
+    if (editorEventoAperto) {
+        alert("Chiudi prima l'editor già aperto.");
+        return;
+    }
+
+    const evt = logEvents[index];
+    if (!evt) return;
+
+    eventoInModifica = index;
+    editorEventoAperto = true;
+
+document.getElementById("edit-time").value = evt.time || "";
+document.getElementById("edit-team").value = evt.team || "A";
+
+// Aggiorna menu numeri in base alla squadra
+aggiornaNumeriEditor();
+
+// Seleziona il numero corretto
+document.getElementById("edit-num").value = evt.num || "";
+
+// Seleziona l'evento corretto
+document.getElementById("edit-event").value = evt.desc || evt.evento || "";
+    document.getElementById("editor-evento").classList.remove("hidden");
+}
+
+// =========================================
+// CHIUDI EDITOR
+// =========================================
+function chiudiEditorEvento() {
+    eventoInModifica = -1;
+    editorEventoAperto = false;
+
+    document.getElementById("editor-evento").classList.add("hidden");
+}
+
+// =========================================
+// SALVA MODIFICA EVENTO
+// =========================================
+function salvaModificaEvento() {
+    if (eventoInModifica < 0) return;
+
+    const evt = logEvents[eventoInModifica];
+
+    evt.time = document.getElementById("edit-time").value.trim();
+    evt.team = document.getElementById("edit-team").value;
+    evt.num  = document.getElementById("edit-num").value;
+    evt.desc = document.getElementById("edit-event").value;
+
+ ricalcolaGaraDaRegistro();
+ ricostruisciEsclusioniAttive();
+ refreshDashboard();
+
+    chiudiEditorEvento();
+}
+// =========================================
+// AGGIORNA MENU NUMERI IN BASE ALLA SQUADRA
+// =========================================
+function aggiornaNumeriEditor() {
+    const team = document.getElementById("edit-team").value;
+    const select = document.getElementById("edit-num");
+
+    select.innerHTML = "";
+
+    const roster = team === "A" ? currentRosterA : currentRosterB;
+
+    // Giocatori
+    roster.players.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p.num;
+        opt.textContent = `${p.num} - ${p.name}`;
+
+        select.appendChild(opt);
+    });
+
+    // Dirigenti
+    roster.officials.forEach(o => {
+        const opt = document.createElement("option");
+        opt.value = o.num;
+        opt.textContent = `${o.num} - ${o.name}`;
+
+        select.appendChild(opt);
+    });
+}
+
+// =========================================
+// ELIMINA EVENTO
+// =========================================
+function eliminaEventoCorrente() {
+    if (eventoInModifica < 0) return;
+    if (!confirm("Eliminare questo evento?")) return;
+    logEvents.splice(eventoInModifica, 1);
+    ricalcolaGaraDaRegistro();
+
+    chiudiEditorEvento();
+}
+
+//=========================================
+// RENDER TABELLA REGISTRO EVENTI
+//=========================================
+
+function renderLogTable(){
+
+    const logBody = document.getElementById("log-table-body");
+    if(!logBody) return;
+    logBody.innerHTML = "";
+    for(let i = logEvents.length - 1; i >= 0; i--){
+        const evt = logEvents[i];
+
+        //---------------------------------
+        // EVENTO
+        //---------------------------------
+
+        let evento = (evt.desc || evt.evento || "").toUpperCase();
+
+        if(evento.includes("RIGORE REALIZZATO")){
+            evento = "RIGORE REALIZZATO";
+
+        }
+        else if(evento.includes("RIGORE ERRATO")){
+            evento = "RIGORE ERRATO";
+
+        }
+        else if(evento.includes("RETE")){
+            evento = "RETE";
+
+        }
+        else if(evento.includes("AMMONIZIONE")){
+            evento = "AMMONIZIONE";
+
+        }
+else if(
+    evento.includes("SQUALIFICA AUTOMATICA")
+){
+    evento = "SQUALIFICA AUTOMATICA (3° 2')";
+}
+else if(
+    evento.includes("ESCLUSIONE") ||
+    evento.includes("ESPULSIONE") ||
+    evento.includes("ROSSO")
+){
+    evento = "ESPULSIONE";
+}
+else if(
+    evento.includes("SOSPENSIONE") ||
+    evento.includes("2 MIN") ||
+    evento.includes("2'")
+){
+    evento = "2'";
+}
+
+        else if(evento.includes("TIME")){
+
+            evento = "TIME OUT";
+
+        }
+
+        //---------------------------------
+        // COLORE SQUADRA
+        //---------------------------------
+
+        const coloreSquadra =
+            evt.team === "A"
+                ? "text-blue-700"
+                : evt.team === "B"
+                    ? "text-purple-700"
+                    : "text-slate-700";
+
+        //---------------------------------
+        // COLORE EVENTO
+        //---------------------------------
+
+        let coloreEvento = coloreSquadra;
+
+        switch(evento){
+
+            case "AMMONIZIONE":
+                coloreEvento = "text-yellow-600";
+                break;
+
+            case "2'":
+                coloreEvento = "text-orange-600";
+                break;
+
+            case "ESPULSIONE":
+                coloreEvento = "text-red-700";
+                break;
+
+            case "RIGORE ERRATO":
+                coloreEvento = "text-black";
+                break;
+
+            case "RETE":
+            case "RIGORE REALIZZATO":
+            case "TIME OUT":
+                coloreEvento = coloreSquadra;
+                break;
+
+        }
+
+        //---------------------------------
+        // RIGA
+        //---------------------------------
+
+const row = document.createElement("tr");
+
+row.className = "bg-sky-50 hover:bg-sky-100 border-b border-sky-200 h-8 cursor-pointer transition";
+
+// =========================================
+// CLICK MODIFICA EVENTO
+// SOLO A CRONOMETRO FERMO
+// =========================================
+
+row.onclick = () => {
+    // Cronometro in movimento
+    if (timerInterval !== null) {
+        alert("Metti in pausa il cronometro prima di modificare un evento.");
+        return;
+    }
+
+    apriEditorEvento(i);
+};
+
+        row.innerHTML = `
+
+            <td class="w-[55px] py-1 text-center text-[13px] text-slate-700 font-semibold whitespace-nowrap">
+                ${evt.time || ""}
+            </td>
+
+            <td class="w-[35px] py-1 text-center text-[13px] font-bold ${coloreSquadra} whitespace-nowrap">
+                ${evt.team || ""}
+            </td>
+
+            <td class="w-[40px] py-1 text-center text-[13px] font-bold ${coloreSquadra} whitespace-nowrap">
+                ${evt.num || "-"}
+            </td>
+
+<td class="w-[95px] py-1 px-1 text-[13px] font-semibold ${coloreEvento}
+           whitespace-nowrap overflow-hidden text-ellipsis truncate">
+
+    ${evento}
+
+</td>
+            <td class="w-[55px] py-1 text-center text-[13px] font-bold ${coloreEvento} whitespace-nowrap">
+
+                ${evt.score || "-"}
+
+            </td>
+        `;
+
+        logBody.appendChild(row);
+    }
+}
+
+
+//=========================================
+// REGISTRAZIONE EVENTO NEL LOG (SYSTEM & MATCH)
+//=========================================
+
+function logMatchSystem(team, num, desc) {
+
+    console.log("logMatchSystem chiamata", team, num, desc);
+    const currentScore =
+        `${String(scoreA).padStart(2,"0")}-${String(scoreB).padStart(2,"0")}`;
+
+    const eventObj = {
+        time: getTimeString(),
+        team: team,
+        num: num,
+        desc: desc,
+        score: currentScore
+    };
+
+    logEvents.push(eventObj);
+
+    renderLogTable();
+}
+
+	//=========================================
+       // AGGIORNA STATO PULSANTE UNDO
+      //=========================================
+
+function aggiornaPulsanteUndo(){
+
+    const btn = document.getElementById("btn-undo");
+
+    if(!btn) return;
+
+    if(undoHistory.length===0){
+
+
+        btn.classList.remove(
+            "bg-orange-700",
+            "hover:bg-orange-600",
+            "text-white"
+        );
+
+        btn.classList.add(
+            "bg-slate-700",
+            "text-slate-500",
+            "cursor-not-allowed"
+        );
+
+    }else{
+
+        btn.disabled = false;
+
+        btn.classList.remove(
+            "bg-slate-700",
+            "text-slate-500",
+            "cursor-not-allowed"
+        );
+
+        btn.classList.add(
+            "bg-orange-700",
+            "hover:bg-orange-600",
+            "text-white"
+        );
+
+    }
+
+}
+
+
+//=========================================
+// REGISTRO GARA FIGH
+//=========================================
+
+function downloadLog(){
+
+    const partita = creaOggettoPartita();
+
+    localStorage.setItem(
+        "RegistroFIGH",
+        JSON.stringify(partita)
+    );
+
+    window.open(
+        "RegistroFIGH.html",
+        "_blank"
+    );
+
+}
+
+//=========================================
+// REGISTRO POST GARA
+//=========================================
+
+function apriRegistroPostGara(){
+
+    const partita = creaOggettoPartita();
+
+    //----------------------------------
+    // INFORMAZIONE GARA DEFINITIVA
+    //----------------------------------
+
+    partita.partitaDefinitiva = partitaDefinitiva;
+
+    //----------------------------------
+    // SALVA PER IL REGISTRO POST GARA
+    //----------------------------------
+
+    localStorage.setItem(
+        "RegistroPostGara",
+        JSON.stringify(partita)
+    );
+
+    //----------------------------------
+    // APRE IL REGISTRO POST GARA
+    //----------------------------------
+
+    const finestraRegistro = window.open(
+        "RegistroPostGara.html",
+        "_blank"
+    );
+
+    //----------------------------------
+    // CHIUDE IL REFERTO
+    //----------------------------------
+
+    if(finestraRegistro){
+
+        window.close();
+
+    }
+
+}
+//====================================================
+// APRE MODULO RIGORI
+//====================================================
+
+function apriRigori(){
+
+    salvaPartita();
+
+    localStorage.setItem(
+        "PartitaCorrente",
+        JSON.stringify(creaOggettoPartita())
+    );
+
+    window.open("RefertoFIGH_Rigori.html","_blank");
+
+}
+
+//=========================================
+// CREA OGGETTO PARTITA
+//=========================================
+
+function creaOggettoPartita(){
+
+    const partita = {
+
+        //=================================
+        // STATO GARA
+        //=================================
+
+statoGara,
+currentHalf,
+timerSeconds,
+matchDurationMinutes,
+
+overtimeSeries,
+overtimeHalf,
+
+motivoFineGara,
+
+partitaDefinitiva,
+
+        //=================================
+        // CONFIGURAZIONE GARA
+        //=================================
+
+        usaTempiSupplementari,
+        usaRigori,
+
+        //=================================
+        // PUNTEGGIO
+        //=================================
+
+        scoreA,
+        scoreB,
+
+        firstHalfScoreA,
+        firstHalfScoreB,
+
+        secondHalfScoreA,
+        secondHalfScoreB,
+
+        overtime1ScoreA,
+        overtime1ScoreB,
+
+        overtime2ScoreA,
+        overtime2ScoreB,
+
+        overtime3ScoreA,
+        overtime3ScoreB,
+
+        overtime4ScoreA,
+        overtime4ScoreB,
+
+        //=================================
+        // RISULTATI UFFICIALI
+        //=================================
+
+        risultati:{
+
+            primoTempo:{
+                A:firstHalfScoreA,
+                B:firstHalfScoreB
+            },
+
+            secondoTempo:{
+                A:secondHalfScoreA,
+                B:secondHalfScoreB
+            },
+
+            primoSupplementare:{
+                A:overtime2ScoreA,
+                B:overtime2ScoreB
+            },
+
+            secondoSupplementare:{
+                A:overtime4ScoreA,
+                B:overtime4ScoreB
+            },
+
+            rigoriFinali:{
+                A:penaltyShootout.scoreA,
+                B:penaltyShootout.scoreB
+            },
+
+            finale:{
+                A:scoreA,
+                B:scoreB
+            }
+
+        },
+
+//=================================
+// RIGORI
+//=================================
+
+penaltyScoredA,
+penaltyTotalA,
+
+penaltyScoredB,
+penaltyTotalB,
+
+penaltyShootout:{
+    played: penaltyShootout.played || false,
+    started: penaltyShootout.started || false,
+    finished: penaltyShootout.finished || false,
+    scoreA: penaltyShootout.scoreA || 0,
+    scoreB: penaltyShootout.scoreB || 0,
+    winner: penaltyShootout.winner || "",
+    currentRound: penaltyShootout.currentRound || 1,
+    suddenDeath: penaltyShootout.suddenDeath || false,
+    sequence:
+        JSON.parse(
+            JSON.stringify(
+                penaltyShootout.sequence || []
+            )
+        )
+},
+  
+        //=================================
+        // TIME OUT
+        //=================================
+
+        timeoutsA:
+            JSON.parse(JSON.stringify(timeoutsA)),
+
+        timeoutsB:
+            JSON.parse(JSON.stringify(timeoutsB)),
+
+        //=================================
+        // PENALITA' ATTIVE
+        //=================================
+
+        activePenalties:
+            JSON.parse(JSON.stringify(activePenalties)),
+
+        //=================================
+        // ROSTER
+        //=================================
+
+        currentRosterA:
+            JSON.parse(JSON.stringify(currentRosterA)),
+
+        currentRosterB:
+            JSON.parse(JSON.stringify(currentRosterB)),
+
+        savedRosterDataA:
+            JSON.parse(JSON.stringify(savedRosterDataA)),
+
+        savedRosterDataB:
+            JSON.parse(JSON.stringify(savedRosterDataB)),
+
+        rosterA:
+            JSON.parse(JSON.stringify(currentRosterA)),
+
+        rosterB:
+            JSON.parse(JSON.stringify(currentRosterB)),
+
+        //=================================
+        // REGISTRO EVENTI
+        //=================================
+
+        logEvents:
+            JSON.parse(JSON.stringify(logEvents)),
+
+        //=================================
+        // DATI GARA
+        //=================================
+
+        teamA: document.getElementById("team-a-name").value,
+        teamB: document.getElementById("team-b-name").value,
+
+        matchNumber: document.getElementById("match-num").value,
+        league: document.getElementById("match-league").value,
+        season: document.getElementById("match-season").value,
+
+        matchDate: document.getElementById("match-date").value,
+        matchTime: document.getElementById("match-time").value,
+
+        city: document.getElementById("match-city").value,
+        venue: document.getElementById("match-venue").value,
+
+        referee1: document.getElementById("referee1").value,
+        referee2: document.getElementById("referee2").value,
+
+        delegate1: document.getElementById("delegate1").value,
+        delegate2: document.getElementById("delegate2").value,
+
+// Al momento non presenti nella schermata di configurazione
+// timekeeper: document.getElementById("timekeeper").value,
+// secretary: document.getElementById("secretary").value,
+        //=================================
+        // DISTINTE
+        //=================================
+
+        giocatoriA: [],
+        giocatoriB: [],
+
+        dirigentiA: [],
+        dirigentiB: [],
+
+        //=================================
+        // RISULTATO FINALE
+        //=================================
+
+        finalResult:{
+            scoreA,
+            scoreB,
+            penaltiesA: penaltyShootout.scoreA,
+            penaltiesB: penaltyShootout.scoreB,
+            winner: penaltyShootout.winner || ""
+        }
+    };
+
+    //=================================
+    // GIOCATORI CASA
+    //=================================
+
+    for(let i=1;i<=16;i++){
+        partita.giocatoriA.push({
+            numero: document.getElementById(`num-a-${i}`).value,
+            nome: document.getElementById(`name-a-${i}`).value
+        });
+    }
+
+    //=================================
+    // GIOCATORI OSPITI
+    //=================================
+
+    for(let i=1;i<=16;i++){
+        partita.giocatoriB.push({
+            numero: document.getElementById(`num-b-${i}`).value,
+            nome: document.getElementById(`name-b-${i}`).value
+        });
+    }
+
+    //=================================
+    // DIRIGENTI CASA
+    //=================================
+
+    ["A","B","C","D","E"].forEach(lettera=>{
+
+        partita.dirigentiA.push({
+            lettera: document.getElementById(`off-letter-a-${lettera}`).value,
+            nome: document.getElementById(`off-name-a-${lettera}`).value
+        });
+    });
+
+    //=================================
+    // DIRIGENTI OSPITI
+    //=================================
+
+    ["A","B","C","D","E"].forEach(lettera=>{
+
+        partita.dirigentiB.push({
+            lettera: document.getElementById(`off-letter-b-${lettera}`).value,
+            nome: document.getElementById(`off-name-b-${lettera}`).value
+        });
+    });
+    return partita;
+}
+
+///=========================================
+// STAMPA REFERTO FIGH
+//=========================================
+
+function stampaReferto(){
+
+    //----------------------------------
+    // GARA SALVATA?
+    //----------------------------------
+
+    if(statoGara !== STATO_GARA.SALVATA){
+
+        alert("Salvare prima la gara.");
+        return;
+    }
+
+    //----------------------------------
+    // APRI REFERTO FIGH
+    //----------------------------------
+
+    window.open(
+        "RefertoFIGH web.html",
+        "_blank"
+    );
+
+}
+
+//=========================================
+// SALVA GARA SU FILE JSON
+//=========================================
+
+async function salvaGaraSuFile(){
+
+    const partita = creaOggettoPartita();
+
+    const testo = JSON.stringify(partita, null, 4);
+
+    //----------------------------------
+    // NUMERO GARA
+    //----------------------------------
+
+    const numero =
+        (partita.matchNumber || "").trim();
+
+    //----------------------------------
+    // NOMI SQUADRE
+    //----------------------------------
+
+    const squadraA =
+        (partita.teamA || "Casa")
+        .trim()
+        .replace(/[\\/:*?"<>|]/g,"")
+        .replace(/\s+/g,"_");
+
+    const squadraB =
+        (partita.teamB || "Ospiti")
+        .trim()
+        .replace(/[\\/:*?"<>|]/g,"")
+        .replace(/\s+/g,"_");
+
+    //----------------------------------
+    // NOME FILE
+    //----------------------------------
+
+    let nomeFile;
+
+    if(numero){
+        nomeFile =
+            `Gara_${numero}_${squadraA}_${squadraB}.json`;
+    }else{
+        nomeFile =
+            `${squadraA}_${squadraB}.json`;
+    }
+
+    //----------------------------------
+    // SALVATAGGIO
+    //----------------------------------
+
+    try{
+
+        const handle = await window.showSaveFilePicker({
+            suggestedName: nomeFile,
+            types:[{
+                description:"Partita Pallamano",
+                accept:{
+                    "application/json":[".json"]
+                }
+            }]
+        });
+
+        const writable = await handle.createWritable();
+        await writable.write(testo);
+        await writable.close();
+        alert("Gara salvata correttamente.");
+    }
+    catch(err){
+        if(err.name !== "AbortError"){
+            console.error(err);
+            alert("Errore durante il salvataggio.");
+        }
+    }
+}
+
+//=========================================
+// CARICA GARA DA FILE JSON
+//=========================================
+
+function apriGaraDaFile(){
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = function(e){
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(event){
+        const partita = JSON.parse(event.target.result);
+
+//----------------------------------
+// MODALITÀ GARA
+//----------------------------------
+
+partitaDefinitiva = partita.partitaDefinitiva ?? false;
+
+// Compatibilità con vecchi file
+if(!partitaDefinitiva){
+
+    if(partita.stato === "DEFINITIVO"){
+        partitaDefinitiva = true;
+    }
+    else if(file.name.includes("_Definitivo")){
+        partitaDefinitiva = true;
+    }
+
+}
+            //----------------------------------
+            // RIPRISTINO GARA
+            //----------------------------------
+
+console.log("Sto chiamando ripristinaPartita");
+
+ripristinaPartita(partita);
+
+        };
+
+        reader.readAsText(file);
+
+    };
+
+    input.click();
+
+}
+
+//=========================================
+// RIPRISTINO PARTITA
+//=========================================
+
+function ripristinaPartita(partita){
+
+    //=================================
+    // STATO GARA
+    //=================================
+
+   statoGara       = partita.statoGara ?? STATO_GARA.PREPARTITA;
+currentHalf     = partita.currentHalf ?? 1;
+timerSeconds    = partita.timerSeconds ?? 0;
+motivoFineGara  = partita.motivoFineGara ?? "";
+partitaDefinitiva = partita.partitaDefinitiva ?? false;
+overtimeSeries  = partita.overtimeSeries ?? 0;
+overtimeHalf    = partita.overtimeHalf ?? 0;
+matchDurationMinutes = partita.matchDurationMinutes || 30;
+document.getElementById('durataLabel').textContent =
+matchDurationMinutes + "'";
+
+
+//=================================
+// CONFIGURAZIONE GARA - MODALITÀ
+//=================================
+
+const modalita = partita.modalitaGara ?? null;
+
+// Modalità selezionata
+const chkSingola = document.getElementById('cfg-singola');
+const chkSupp    = document.getElementById('cfg-supplementari');
+const chkRigori  = document.getElementById('cfg-rigori');
+
+if(chkSingola){
+
+    chkSingola.checked = (modalita === 'SINGOLA');
+
+}
+
+if(chkSupp){
+
+    chkSupp.checked = (modalita === 'SUPPLEMENTARI');
+
+}
+
+if(chkRigori){
+
+    chkRigori.checked = (modalita === 'RIGORI');
+
+}
+
+// Variabili logiche compatibili col resto del codice
+usaTempiSupplementari = (modalita === 'SUPPLEMENTARI');
+
+usaRigori = (
+    modalita === 'SUPPLEMENTARI' ||
+    modalita === 'RIGORI'
+);
+//=================================
+// RIGORI DI SPAREGGIO
+//=================================
+
+penaltyShootout = {
+
+    played:
+        partita.penaltyShootout?.played ?? false,
+    started:
+        partita.penaltyShootout?.started ?? false,
+    finished:
+        partita.penaltyShootout?.finished ?? false,
+    scoreA:
+        partita.penaltyShootout?.scoreA ?? 0,
+    scoreB:
+        partita.penaltyShootout?.scoreB ?? 0,
+    winner:
+        partita.penaltyShootout?.winner ?? "",
+    currentRound:
+        partita.penaltyShootout?.currentRound ?? 1,
+    suddenDeath:
+        partita.penaltyShootout?.suddenDeath ?? false,
+    sequence:
+        JSON.parse(
+            JSON.stringify(
+
+                partita.penaltyShootout?.sequence ??
+                partita.penaltyShootout?.shots ??
+                partita.rigori ??
+                []
+            )
+        )
+
+};
+
+    //=================================
+    // PUNTEGGIO
+    //=================================
+
+    scoreA = partita.scoreA ?? 0;
+    scoreB = partita.scoreB ?? 0;
+
+    penaltyScoredA = partita.penaltyScoredA ?? 0;
+    penaltyTotalA  = partita.penaltyTotalA ?? 0;
+
+    penaltyScoredB = partita.penaltyScoredB ?? 0;
+    penaltyTotalB  = partita.penaltyTotalB ?? 0;
+
+    firstHalfScoreA = partita.firstHalfScoreA ?? 0;
+    firstHalfScoreB = partita.firstHalfScoreB ?? 0;
+
+    secondHalfScoreA = partita.secondHalfScoreA ?? 0;
+    secondHalfScoreB = partita.secondHalfScoreB ?? 0;
+
+    overtime1ScoreA = partita.overtime1ScoreA ?? 0;
+    overtime1ScoreB = partita.overtime1ScoreB ?? 0;
+
+    overtime2ScoreA = partita.overtime2ScoreA ?? 0;
+    overtime2ScoreB = partita.overtime2ScoreB ?? 0;
+
+    overtime3ScoreA = partita.overtime3ScoreA ?? 0;
+    overtime3ScoreB = partita.overtime3ScoreB ?? 0;
+
+    overtime4ScoreA = partita.overtime4ScoreA ?? 0;
+    overtime4ScoreB = partita.overtime4ScoreB ?? 0;
+
+    //=================================
+    // TIMEOUT
+    //=================================
+
+    timeoutsA = partita.timeoutsA ?? {
+        first:0,
+        second:0,
+        total:0
+    };
+
+    timeoutsB = partita.timeoutsB ?? {
+        first:0,
+        second:0,
+        total:0
+    };
+
+    //=================================
+    // PENALITA'
+    //=================================
+
+    activePenalties = partita.activePenalties ?? [];
+
+    //=================================
+    // ROSTER
+    //=================================
+
+    currentRosterA = partita.currentRosterA ?? {
+        players:[],
+        officials:[]
+    };
+
+    currentRosterB = partita.currentRosterB ?? {
+        players:[],
+        officials:[]
+    };
+
+    savedRosterDataA = partita.savedRosterDataA ?? {
+        players:{},
+        officials:{}
+    };
+
+    savedRosterDataB = partita.savedRosterDataB ?? {
+        players:{},
+        officials:{}
+    };
+
+    logEvents = partita.logEvents ?? [];
+
+    //=================================
+    // DATI GARA
+    //=================================
+
+    document.getElementById("team-a-name").value = partita.teamA ?? "";
+    document.getElementById("team-b-name").value = partita.teamB ?? "";
+
+    document.getElementById("match-num").value = partita.matchNumber ?? "";
+    document.getElementById("match-league").value = partita.league ?? "";
+    document.getElementById("match-season").value = partita.season ?? "";
+
+    document.getElementById("match-date").value = partita.matchDate ?? "";
+    document.getElementById("match-time").value = partita.matchTime ?? "";
+
+    document.getElementById("match-city").value = partita.city ?? "";
+    document.getElementById("match-venue").value = partita.venue ?? "";
+
+    document.getElementById("referee1").value = partita.referee1 ?? "";
+    document.getElementById("referee2").value = partita.referee2 ?? "";
+
+    document.getElementById("delegate1").value = partita.delegate1 ?? "";
+    document.getElementById("delegate2").value = partita.delegate2 ?? "";
+
+const tk = document.getElementById("timekeeper");
+if (tk) {
+    tk.value = partita.timekeeper ?? "";
+}
+
+const sec = document.getElementById("secretary");
+if (sec) {
+    sec.value = partita.secretary ?? "";
+}
+    //=================================
+    // GIOCATORI CASA
+    //=================================
+
+    (partita.giocatoriA ?? []).forEach((g,i)=>{
+
+        document.getElementById(`num-a-${i+1}`).value = g.numero ?? "";
+        document.getElementById(`name-a-${i+1}`).value = g.nome ?? "";
+
+    });
+
+    //=================================
+    // GIOCATORI OSPITI
+    //=================================
+
+    (partita.giocatoriB ?? []).forEach((g,i)=>{
+
+        document.getElementById(`num-b-${i+1}`).value = g.numero ?? "";
+        document.getElementById(`name-b-${i+1}`).value = g.nome ?? "";
+
+    });
+
+    //=================================
+    // DIRIGENTI CASA
+    //=================================
+
+    (partita.dirigentiA ?? []).forEach((d,i)=>{
+
+        const l = ["A","B","C","D","E"][i];
+
+        document.getElementById(`off-letter-a-${l}`).value = d.lettera ?? "";
+        document.getElementById(`off-name-a-${l}`).value = d.nome ?? "";
+
+    });
+
+    //=================================
+    // DIRIGENTI OSPITI
+    //=================================
+
+    (partita.dirigentiB ?? []).forEach((d,i)=>{
+
+        const l = ["A","B","C","D","E"][i];
+
+        document.getElementById(`off-letter-b-${l}`).value = d.lettera ?? "";
+        document.getElementById(`off-name-b-${l}`).value = d.nome ?? "";
+
+    });
+
+    //=================================
+    // RICOSTRUZIONE
+    //=================================
+
+aggiornaParziali();
+ricostruisciDashboard();
+cambiaStatoGara(statoGara);
+updatePenaltyCountersDisplay();
+updateTimeoutCountersDisplay();
+updateClockDisplay();
+updateActivePenalties();
+renderLogTable();
+aggiornaPulsanteUndo();
+
+    //----------------------------------
+    // GARA TERMINATA
+    //----------------------------------
+
+    if(statoGara === STATO_GARA.PARTITA_TERMINATA){
+
+        const btnRegistro =
+            document.getElementById("btn-post-game");
+
+        if(btnRegistro){
+            btnRegistro.classList.remove("hidden");
+        }
+
+        updateHalfDisplay();
+        updateClockDisplay();
+    }
+
+    //----------------------------------
+    // SE LA GARA È DEFINITIVA
+    //----------------------------------
+
+    if(partitaDefinitiva){
+
+        bloccaGara();
+
+    }
+
+}
+
+//=========================================
+// RICOSTRUISCE LA DASHBOARD
+//=========================================
+
+function ricostruisciDashboard(){
+
+console.log("Entrato in ricostruisciDashboard");
+
+    //=================================
+    // NOMI SQUADRE
+    //=================================
+
+    const nameA =
+        (document.getElementById("team-a-name").value || "CASA")
+        .toUpperCase();
+
+    const nameB =
+        (document.getElementById("team-b-name").value || "OSPITI")
+        .toUpperCase();
+
+    document.getElementById("dash-team-a").innerText = nameA;
+    document.getElementById("dash-team-b").innerText = nameB;
+    document.getElementById("panel-title-a").innerText = nameA;
+    document.getElementById("panel-title-b").innerText = nameB;
+
+    //=================================
+    // PUNTEGGIO
+    //=================================
+
+    document.getElementById("game-score").innerText =
+        `${String(scoreA).padStart(2,"0")} - ${String(scoreB).padStart(2,"0")}`;
+
+    //=================================
+    // TABELLE
+    //=================================
+
+    renderTable("A");
+
+    renderTable("B");
+
+    //=================================
+    // CONTATORI
+    //=================================
+
+    updatePenaltyCountersDisplay();
+    updateTimeoutCountersDisplay();
+    updateClockDisplay();
+    updateHalfDisplay();
+
+    updateActivePenalties();
+
+    //=================================
+    // REGISTRO EVENTI
+    //=================================
+    renderLogTable();
+
+    //=================================
+    // VISUALIZZA DASHBOARD
+    //=================================
+
+    document.getElementById("setup-section").classList.add("hidden");
+
+    document.getElementById("match-section").classList.remove("hidden");
+
+}
+
+//=========================================
+// FORMATTA EVENTO REGISTRO
+//=========================================
+
+function formattaEventoRegistro(ev){
+
+    let testo = ev.evento ?? ev.desc ?? "";
+
+    testo = testo.toUpperCase();
+
+    //---------------------------------
+    // RETE
+    //---------------------------------
+
+    if(testo.includes("RETE"))
+        return "RETE";
+
+    //---------------------------------
+    // RIGORE REALIZZATO
+    //---------------------------------
+
+    if(testo.includes("RIGORE REALIZZATO"))
+        return "RIGORE REALIZZATO";
+
+    //---------------------------------
+    // RIGORE ERRATO
+    //---------------------------------
+
+    if(testo.includes("RIGORE ERRATO"))
+        return "RIGORE ERRATO";
+
+    //---------------------------------
+    // AMMONIZIONE
+    //---------------------------------
+
+    if(testo.includes("AMMONIZIONE"))
+        return "AMMONIZIONE";
+
+    //---------------------------------
+    // SQUALIFICA AUTOMATICA
+    // DEVE VENIRE PRIMA DEL 2'
+    //---------------------------------
+
+    if(testo.includes("SQUALIFICA AUTOMATICA"))
+        return "SQUALIFICA AUTOMATICA (3° 2')";
+
+    //---------------------------------
+    // ESPULSIONE
+    //---------------------------------
+
+    if(
+        testo.includes("ESPULSIONE") ||
+        testo.includes("ROSSO") ||
+        testo.includes("SQUALIFICA")
+    )
+        return "ESPULSIONE";
+
+    //---------------------------------
+    // 2 MINUTI
+    //---------------------------------
+
+    if(
+        testo.includes("2 MIN") ||
+        testo.includes("2MIN") ||
+        testo.includes("2'")
+    )
+        return "2'";
+
+    //---------------------------------
+    // TIME OUT
+    //---------------------------------
+
+    if(testo.includes("TIME"))
+        return "TIME OUT";
+
+    return testo;
+}
+//=========================================
+// SALVATAGGIO AUTOMATICO
+//=========================================
+
+function salvaPartita() {
+
+    const partita = creaOggettoPartita();
+
+    //---------------------------------
+    // Stato gara
+    //---------------------------------
+
+    partita.statoGara = statoGara;
+
+    //---------------------------------
+    // Modalità gara
+    //---------------------------------
+
+    partita.modalitaGara = getModalitaGara();
+
+    //=================================
+    // SALVATAGGIO NEL BROWSER
+    //=================================
+
+    try {
+
+        localStorage.setItem(
+            'RefertoPallamano',
+            JSON.stringify(partita)
+        );
+
+        console.log('Partita salvata automaticamente');
+    }
+    catch(error){
+
+        console.error(
+            'Errore nel salvataggio:',
+            error
+        );
+    }
+}
+  //=========================================
+ // startAutosave
+//=========================================
+
+function startAutosave() {
+    if (autosaveInterval) clearInterval(autosaveInterval);
+    autosaveInterval = setInterval(() => {
+        salvaPartita();
+    }, 5000); // salva ogni 5 secondi
+}
+
+function stopAutosave() {
+
+    if (autosaveInterval) {
+
+        clearInterval(autosaveInterval);
+
+        autosaveInterval = null;
+
+    }
+}
+
+//=========================================
+// AVVISO PRIMA DI USCIRE
+//=========================================
+
+window.addEventListener("beforeunload", function () {
+
+    salvaPartita();
+
+});
+
+window.addEventListener("keydown", function(e){
+    if(e.key !== "F9") return;
+    e.preventDefault();
+    document.getElementById("btn-test-time").click();
+
+});
+
+
+//=========================================
+// AVVIO PROGRAMMA
+//=========================================
+
+// window.onload = buildSetupInputs;
+
+// NUOVA FUNZIONE PER IL TASTO ARANCIONE
+function recuperaUltimaGara() {
+    const dati = localStorage.getItem("RefertoPallamano");
+    if (dati) {
+        ripristinaPartita(JSON.parse(dati));
+        ricostruisciDashboard();
+        startAutosave();
+    }
+}
+
+// NUOVO CARICAMENTO PAGINA (Senza Popup)
+window.onload = function () {
+    buildSetupInputs();
+    
+    // Controlla se ci sono dati salvati nel browser
+    const dati = localStorage.getItem("RefertoPallamano");
+    const btnRecupero = document.getElementById("btn-recupero-rapido");
+    
+    // Se i dati esistono, mostra il pulsante arancione, altrimenti resta nascosto
+    if (dati && btnRecupero) {
+        btnRecupero.classList.remove("hidden");
+    }
+};
+    </script>
+
+<!-- =========================================
+     EDITOR EVENTO REGISTRO
+========================================= -->
+<div id="editor-evento"
+     class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+
+  <div class="bg-white rounded-2xl shadow-2xl w-[420px] p-5 space-y-4">
+
+    <div class="text-lg font-black text-slate-800 text-center uppercase">
+      Modifica Evento
+    </div>
+
+    <div>
+      <label class="text-sm font-bold text-slate-700">Tempo</label>
+      <input id="edit-time"
+             type="text"
+             class="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-800">
+    </div>
+
+   <div>
+  <label class="text-sm font-bold text-slate-700">Squadra</label>
+  <select id="edit-team"
+          onchange="aggiornaNumeriEditor()"
+          class="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-800">
+    <option value="A">A</option>
+    <option value="B">B</option>
+  </select>
+</div>
+
+   <div>
+  <label class="text-sm font-bold text-slate-700">Numero</label>
+  <select id="edit-num"
+          class="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-800">
+  </select>
+</div>
+
+<div>
+  <label class="text-sm font-bold text-slate-700">Evento</label>
+  <select id="edit-event"
+          class="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-800">
+
+    <option value="RETE">RETE</option>
+    <option value="RIGORE REALIZZATO">RIGORE REALIZZATO</option>
+    <option value="RIGORE ERRATO">RIGORE ERRATO</option>
+    <option value="AMMONIZIONE">AMMONIZIONE</option>
+    <option value="2'">2'</option>
+    <option value="ESPULSIONE">ESPULSIONE</option>
+    <option value="TIME OUT">TIME OUT</option>
+
+  </select>
+</div>
+
+    <div class="flex justify-between gap-3 pt-2">
+
+      <button onclick="eliminaEventoCorrente()"
+              class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold py-2 rounded-xl">
+        Elimina
+      </button>
+
+      <button onclick="chiudiEditorEvento()"
+              class="flex-1 bg-slate-500 hover:bg-slate-400 text-white font-bold py-2 rounded-xl">
+        Annulla
+      </button>
+
+      <button onclick="salvaModificaEvento()"
+              class="flex-1 bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 rounded-xl">
+        Salva
+      </button>
+
+    </div>
+  </div>
+</div>
+
+</body>
+<!-- =========================================
+     FINESTRA CONFERMA UNDO
+========================================= -->
+
+<div id="undo-modal"
+     class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+
+    <div class="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl w-[430px]">
+
+        <div class="bg-orange-700 text-white text-center font-bold py-2 rounded-t-xl">
+
+            ↶ ANNULLA ULTIMA AZIONE
+
+        </div>
+
+        <div class="p-5">
+
+            <div class="text-slate-300 text-sm mb-3">
+
+                Ultimo evento registrato
+
+            </div>
+
+            <div id="undo-description"
+                 class="bg-slate-800 border border-slate-700 rounded p-3 text-yellow-300 font-bold text-center">
+            </div>
+
+            <div class="mt-5 flex justify-center gap-4">
+                <button
+
+                    onclick="chiudiUndoModal()"
+                    class="bg-slate-700 hover:bg-slate-600 text-white px-6 py-2 rounded font-bold">
+                    Annulla
+                </button>
+
+                <button
+    onclick="confermaUndo()"
+    class="bg-green-700 hover:bg-green-600 text-white w-6 py-0.5 rounded font-bold text-[10px] cursor-pointer">
+    Conferma
+</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
