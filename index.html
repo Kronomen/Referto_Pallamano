@@ -245,10 +245,16 @@ body{
 
 function apriReferto(){
 
-window.open("Referto%20Pallamano.html", "_blank");
+    const elem = document.documentElement;
+
+    if(elem.requestFullscreen){
+
+        elem.requestFullscreen().catch(() => {});
+    }
+
+    window.location.href = "Referto%20Pallamano.html";
 
 }
-
 
 
 function chiudiBrowser(){

@@ -33,7 +33,9 @@
 <body class="p-2 text-slate-100 flex flex-col justify-between h-screen">
 
 <!-- SCHERMATA COMPILAZIONE DISTINTE (SETUP) -->
-<div id="setup-section" class="w-full h-full bg-slate-100 p-4 rounded-2xl shadow-lg border border-slate-300 space-y-4 overflow-y-auto text-slate-800">
+<div id="setup-section"
+     onclick="avviaFullscreen()"
+     class="w-full h-full bg-slate-100 p-4 rounded-2xl shadow-lg border border-slate-300 space-y-4 overflow-y-auto text-slate-800">
 
 <!-- INTESTAZIONE PRINCIPALE CON LOGHI -->
 <div class="max-w-[1400px] mx-auto">
@@ -510,17 +512,70 @@ DASHBOARD GARA
 <script>
 
 //=========================================
-// Avvia Full screen
+// AVVIA FULL SCREEN
 //=========================================
 
-    function avviaFullscreen() {
-        const elem = document.documentElement;
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen().catch(err => {
-                console.log("Fullscreen richiesto tramite interazione.");
-            });
-        }
+function avviaFullscreen() {
+
+    const elem = document.documentElement;
+
+    if (elem.requestFullscreen) {
+
+        elem.requestFullscreen().catch(err => {
+
+            console.log(
+                "Fullscreen richiesto tramite interazione."
+            );
+
+        });
+
     }
+
+}
+
+
+//=========================================
+// BLOCCO FULLSCREEN
+//=========================================
+
+function mantieniFullscreen(){
+
+    if(!document.fullscreenElement){
+
+        const elem = document.documentElement;
+
+        if(elem.requestFullscreen){
+
+            elem.requestFullscreen().catch(() => {
+
+                // Il browser può impedire il fullscreen
+                // se non è stato attivato da un'azione dell'utente
+
+            });
+
+        }
+
+    }
+
+}
+
+
+//=========================================
+// CONTROLLO TASTO F11
+//=========================================
+
+window.addEventListener("keydown", function(e){
+
+    if(e.key === "F11"){
+
+        e.preventDefault();
+
+        mantieniFullscreen();
+
+    }
+
+});
+
 
 //=========================================
 // POPUP FINE TEMPO
@@ -541,8 +596,9 @@ function mostraFineTempo(messaggio){
     modal.classList.add("flex");
 }
 
+
 //=========================================
-// Chiudi Fine Tempo
+// CHIUDI FINE TEMPO
 //=========================================
 
 function chiudiFineTempo(){
@@ -566,10 +622,10 @@ function chiudiFineTempo(){
     ){
 
         nextHalf();
+
     }
 
 }
-
 //=========================================
 // IMPORT CSV SQUADRE
 //=========================================
