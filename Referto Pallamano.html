@@ -34,7 +34,6 @@
 
 <!-- SCHERMATA COMPILAZIONE DISTINTE (SETUP) -->
 <div id="setup-section"
-     onclick="avviaFullscreen()"
      class="w-full h-full bg-slate-100 p-4 rounded-2xl shadow-lg border border-slate-300 space-y-4 overflow-y-auto text-slate-800">
 
 <!-- INTESTAZIONE PRINCIPALE CON LOGHI -->
@@ -745,50 +744,162 @@ const garaExcel = document.getElementById('importGaraXLSX'); if(garaExcel){ gara
 
 //=========================================
 // IMPORT EXCEL GARA COMPLETA
+// Compatibile XLSX / XLSM / XLS
 //=========================================
 
 function importaGaraExcel(file){
 
-const reader = new FileReader();
-reader.onload = function(e){
-const data = new Uint8Array(e.target.result);
-const workbook = XLSX.read(data, { type: 'array' });
+    if(!file){
+        alert("Nessun file Excel selezionato.");
+        return;
+    }
 
-// Cerca il foglio GARA
+    console.log("Importazione Excel:", file.name);
+    console.log("Tipo file:", file.type);
+    console.log("Dimensione:", file.size);
 
-let sheetName = workbook.SheetNames.find(
+    const reader = new FileReader();
 
-n => n.trim().toUpperCase() === 'GARA' || n.trim().toUpperCase() === 'GARA'
+    reader.onload = function(e){
 
-);
+        try {
 
-if(!sheetName){
+            const data = new Uint8Array(e.target.result);
 
-alert('Foglio GARA non trovato');
+            //---------------------------------
+            // LETTURA FILE EXCEL
+            //---------------------------------
 
-return;
+            const workbook = XLSX.read(data, {
+                type: "array",
+                cellFormula: true,
+                cellHTML: false,
+                cellNF: false,
+                cellStyles: false
+            });
 
-}
+            console.log("Fogli Excel trovati:", workbook.SheetNames);
 
-const sheet = workbook.Sheets[sheetName];
+            //---------------------------------
+            // CERCA FOGLIO GARA
+            //---------------------------------
 
-const righe = XLSX.utils.sheet_to_json(sheet, {
+            const sheetName = workbook.SheetNames.find(
+                n => String(n).trim().toUpperCase() === "GARA"
+            );
 
-header: 1,
+            if(!sheetName){
 
-defval: ''
+                alert(
+                    "Il file Excel è stato aperto, ma non contiene il foglio 'Gara'.\n\n" +
+                    "Fogli trovati:\n" +
+                    workbook.SheetNames.join("\n")
+                );
 
-});
+                return;
+            }
 
- importaDatiGara(righe);
- importaRigheExcel(righe, 'A');
- importaRigheExcel(righe, 'B');
+            //---------------------------------
+            // FOGLIO GARA
+            //---------------------------------
 
-alert('Gara importata correttamente dal foglio GARA');
+            const sheet = workbook.Sheets[sheetName];
 
-};
+            if(!sheet){
 
-reader.readAsArrayBuffer(file);
+                alert("Impossibile leggere il foglio GARA.");
+                return;
+            }
+
+            //---------------------------------
+            // CONVERSIONE IN MATRICE
+            //---------------------------------
+
+            const righe = XLSX.utils.sheet_to_json(sheet, {
+
+                header: 1,
+
+                defval: "",
+
+                raw: true
+
+            });
+
+            console.log("Righe importate:", righe.length);
+
+            //---------------------------------
+            // CONTROLLO MINIMO
+            //---------------------------------
+
+            if(!righe || righe.length === 0){
+
+                alert("Il foglio GARA è vuoto.");
+                return;
+            }
+
+            //---------------------------------
+            // IMPORTAZIONE DATI
+            //---------------------------------
+
+            importaDatiGara(righe);
+
+            //---------------------------------
+            // SQUADRA A
+            //---------------------------------
+
+            importaRigheExcel(righe, "A");
+
+            //---------------------------------
+            // SQUADRA B
+            //---------------------------------
+
+            importaRigheExcel(righe, "B");
+
+            //---------------------------------
+            // AGGIORNA EVENTUALI DATI VISIVI
+            //---------------------------------
+
+            if(typeof renderSetup === "function"){
+                renderSetup();
+            }
+
+            //---------------------------------
+            // CONFERMA
+            //---------------------------------
+
+            alert(
+                "Gara importata correttamente dal file Excel:\n\n" +
+                file.name
+            );
+
+        }
+        catch(error){
+
+            console.error(
+                "ERRORE IMPORTAZIONE EXCEL:",
+                error
+            );
+
+            alert(
+                "ERRORE NELL'APERTURA DEL FILE EXCEL.\n\n" +
+                "File: " + file.name + "\n\n" +
+                "Dettaglio:\n" +
+                error.message
+            );
+
+        }
+
+    };
+
+    reader.onerror = function(){
+
+        alert(
+            "Impossibile leggere il file Excel."
+        );
+
+    };
+
+    reader.readAsArrayBuffer(file);
 
 }
 
