@@ -1928,53 +1928,30 @@ function confirmPenaltyGoal(){
     salvaPartita();
 
 }
+
 //---------------------------------
 // CONTROLLO FINE SERIE RIGORI
 //---------------------------------
 
 function controllaFineRigori(){
 
-    const tentativiA = rigori.filter(r => r.team === "A").length;
-    const tentativiB = rigori.filter(r => r.team === "B").length;
+    const tentativiA =
+        rigori.filter(r => r.team === "A").length;
 
-    const golA = rigori.filter(r => r.team === "A" && r.goal).length;
-    const golB = rigori.filter(r => r.team === "B" && r.goal).length;
+    const tentativiB =
+        rigori.filter(r => r.team === "B").length;
 
-    //---------------------------------
-    // VITTORIA ANTICIPATA (PRIMI 5)
-    //---------------------------------
+    const golA =
+        rigori.filter(r => r.team === "A" && r.goal).length;
 
-    if(tentativiA < 5 || tentativiB < 5){
+    const golB =
+        rigori.filter(r => r.team === "B" && r.goal).length;
 
-        const restantiA = 5 - tentativiA;
-        const restantiB = 5 - tentativiB;
-
-        if(golA > golB + restantiB){
-
-            serieTerminata = true;
-            motivoFineGara = "RIGORI";
-
-            terminaGaraDefinitivamente();
-            return;
-
-        }
-
-        if(golB > golA + restantiA){
-
-            serieTerminata = true;
-            motivoFineGara = "RIGORI";
-
-            terminaGaraDefinitivamente();
-            return;
-
-        }
-
-        return;
-
-    }
 
     //---------------------------------
-    // ASPETTA CHE TIRINO ENTRAMBI
+    // DEVONO AVERE LO STESSO NUMERO
+    // DI TIRI PRIMA DI CHIUDERE
+    // IL TURNO
     //---------------------------------
 
     if(tentativiA !== tentativiB){
@@ -1983,8 +1960,49 @@ function controllaFineRigori(){
 
     }
 
+
     //---------------------------------
-    // FINE DEI PRIMI 5
+    // PRIMI 5 RIGORI
+    //---------------------------------
+
+    if(tentativiA < 5){
+
+        const restantiA = 5 - tentativiA;
+        const restantiB = 5 - tentativiB;
+
+
+        //---------------------------------
+        // VITTORIA MATEMATICAMENTE CERTA
+        //---------------------------------
+
+        if(golA > golB + restantiB){
+
+            serieTerminata = true;
+            motivoFineGara = "RIGORI";
+
+            terminaGaraDefinitivamente();
+
+            return;
+        }
+
+
+        if(golB > golA + restantiA){
+
+            serieTerminata = true;
+            motivoFineGara = "RIGORI";
+
+            terminaGaraDefinitivamente();
+
+            return;
+        }
+
+
+        return;
+    }
+
+
+    //---------------------------------
+    // FINE DEI PRIMI 5 RIGORI
     //---------------------------------
 
     if(tentativiA === 5){
@@ -1996,11 +2014,20 @@ function controllaFineRigori(){
 
             terminaGaraDefinitivamente();
 
+            return;
         }
 
-        return;
 
+        //---------------------------------
+        // PARITÀ DOPO 5 RIGORI
+        // → MORTE IMPROVVISA
+        //---------------------------------
+
+        faseRigori = 2;
+
+        return;
     }
+
 
     //---------------------------------
     // MORTE IMPROVVISA
@@ -2008,7 +2035,10 @@ function controllaFineRigori(){
 
     if(tentativiA > 5){
 
-        // Controlla solo dopo che hanno tirato entrambi
+        //---------------------------------
+        // SI CONTROLLA SOLO DOPO CHE
+        // ENTRAMBE HANNO TIRATO
+        //---------------------------------
 
         if(golA !== golB){
 
@@ -2018,7 +2048,6 @@ function controllaFineRigori(){
             terminaGaraDefinitivamente();
 
             return;
-
         }
 
     }

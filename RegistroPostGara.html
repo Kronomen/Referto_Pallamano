@@ -576,12 +576,14 @@ EDITOR EVENTO
 
             <!-- Parziali in Orizzontale -->
             <div id="hdr-parziale" style="display:flex;justify-content:center;gap:6px;font-size:10px;color:#cbd5e1;background:rgba(255,255,255,.06);border-radius:6px;padding:3px;margin-top:4px;flex-wrap:wrap;">
-                <span>1°T:<b id="par-1t">—</b></span>|
-                <span>2°T:<b id="par-2t">—</b></span>|
-                <span>1°TS:<b id="par-3t">—</b></span>|
-                <span>2°TS:<b id="par-4t">—</b></span>|
-                <span>Rig:<b id="par-rig">—</b></span>
-            </div>
+    <span>1°T:<b id="par-1t">—</b></span>|
+    <span>2°T:<b id="par-2t">—</b></span>|
+    <span>1°TS:<b id="par-3t">—</b></span>|
+    <span>2°TS:<b id="par-4t">—</b></span>|
+    <span>3°TS:<b id="par-5t">—</b></span>|
+    <span>4°TS:<b id="par-6t">—</b></span>|
+    <span>Rig:<b id="par-rig">—</b></span>
+</div>
         </div>
 
         <!-- SQUADRA OSPITE + Delegati piccoli e indipendenti -->
@@ -908,8 +910,15 @@ function ricalcolaRisultato(){
             .trim()
             .toUpperCase();
 
-        // Contano SOLO questi eventi
-        if(tipo === "RETE" || tipo === "GOAL" || tipo === "RIGORE REALIZZATO"){
+        //=========================================
+        // RETI DELLA GARA
+        //=========================================
+        // I RIGORI DELLA SERIE FINALE NON
+        // modificano il risultato della gara.
+        // Il loro risultato è gestito separatamente
+        // da penaltyShootout.scoreA / scoreB.
+
+        if(tipo === "RETE" || tipo === "GOAL"){
 
             if(squadra === "A"){
 
@@ -920,7 +929,6 @@ function ricalcolaRisultato(){
                 scoreB++;
 
             }
-
         }
 
         // Aggiorna il risultato progressivo della riga
@@ -935,8 +943,9 @@ function ricalcolaRisultato(){
         partita.scoreB = scoreB;
 
     }
-document.getElementById("hdr-score-a").textContent = scoreA;
-document.getElementById("hdr-score-b").textContent = scoreB;
+
+    document.getElementById("hdr-score-a").textContent = scoreA;
+    document.getElementById("hdr-score-b").textContent = scoreB;
 
 }
 
@@ -1893,15 +1902,44 @@ function mostraRegistro(){
     let ts1B = partita.overtime1ScoreB ?? partita.risultati?.primoSupplementare?.B ?? "-";
     document.getElementById("par-3t").textContent = (ts1A !== "-" && ts1B !== "-") ? `${ts1A}-${ts1B}` : "-";
 
-    // 2° Supplementare (4° tempo)
-    let ts2A = partita.overtime2ScoreA ?? partita.risultati?.secondoSupplementare?.A ?? "-";
-    let ts2B = partita.overtime2ScoreB ?? partita.risultati?.secondoSupplementare?.B ?? "-";
-    document.getElementById("par-4t").textContent = (ts2A !== "-" && ts2B !== "-") ? `${ts2A}-${ts2B}` : "-";
+    // 2° Supplementare
+let ts2A = partita.overtime2ScoreA ?? "-";
+let ts2B = partita.overtime2ScoreB ?? "-";
 
-    // Tiri di Rigore
-    let rigA = partita.penaltyShootout?.scoreA ?? partita.risultati?.rigoriFinali?.A ?? "-";
-    let rigB = partita.penaltyShootout?.scoreB ?? partita.risultati?.rigoriFinali?.B ?? "-";
-    document.getElementById("par-rig").textContent = (rigA !== "-" && rigB !== "-") ? `${rigA}-${rigB}` : "-";
+document.getElementById("par-4t").textContent =
+    (ts2A !== "-" && ts2B !== "-")
+        ? `${ts2A}-${ts2B}`
+        : "-";
+
+
+// 3° Supplementare
+let ts3A = partita.overtime3ScoreA ?? "-";
+let ts3B = partita.overtime3ScoreB ?? "-";
+
+document.getElementById("par-5t").textContent =
+    (ts3A !== "-" && ts3B !== "-")
+        ? `${ts3A}-${ts3B}`
+        : "-";
+
+
+// 4° Supplementare
+let ts4A = partita.overtime4ScoreA ?? "-";
+let ts4B = partita.overtime4ScoreB ?? "-";
+
+document.getElementById("par-6t").textContent =
+    (ts4A !== "-" && ts4B !== "-")
+        ? `${ts4A}-${ts4B}`
+        : "-";
+
+
+// Tiri di Rigore
+let rigA = partita.penaltyShootout?.scoreA ?? "-";
+let rigB = partita.penaltyShootout?.scoreB ?? "-";
+
+document.getElementById("par-rig").textContent =
+    (rigA !== "-" && rigB !== "-")
+        ? `${rigA}-${rigB}`
+        : "-";
 
     // Arbitri e Delegati (posizionati sotto le squadre)
     document.getElementById("hdr-arbitro1").textContent = 

@@ -315,7 +315,7 @@ DASHBOARD GARA
                 <button id="btn-toggle-clock" onclick="toggleClock()" class="bg-green-600 hover:bg-green-700 text-white font-black px-6 py-2 rounded-xl shadow">▶ START</button>
                 <button onclick="adjustTimer(-1)" class="w-12 h-12 bg-slate-200 hover:bg-slate-300 text-slate-700 font-black rounded-xl border shadow">−1</button>
             </div>
-            <div id="game-timer" class="bg-black border-4 border-cyan-500 rounded-2xl min-w-[260px] text-center text-7xl font-mono font-black text-cyan-300 px-6 py-3 shadow-xl">00:00</div>
+            <div id="game-timer" class="bg-black border-4 border-yellow-500 rounded-2xl min-w-[260px] text-center text-7xl font-mono font-black text-yellow-300 px-6 py-3 shadow-xl">00:00</div>
             <div class="flex justify-start items-center gap-3 pl-8">
                 <button onclick="adjustTimer(1)" class="w-12 h-12 bg-slate-200 hover:bg-slate-300 text-slate-700 font-black rounded-xl border shadow">+1</button>
                 <button id="btn-test-time" onclick="testJumpTime()" class="hidden bg-purple-700 hover:bg-purple-600 text-white font-black px-5 py-2 rounded-xl shadow">⏩ TEST</button>
@@ -480,8 +480,39 @@ DASHBOARD GARA
     </div>
 </div>
 
+<!-- FINESTRA FINE TEMPO -->
+<div id="fine-tempo-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-[100]">
+    <div class="bg-white rounded-2xl shadow-2xl w-[430px] border-4 border-red-600">
+
+        <div class="bg-red-600 text-white text-center font-black text-xl py-3 rounded-t-xl">
+            FINE TEMPO
+        </div>
+
+        <div class="p-6 text-center">
+
+            <div id="fine-tempo-messaggio"
+                 class="text-2xl font-black text-slate-800 mb-6">
+                Fine 1° Tempo!
+            </div>
+
+            <button
+                onclick="chiudiFineTempo()"
+                class="bg-blue-700 hover:bg-blue-800 text-white px-10 py-3 rounded-xl font-black text-lg shadow-lg">
+                OK
+            </button>
+
+        </div>
+    </div>
+</div>
+
+
 <!-- SCRIPT LOGICA APPLICAZIONE -->
 <script>
+
+//=========================================
+// Avvia Full screen
+//=========================================
+
     function avviaFullscreen() {
         const elem = document.documentElement;
         if (elem.requestFullscreen) {
@@ -490,6 +521,36 @@ DASHBOARD GARA
             });
         }
     }
+
+//=========================================
+// POPUP FINE TEMPO
+//=========================================
+
+function mostraFineTempo(messaggio){
+
+    const modal = document.getElementById("fine-tempo-modal");
+    const testo = document.getElementById("fine-tempo-messaggio");
+
+    if(!modal) return;
+
+    if(testo){
+        testo.textContent = messaggio;
+    }
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+}
+
+function chiudiFineTempo(){
+
+    const modal = document.getElementById("fine-tempo-modal");
+
+    if(!modal) return;
+
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+}
+
 
 //=========================================
 // IMPORT CSV SQUADRE
@@ -2172,7 +2233,6 @@ function arrestaCronometroFineTempo(){
     //---------------------------------
 
     clearInterval(timerInterval);
-
     timerInterval = null;
 
     //---------------------------------
@@ -2182,41 +2242,82 @@ function arrestaCronometroFineTempo(){
     isRunning = false;
 
     //---------------------------------
-    // Forza il tempo esatto
+    // Calcola la fine ESATTA del tempo
     //---------------------------------
+
+    let fineTempo = null;
 
     switch(statoGara){
 
+        // 1° TEMPO
         case STATO_GARA.PRIMO_TEMPO:
-            timerSeconds = getHalfDurationSeconds();
+
+            fineTempo = getHalfDurationSeconds();
+
             break;
 
+
+        // 2° TEMPO
         case STATO_GARA.SECONDO_TEMPO:
-            timerSeconds = getMatchDurationSeconds();
+
+            fineTempo = getMatchDurationSeconds();
+
             break;
 
+
+        // 1° TEMPO SUPPLEMENTARE
         case STATO_GARA.SUPPLEMENTARE1_PRIMO:
-            timerSeconds = 3900;
+
+            fineTempo = getMatchDurationSeconds() + 300;
+
             break;
 
+
+        // 2° TEMPO SUPPLEMENTARE
         case STATO_GARA.SUPPLEMENTARE1_SECONDO:
-            timerSeconds = 4200;
+
+            fineTempo = getMatchDurationSeconds() + 600;
+
             break;
 
+
+        // 3° TEMPO SUPPLEMENTARE
         case STATO_GARA.SUPPLEMENTARE2_PRIMO:
-            timerSeconds = 4500;
+
+            fineTempo = getMatchDurationSeconds() + 900;
+
             break;
 
+
+        // 4° TEMPO SUPPLEMENTARE
         case STATO_GARA.SUPPLEMENTARE2_SECONDO:
-            timerSeconds = 4800;
+
+            fineTempo = getMatchDurationSeconds() + 1200;
+
             break;
     }
+
+
+//---------------------------------
+// FORZA IL CRONOMETRO AL VALORE ESATTO
+// SOLO QUANDO HA RAGGIUNTO LA FINE
+//---------------------------------
+
+if(
+    fineTempo !== null &&
+    timerSeconds >= fineTempo
+){
+
+    timerSeconds = fineTempo;
+
+}
 
     //---------------------------------
     // Aggiorna display
     //---------------------------------
 
     updateClockDisplay();
+
 
     //---------------------------------
     // Pulsante torna START
@@ -2230,11 +2331,15 @@ function arrestaCronometroFineTempo(){
 
     }
 
+
     //---------------------------------
     // Pulsante modifica resta nascosto
     //---------------------------------
 
-    document.getElementById('btn-edit-setup').classList.add('hidden');
+    document
+        .getElementById('btn-edit-setup')
+        .classList.add('hidden');
+
 
     //---------------------------------
     // Aggiorna interfaccia
@@ -2244,11 +2349,13 @@ function arrestaCronometroFineTempo(){
 
     updateNextHalfButton();
 
+
     //---------------------------------
     // Salva
     //---------------------------------
 
     salvaPartita();
+
 }
 
     //---------------------------------
@@ -2266,6 +2373,61 @@ function esciProgramma(){
 
     window.close();
 }
+
+//=========================================
+// SUONO FINE TEMPO
+//=========================================
+
+function suonaFineTempo(numeroBeep){
+
+    try {
+
+        const ctx = new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+
+        function beep(delay){
+
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = "square";
+            osc.frequency.value = 900;
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            gain.gain.setValueAtTime(
+                0.25,
+                ctx.currentTime + delay
+            );
+
+            osc.start(
+                ctx.currentTime + delay
+            );
+
+            osc.stop(
+                ctx.currentTime + delay + 0.18
+            );
+        }
+
+        if(numeroBeep === 1){
+
+            // BEEP SINGOLO
+            beep(0.00);
+
+        }else{
+
+            // TRIPLO BEEP
+            beep(0.00);
+            beep(0.30);
+            beep(0.60);
+        }
+
+    } catch(e){}
+}
+
 
 //=====================================
 // Timer
@@ -2384,45 +2546,13 @@ if (
 
 }
 
-if (
-    statoGara === STATO_GARA.SUPPLEMENTARE1_PRIMO &&
-    timerSeconds >= 3900
-){
+//=========================================
+// FINE TEMPI SUPPLEMENTARI
+//=========================================
+// La gestione della fine tempo viene fatta
+// esclusivamente dal setInterval del cronometro.
+// Non inserire qui controlli con valori assoluti.
 
-    alert("Il 1° Tempo Supplementare è terminato.");
-    return;
-
-}
-
-if (
-    statoGara === STATO_GARA.SUPPLEMENTARE1_SECONDO &&
-    timerSeconds >= 4200
-){
-
-    alert("Il 2° Tempo Supplementare è terminato.");
-    return;
-
-}
-
-if (
-    statoGara === STATO_GARA.SUPPLEMENTARE2_PRIMO &&
-    timerSeconds >= 4500
-){
-
-    alert("Il 3° Tempo Supplementare è terminato.");
-    return;
-
-}
-
-if (
-    statoGara === STATO_GARA.SUPPLEMENTARE2_SECONDO &&
-    timerSeconds >= 4800
-){
-
-    alert("Il 4° Tempo Supplementare è terminato.");
-    return;
-
-}
 
 //=====================================
 // AVVIO CRONOMETRO
@@ -2431,207 +2561,408 @@ if (
 // Lo stato della gara è già gestito dalle
 // funzioni di transizione.
 
-// ESCI NASCOSTO
-
 updateExitButton();
 
 mostraPulsanteFineTempo(false);
 
 // Chiude qualsiasi popup aperto
-
 closeActionPanel("A");
 closeActionPanel("B");
 hideHalfConfirm();
+
 console.log('avvio setInterval');
+
 timerInterval = setInterval(() => {
-        timerSeconds++;
-console.log('timer:', timerSeconds);
+
+
+    //=====================================
+    // CALCOLA FINE DEL TEMPO CORRENTE
+    //=====================================
+
+    let fineTempo = null;
+
+    switch(statoGara){
+
+        //=============================
+        // 1° TEMPO
+        //=============================
+
+        case STATO_GARA.PRIMO_TEMPO:
+
+            fineTempo = getHalfDurationSeconds();
+
+            break;
+
+
+        //=============================
+        // 2° TEMPO
+        //=============================
+
+        case STATO_GARA.SECONDO_TEMPO:
+
+            fineTempo = getMatchDurationSeconds();
+
+            break;
+
+
+        //=============================
+        // 1° TEMPO SUPPLEMENTARE
+        //=============================
+
+        case STATO_GARA.SUPPLEMENTARE1_PRIMO:
+
+            fineTempo = getMatchDurationSeconds() + 300;
+
+            break;
+
+
+        //=============================
+        // 2° TEMPO SUPPLEMENTARE
+        //=============================
+
+        case STATO_GARA.SUPPLEMENTARE1_SECONDO:
+
+            fineTempo = getMatchDurationSeconds() + 600;
+
+            break;
+
+
+        //=============================
+        // 3° TEMPO SUPPLEMENTARE
+        //=============================
+
+        case STATO_GARA.SUPPLEMENTARE2_PRIMO:
+
+            fineTempo = getMatchDurationSeconds() + 900;
+
+            break;
+
+
+        //=============================
+        // 4° TEMPO SUPPLEMENTARE
+        //=============================
+
+        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+
+            fineTempo = getMatchDurationSeconds() + 1200;
+
+            break;
+    }
+
+
+    //=====================================
+    // AVANZA IL CRONOMETRO
+    //=====================================
+
+    timerSeconds++;
+
+
+    //=====================================
+    // NON SUPERARE LA FINE DEL TEMPO
+    //=====================================
+
+    if(
+        fineTempo !== null &&
+        timerSeconds > fineTempo
+    ){
+
+        timerSeconds = fineTempo;
+
+    }
+
+
+    //=====================================
+    // AGGIORNA DISPLAY
+    //=====================================
+
+    updateClockDisplay();
+
+    updateActivePenalties();
+
+    salvaPartita();
+
+
+    //=====================================
+    // FINE 1° TEMPO
+    //=====================================
+
+    if(
+        statoGara === STATO_GARA.PRIMO_TEMPO &&
+        timerSeconds >= getHalfDurationSeconds()
+    ){
+
+        arrestaCronometroFineTempo();
 
         updateClockDisplay();
 
-        updateActivePenalties();
+        try {
 
-        salvaPartita();
+            const ctx = new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
 
-//=========================
-// FINE 1° TEMPO
-//=========================
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
 
-if (
-    statoGara === STATO_GARA.PRIMO_TEMPO &&
-    timerSeconds >= getHalfDurationSeconds()
-){
+            osc.type = "square";
+            osc.frequency.value = 900;
 
-arrestaCronometroFineTempo();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
 
-    try {
+            gain.gain.setValueAtTime(
+                0.25,
+                ctx.currentTime
+            );
 
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            osc.start();
 
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+            osc.stop(
+                ctx.currentTime + 0.80
+            );
 
-        osc.type = "square";
-        osc.frequency.value = 900;
+        } catch(e){}
 
-        osc.connect(gain);
-        gain.connect(ctx.destination);
+        stopTimerWarning();
 
-        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        updateNextHalfButton();
 
-        osc.start();
-        osc.stop(ctx.currentTime + 0.80);
+        mostraFineTempo("Fine 1° Tempo!");
 
-    } catch(e){}
+        document
+            .getElementById("game-timer")
+            .classList.remove("timer-warning");
 
-    stopTimerWarning();
+        return;
+    }
 
-    updateNextHalfButton();
 
-    alert("Fine 1° Tempo!");
+    //=====================================
+    // FINE 2° TEMPO / FINE GARA
+    //=====================================
 
-    document.getElementById("game-timer").classList.remove("timer-warning");
+    if(
+        statoGara === STATO_GARA.SECONDO_TEMPO &&
+        timerSeconds >= getMatchDurationSeconds()
+    ){
 
-    updateNextHalfButton();
+        arrestaCronometroFineTempo();
 
-    return;
+        updateClockDisplay();
 
-}
-     
-        //=========================
-        // FINE GARA
-        //=========================
+        try {
 
-        if (
-    statoGara === STATO_GARA.SECONDO_TEMPO &&
-    timerSeconds >= getMatchDurationSeconds()
-){
+            const ctx = new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
 
-           arrestaCronometroFineTempo();
+            function beep(delay){
 
-            try {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
 
-           const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                osc.type = "square";
+                osc.frequency.value = 900;
 
- //=========================
-// Beep
-//=========================
+                osc.connect(gain);
+                gain.connect(ctx.destination);
 
-                function beep(delay){
+                gain.gain.setValueAtTime(
+                    0.25,
+                    ctx.currentTime + delay
+                );
 
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
+                osc.start(
+                    ctx.currentTime + delay
+                );
 
-                    osc.type = "square";
-                    osc.frequency.value = 900;
+                osc.stop(
+                    ctx.currentTime + delay + 0.18
+                );
+            }
 
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
+            beep(0.00);
+            beep(0.30);
+            beep(0.60);
 
-                    gain.gain.setValueAtTime(0.25, ctx.currentTime + delay);
+        } catch(e){}
 
-                    osc.start(ctx.currentTime + delay);
-                    osc.stop(ctx.currentTime + delay + 0.18);
+        stopTimerWarning();
 
-                }
+        mostraPulsanteFineTempo(true);
 
-                // Tre bip di fine gara
-                beep(0.00);
-                beep(0.30);
-                beep(0.60);
+        if(scoreA !== scoreB){
 
-            } catch(e){}
+            mostraFineTempo("FINE GARA");
 
-            stopTimerWarning();
+        }else if(usaTempiSupplementari){
 
-            mostraPulsanteFineTempo(true);
+            mostraFineTempo(
+                "FINE TEMPI REGOLAMENTARI\nSI PROCEDE AI TEMPI SUPPLEMENTARI"
+            );
 
-            endMatch();
+        }else if(usaRigori){
 
-            return;
+            mostraFineTempo(
+                "FINE TEMPI REGOLAMENTARI\nSI PROCEDE AI TIRI DI RIGORE"
+            );
 
+        }else{
+
+            mostraFineTempo(
+                "FINE TEMPI REGOLAMENTARI"
+            );
         }
 
- //=========================
-// FINE 1° TEMPO SUPPLEMENTARE
-//=========================
+        endMatch();
 
-if (
-    statoGara === STATO_GARA.SUPPLEMENTARE1_PRIMO &&
-    timerSeconds >= 3900
-){
+        return;
+    }
 
-   arrestaCronometroFineTempo();
-    endFirstOvertime();
 
-    return;
+    //=====================================
+    // FINE 1° TEMPO SUPPLEMENTARE
+    //=====================================
 
+    if(
+        statoGara === STATO_GARA.SUPPLEMENTARE1_PRIMO &&
+        timerSeconds >= getMatchDurationSeconds() + 300
+    ){
+
+        arrestaCronometroFineTempo();
+
+        updateClockDisplay();
+
+        stopTimerWarning();
+
+mostraFineTempo(
+    "Fine 1° Tempo Supplementare!"
+);
+
+suonaFineTempo(1);
+
+endFirstOvertime();
+
+        return;
+    }
+
+
+    //=====================================
+    // FINE 2° TEMPO SUPPLEMENTARE
+    //=====================================
+
+    if(
+        statoGara === STATO_GARA.SUPPLEMENTARE1_SECONDO &&
+        timerSeconds >= getMatchDurationSeconds() + 600
+    ){
+
+        arrestaCronometroFineTempo();
+
+        updateClockDisplay();
+
+        stopTimerWarning();
+
+if(scoreA !== scoreB){
+
+    mostraFineTempo("FINE GARA");
+
+}else{
+
+    mostraFineTempo(
+        "FINE 2° TEMPO SUPPLEMENTARE"
+    );
 }
 
-//=========================
-// FINE 2° TEMPO SUPPLEMENTARE
-//=========================
+suonaFineTempo(3);
 
-if (
-    statoGara === STATO_GARA.SUPPLEMENTARE1_SECONDO &&
-    timerSeconds >= 4200
-){
+endSecondOvertime();
 
-    arrestaCronometroFineTempo();
-    endSecondOvertime();
+        return;
+    }
 
-    return;
 
+    //=====================================
+    // FINE 3° TEMPO SUPPLEMENTARE
+    //=====================================
+
+    if(
+        statoGara === STATO_GARA.SUPPLEMENTARE2_PRIMO &&
+        timerSeconds >= getMatchDurationSeconds() + 900
+    ){
+
+        arrestaCronometroFineTempo();
+
+        updateClockDisplay();
+
+        stopTimerWarning();
+
+mostraFineTempo(
+    "FINE 3° TEMPO SUPPLEMENTARE"
+);
+
+suonaFineTempo(1);
+
+endThirdOvertime();
+
+        return;
+    }
+
+
+    //=====================================
+    // FINE 4° TEMPO SUPPLEMENTARE
+    //=====================================
+
+    if(
+        statoGara === STATO_GARA.SUPPLEMENTARE2_SECONDO &&
+        timerSeconds >= getMatchDurationSeconds() + 1200
+    ){
+
+        arrestaCronometroFineTempo();
+
+        updateClockDisplay();
+
+        stopTimerWarning();
+
+if(scoreA !== scoreB){
+
+    mostraFineTempo("FINE GARA");
+
+}else{
+
+    mostraFineTempo(
+        "FINE 4° TEMPO SUPPLEMENTARE"
+    );
 }
 
-//=========================
-// FINE 3° TEMPO SUPPLEMENTARE
-//=========================
+suonaFineTempo(3);
 
-if (
-    statoGara === STATO_GARA.SUPPLEMENTARE2_PRIMO &&
-    timerSeconds >= 4500
-){
+mostraPulsanteFineTempo(true);
 
-    arrestaCronometroFineTempo();
+endFourthOvertime();
 
-    endThirdOvertime();
+        return;
+    }
 
-    return;
+}, 1000);
 
-}
 
-//=========================
-// FINE 4° TEMPO SUPPLEMENTARE
-//=========================
-
-if (
-    statoGara === STATO_GARA.SUPPLEMENTARE2_SECONDO &&
-    timerSeconds >= 4800
-){
-
-    arrestaCronometroFineTempo();
-
-updateNextHalfButton();
-
-    stopTimerWarning();
-
-    mostraPulsanteFineTempo(true);
-
-    endFourthOvertime();
-
-    return;
-
-}
-
-    },1000);
+//=====================================
+// INTERFACCIA
+//=====================================
 
 updateExitButton();
-    document.getElementById("btn-toggle-clock").innerText = "PAUSA";
 
-    document.getElementById("btn-edit-setup").classList.add("hidden");
+document
+    .getElementById("btn-toggle-clock")
+    .innerText = "PAUSA";
 
-    salvaPartita();
+document
+    .getElementById("btn-edit-setup")
+    .classList.add("hidden");
+
+salvaPartita();
 
 }
 
@@ -3352,7 +3683,7 @@ function startSecondOvertime(){
         STATO_GARA.SUPPLEMENTARE1_SECONDO
     );
 
-    timerSeconds = 3900;
+    timerSeconds = getMatchDurationSeconds() + 300;
 
 refreshDashboard();
 
@@ -3508,7 +3839,7 @@ function startThirdOvertime(){
         STATO_GARA.SUPPLEMENTARE2_PRIMO
     );
 
-    timerSeconds = 4200;
+    timerSeconds = getMatchDurationSeconds() + 600;
 
     updateClockDisplay();
     updateHalfDisplay();
@@ -3590,7 +3921,7 @@ function startFourthOvertime(){
         STATO_GARA.SUPPLEMENTARE2_SECONDO
     );
 
-    timerSeconds = 4500;
+    timerSeconds = getMatchDurationSeconds() + 900;
 
     updateClockDisplay();
     updateHalfDisplay();
@@ -3624,6 +3955,9 @@ function endFourthOvertime(){
 
     aggiornaParziali();
 
+    // Nasconde il pulsante "INIZIA 4° TEMPO SUPPLEMENTARE"
+    mostraPulsanteFineTempo(false);
+
     //----------------------------------
     // REGISTRO EVENTI
     //----------------------------------
@@ -3650,13 +3984,10 @@ function endFourthOvertime(){
 
         penaltyShootout.played = true;
 
-        showHalfConfirm(
-
-            "Parità dopo il 4° Tempo Supplementare.\nProcedere ai Rigori?",
-
-            vaiAiRigori
-
-        );
+showHalfConfirm(
+    "FINE TEMPI SUPPLEMENTARI\nSI PROCEDE AI TIRI DI RIGORE",
+    vaiAiRigori
+);
 
     }
     else{
@@ -3869,31 +4200,31 @@ function testJumpTime(){
         currentHalf = 2;
         cambiaStatoGara(STATO_GARA.SECONDO_TEMPO);
 
-    }else if(timerSeconds < 3900){
+    }else if(timerSeconds < getMatchDurationSeconds() + 300){
 
-        timerSeconds = 3900;
-        currentHalf = 3;
-        cambiaStatoGara(STATO_GARA.SUPPLEMENTARE1_PRIMO);
+    timerSeconds = getMatchDurationSeconds() + 300;
+    currentHalf = 3;
+    cambiaStatoGara(STATO_GARA.SUPPLEMENTARE1_PRIMO);
 
-    }else if(timerSeconds < 4200){
+}else if(timerSeconds < getMatchDurationSeconds() + 600){
 
-        timerSeconds = 4200;
-        currentHalf = 4;
-        cambiaStatoGara(STATO_GARA.SUPPLEMENTARE1_SECONDO);
+    timerSeconds = getMatchDurationSeconds() + 600;
+    currentHalf = 4;
+    cambiaStatoGara(STATO_GARA.SUPPLEMENTARE1_SECONDO);
 
-    }else if(timerSeconds < 4500){
+}else if(timerSeconds < getMatchDurationSeconds() + 900){
 
-        timerSeconds = 4500;
-        currentHalf = 5;
-        cambiaStatoGara(STATO_GARA.SUPPLEMENTARE2_PRIMO);
+    timerSeconds = getMatchDurationSeconds() + 900;
+    currentHalf = 5;
+    cambiaStatoGara(STATO_GARA.SUPPLEMENTARE2_PRIMO);
 
-    }else if(timerSeconds < 4800){
+}else if(timerSeconds < getMatchDurationSeconds() + 1200){
 
-        timerSeconds = 4800;
-        currentHalf = 6;
-        cambiaStatoGara(STATO_GARA.SUPPLEMENTARE2_SECONDO);
+    timerSeconds = getMatchDurationSeconds() + 1200;
+    currentHalf = 6;
+    cambiaStatoGara(STATO_GARA.SUPPLEMENTARE2_SECONDO);
 
-    }else{
+}else{
 
         timerSeconds = 0;
         currentHalf = 1;
@@ -4325,80 +4656,69 @@ function updateClockDisplay() {
     // CALCOLO FINE DEL TEMPO CORRENTE
     //---------------------------------
 
-    let fineTempo = null;
+let fineTempo = null;
+
+switch (statoGara) {
+
+    //=============================
+    // 1° TEMPO
+    //=============================
+    case STATO_GARA.PRIMO_TEMPO:
+
+        fineTempo = getHalfDurationSeconds();
+
+        break;
 
 
-    switch (statoGara) {
+    //=============================
+    // 2° TEMPO
+    //=============================
+    case STATO_GARA.SECONDO_TEMPO:
 
-        //=============================
-        // 1° TEMPO
-        //=============================
+        fineTempo = getMatchDurationSeconds();
 
-        case STATO_GARA.PRIMO_TEMPO:
-
-            fineTempo = getHalfDurationSeconds();
-
-            break;
-
-        //=============================
-        // 2° TEMPO
-        //=============================
-
-        case STATO_GARA.SECONDO_TEMPO:
-
-            fineTempo = getMatchDurationSeconds();
-
-            break;
-
-        //=============================
-        // 1° TEMPO SUPPLEMENTARE
-        //=============================
-
-        case STATO_GARA.SUPPLEMENTARE1_PRIMO:
-
-            fineTempo = 3900;
-
-            break;
+        break;
 
 
-        //=============================
-        // 2° TEMPO SUPPLEMENTARE
-        //=============================
+    //=============================
+    // 1° TEMPO SUPPLEMENTARE
+    //=============================
+    case STATO_GARA.SUPPLEMENTARE1_PRIMO:
 
-        case STATO_GARA.SUPPLEMENTARE1_SECONDO:
+        fineTempo = getMatchDurationSeconds() + 300;
 
-            fineTempo = 4200;
-
-            break;
-
-        //=============================
-        // 3° TEMPO SUPPLEMENTARE
-        //=============================
-
-        case STATO_GARA.SUPPLEMENTARE2_PRIMO:
-
-            fineTempo = 4500;
-
-            break;
-
-        //=============================
-        // 4° TEMPO SUPPLEMENTARE
-        //=============================
-
-        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
-
-            fineTempo = 4800;
-
-            break;
+        break;
 
 
-        default:
+    //=============================
+    // 2° TEMPO SUPPLEMENTARE
+    //=============================
+    case STATO_GARA.SUPPLEMENTARE1_SECONDO:
 
-            fineTempo = null;
+        fineTempo = getMatchDurationSeconds() + 600;
 
-            break;
-    }
+        break;
 
+
+    //=============================
+    // 3° TEMPO SUPPLEMENTARE
+    //=============================
+    case STATO_GARA.SUPPLEMENTARE2_PRIMO:
+
+        fineTempo = getMatchDurationSeconds() + 900;
+
+        break;
+
+
+    //=============================
+    // 4° TEMPO SUPPLEMENTARE
+    //=============================
+    case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+
+        fineTempo = getMatchDurationSeconds() + 1200;
+
+        break;
+}
 
     //---------------------------------
     // LAMPEGGIO ULTIMI 30 SECONDI
@@ -4408,7 +4728,6 @@ function updateClockDisplay() {
         fineTempo !== null &&
         timerSeconds >= (fineTempo - 30) &&
         timerSeconds < fineTempo;
-
 
     //---------------------------------
     // CRONOMETRO IN FUNZIONE
@@ -4426,23 +4745,28 @@ function updateClockDisplay() {
     // APPLICA / RIMUOVE LAMPEGGIO
     //---------------------------------
 
-    if (ultimi30 && cronometroInFunzione) {
+if (ultimi30 && cronometroInFunzione) {
 
-        timer.classList.add(
-            'timer-warning',
-            'animate-pulse',
-            'text-red-600'
-        );
+    // ULTIMI 30 SECONDI → ROSSO LAMPEGGIANTE
+    timer.classList.remove("text-yellow-300");
 
-    } else {
+    timer.classList.add(
+        "timer-warning",
+        "animate-pulse",
+        "text-red-600"
+    );
 
-        timer.classList.remove(
-            'timer-warning',
-            'animate-pulse',
-            'text-red-600'
-        );
+} else {
 
-    }
+    // TIMER NORMALE → GIALLO FISSO
+    timer.classList.remove(
+        "timer-warning",
+        "animate-pulse",
+        "text-red-600"
+    );
+
+    timer.classList.add("text-yellow-300");
+}
 
 
     //---------------------------------
@@ -4463,6 +4787,7 @@ function updateClockDisplay() {
     }
 
 }
+
 //=========================================
 // VISIBILITA' PULSANTE FINE TEMPO
 //=========================================
@@ -4537,10 +4862,14 @@ function stopTimerWarning(){
 
     if(timer){
 
-        timer.classList.remove("timer-warning");
+        timer.classList.remove(
+            "timer-warning",
+            "animate-pulse",
+            "text-red-600"
+        );
 
+        timer.classList.add("text-yellow-300");
     }
-
 }
 
 //=========================================
@@ -4793,36 +5122,79 @@ function handleGoal(team, id){
 
 }
 
-    //=========================================
-    // Aggiorna Parziali
-    //=========================================
+//=========================================
+//Aggiorna Parziale
+//=========================================
 
 function aggiornaParziali(){
 
     const div = document.getElementById("first-half-score");
 
+    if(!div) return;
+
     let testo = "";
 
-    if(firstHalfScoreA || firstHalfScoreB)
+    //=========================================
+    // 1° TEMPO
+    //=========================================
+
+    if(currentHalf >= 2){
+
         testo += `1T ${firstHalfScoreA}-${firstHalfScoreB}`;
+    }
 
-    if(secondHalfScoreA || secondHalfScoreB)
+    //=========================================
+    // 2° TEMPO
+    //=========================================
+
+    if(currentHalf >= 3){
+
         testo += `${testo ? " | " : ""}2T ${secondHalfScoreA}-${secondHalfScoreB}`;
+    }
 
-    if(overtime1ScoreA || overtime1ScoreB)
+    //=========================================
+    // 1° TEMPO SUPPLEMENTARE
+    //=========================================
+
+    if(currentHalf >= 4){
+
         testo += `${testo ? " | " : ""}TS1 ${overtime1ScoreA}-${overtime1ScoreB}`;
+    }
 
-    if(overtime2ScoreA || overtime2ScoreB)
+    //=========================================
+    // 2° TEMPO SUPPLEMENTARE
+    //=========================================
+
+    if(currentHalf >= 5){
+
         testo += `${testo ? " | " : ""}TS2 ${overtime2ScoreA}-${overtime2ScoreB}`;
+    }
 
-    if(overtime3ScoreA || overtime3ScoreB)
+    //=========================================
+    // 3° TEMPO SUPPLEMENTARE
+    //=========================================
+
+    if(currentHalf >= 6){
+
         testo += `${testo ? " | " : ""}TS3 ${overtime3ScoreA}-${overtime3ScoreB}`;
+    }
 
-    if(overtime4ScoreA || overtime4ScoreB)
+//=========================================
+// 4° TEMPO SUPPLEMENTARE
+//=========================================
+
+if(
+    statoGara === STATO_GARA.RIGORI ||
+    statoGara === STATO_GARA.PARTITA_TERMINATA
+){
+
+    if(overtime4ScoreA !== undefined && overtime4ScoreB !== undefined){
+
         testo += `${testo ? " | " : ""}TS4 ${overtime4ScoreA}-${overtime4ScoreB}`;
+    }
+}
 
     div.innerText = testo;
-
 }
 
 //=========================================
