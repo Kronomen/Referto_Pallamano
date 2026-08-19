@@ -1392,15 +1392,13 @@ function cambiaStatoGara(nuovoStato){
             break;
 
 
-        case STATO_GARA.SUPPLEMENTARE2_SECONDO:
+case STATO_GARA.SUPPLEMENTARE2_SECONDO:
 
-            configuraPulsanteFineGara(
-                "Fine 4° TEMPO SUPPLEMENTARE",
-                "bg-red-700",
-                endFourthOvertime
-            );
+    // Nel 2° tempo supplementare NON deve essere
+    // presente il pulsante "Fine 4° TEMPO SUPPLEMENTARE"
+    mostraPulsanteFineTempo(false);
 
-            break;
+    break;
 
 
         case STATO_GARA.FINE_GARA_DA_CONFERMARE:
