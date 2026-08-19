@@ -38,6 +38,31 @@
 
 }
 
+/* PICCOLO TASTO CHIUDI */
+.close-browser{
+    position:fixed;
+    top:8px;
+    right:10px;
+    z-index:9999;
+    height:24px;
+    padding:0 9px;
+    border:1px solid #991b1b;
+    border-radius:5px;
+    background:#ef4444;
+    color:#000000;
+    font-size:10px;
+    font-weight:900;
+    font-family:Arial,Helvetica,sans-serif;
+    cursor:pointer;
+    opacity:.9;
+}
+
+.close-browser:hover{
+    background:#dc2626;
+    opacity:1;
+}
+
+
     </style>
 </head>
 
@@ -3401,4 +3426,11 @@ if (datiPartita) {
     </div>
 
 </div>
+<!-- TASTO CHIUDI -->
+<button class="close-browser"
+        type="button"
+        onclick="esciProgramma()"
+        title="Chiudi">
+    CHIUDI
+</button>
 </html>
