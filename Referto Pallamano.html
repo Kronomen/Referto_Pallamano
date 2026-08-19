@@ -541,6 +541,10 @@ function mostraFineTempo(messaggio){
     modal.classList.add("flex");
 }
 
+//=========================================
+// Chiudi Fine Tempo
+//=========================================
+
 function chiudiFineTempo(){
 
     const modal = document.getElementById("fine-tempo-modal");
@@ -549,12 +553,27 @@ function chiudiFineTempo(){
 
     modal.classList.add("hidden");
     modal.classList.remove("flex");
-}
 
+
+    //---------------------------------
+    // FINE 1° TEMPO
+    // PASSAGGIO DIRETTO AL 2° TEMPO
+    //---------------------------------
+
+    if(
+        statoGara === STATO_GARA.PRIMO_TEMPO &&
+        timerSeconds >= getHalfDurationSeconds()
+    ){
+
+        nextHalf();
+    }
+
+}
 
 //=========================================
 // IMPORT CSV SQUADRE
 //=========================================
+
 function leggiCSVConFallback(file, callback){
     const reader = new FileReader();
     reader.onload = function(e){
@@ -2724,11 +2743,12 @@ timerInterval = setInterval(() => {
 
         } catch(e){}
 
-        stopTimerWarning();
+stopTimerWarning();
 
-        updateNextHalfButton();
+// Il pulsante "Fine 1° Tempo" non deve comparire
+mostraPulsanteFineTempo(false);
 
-        mostraFineTempo("Fine 1° Tempo!");
+mostraFineTempo("Fine 1° Tempo!");
 
         document
             .getElementById("game-timer")
