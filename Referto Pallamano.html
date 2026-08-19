@@ -533,6 +533,30 @@ function avviaFullscreen() {
 
 }
 
+//=========================================
+// CHIUDI REFERTO / TORNA A INDEX
+//=========================================
+
+function chiudiReferto(){
+
+    // Prima prova a chiudere la finestra
+    window.close();
+
+    // Se il browser non permette la chiusura,
+    // torna alla pagina index
+    setTimeout(function(){
+
+        if(!window.closed){
+
+            window.location.href = "index.html";
+
+        }
+
+    }, 300);
+
+}
+
+
 
 //=========================================
 // BLOCCO FULLSCREEN
@@ -2433,20 +2457,36 @@ if(
 
 }
 
-    //---------------------------------
-    // Esci
-    //---------------------------------
+//---------------------------------
+// Esci
+//---------------------------------
 
 function esciProgramma(){
 
     if(timerInterval !== null){
-        alert("Ferma il cronometro prima di uscire.");
+
+        alert("Prima di uscire devi fermare il tempo.");
+
         return;
     }
 
     salvaPartita();
 
+    // Prova a chiudere la finestra
     window.close();
+
+    // Se il browser non permette la chiusura,
+    // torna a index.html
+    setTimeout(function(){
+
+        if(!window.closed){
+
+            window.location.href = "index.html";
+
+        }
+
+    }, 300);
+
 }
 
 //=========================================
