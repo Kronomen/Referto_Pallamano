@@ -276,8 +276,20 @@ body{
 }
 
 </style>
+
+<style>
+@media print{
+    #refertoControls,#popupStampa{display:none !important;}
+}
+</style>
 </head>
 <body>
+
+<div id="refertoControls" style="position:fixed;top:8px;right:8px;z-index:100000;display:flex;gap:5px;">
+<button type="button" onclick="apriPopupStampa()" style="padding:5px 8px;font-size:10px;font-weight:bold;background:#0b63ce;color:#fff;border:none;border-radius:4px;cursor:pointer;">🖨 STAMPA</button>
+<button type="button" onclick="chiudiPopupStampa()" style="padding:4px 7px;font-size:10px;font-weight:bold;background:#d32f2f;color:#fff;border:none;border-radius:4px;cursor:pointer;">✕ CHIUDI</button>
+</div>
+
 <div id="popupStampa" style="
 position:fixed;
 inset:0;
@@ -350,7 +362,7 @@ border-radius:8px;
 cursor:pointer;
 ">
 
-❌ ESCI
+✕ ANNULLA
 
 </button>
 
@@ -2200,37 +2212,43 @@ function verificaReferto(){
 }
 
 //--------------------------------------------------
-// ESCI REFERTO
-//--------------------------------------------------
-function esciReferto(){
 
-    try{
-        window.close();
-    }catch(e){
-        history.back();
-    }
+// --------------------------------------------------
+// CONTROLLI REFERTO
+// --------------------------------------------------
 
+function apriPopupStampa(){
+    const popup = document.getElementById("popupStampa");
+    if(popup) popup.style.display = "flex";
 }
 
-//--------------------------------------------------
-// STAMPA REFERTO
-//--------------------------------------------------
+function chiudiPopupStampa(){
+    const popup = document.getElementById("popupStampa");
+    if(popup) popup.style.display = "none";
+}
+
+function esciReferto(){
+    try{ window.close(); }catch(e){}
+
+    setTimeout(function(){
+        if(window.closed) return;
+        if(history.length > 1) history.back();
+    },150);
+}
 
 function stampaEdEsci(){
 
-    if(!verificaReferto()){
-        return;
-    }
+    // LA STAMPA DEVE AVVENIRE ANCHE SE IL CONTROLLO
+    // DEL REFERTO SEGNALA DEGLI ERRORI.
+    // Il controllo resta disponibile, ma NON blocca la stampa.
+
+    chiudiPopupStampa();
 
     document.body.style.zoom = "92%";
 
-    // Dopo la stampa torna alla pagina precedente/chiude la finestra
     window.onafterprint = function(){
-        try{
-            window.close();
-        }catch(e){
-            history.back();
-        }
+        document.body.style.zoom = "";
+        window.onafterprint = null;
     };
 
     window.print();
