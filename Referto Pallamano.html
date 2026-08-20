@@ -1424,14 +1424,33 @@ case STATO_GARA.SUPPLEMENTARE2_SECONDO:
             break;
 
 
-        case STATO_GARA.PARTITA_TERMINATA:
+case STATO_GARA.PARTITA_TERMINATA:
 
-            configuraPulsanteFineGara(
-                "✓ GARA TERMINATA",
-                "bg-green-700",
-                null,
-                true
-            );
+    configuraPulsanteFineGara(
+        "✓ GARA TERMINATA",
+        "bg-green-700",
+        null,
+        true
+    );
+
+    //----------------------------------
+    // DISABILITA DEFINITIVAMENTE START
+    //----------------------------------
+
+    const startBtn = document.getElementById("btn-toggle-clock");
+
+    if(startBtn){
+
+        startBtn.disabled = true;
+
+        startBtn.innerText = "▶ START";
+
+        startBtn.classList.add(
+            "opacity-50",
+            "cursor-not-allowed"
+        );
+
+    }
 
             //----------------------------------
             // PULSANTE REGISTRO POST GARA
@@ -2658,6 +2677,26 @@ function suonaFineTempo(numeroBeep){
 //=====================================
 
 function toggleClock() {
+
+//---------------------------------
+// GARA TERMINATA → START BLOCCATO
+//---------------------------------
+
+if(statoGara === STATO_GARA.PARTITA_TERMINATA){
+
+    const startBtn = document.getElementById("btn-toggle-clock");
+
+    if(startBtn){
+        startBtn.disabled = true;
+        startBtn.innerText = "▶ START";
+        startBtn.classList.add(
+            "opacity-50",
+            "cursor-not-allowed"
+        );
+    }
+
+    return;
+}
 
 
 //---------------------------------
