@@ -337,7 +337,7 @@ cursor:pointer;
 
 </button>
 
-<button onclick="window.close()"
+<button onclick="esciReferto()"
 style="
 flex:1;
 padding:12px;
@@ -979,7 +979,7 @@ text-align:center;
 vertical-align:bottom;
 ">
 
-<img src="FIGH_Logo.png"
+<img src="FIGH.png"
 style="
 max-width:75%;
 max-height:24mm;
@@ -1202,7 +1202,7 @@ if (partita.matchDate) {
 
 document.getElementById("data").textContent = dataFormattata;
  
-    //------------------------------------------------
+ //------------------------------------------------
 // SQUADRA A
 //------------------------------------------------
 
@@ -1421,8 +1421,7 @@ creaCella(r,"col-san");
 
     });
 
-    //------------------------------------------------
-    //------------------------------------------------
+//------------------------------------------------
 // COMPLETA A 5 DIRIGENTI
 //------------------------------------------------
 
@@ -2201,21 +2200,40 @@ function verificaReferto(){
 }
 
 //--------------------------------------------------
+// ESCI REFERTO
+//--------------------------------------------------
+function esciReferto(){
+
+    try{
+        window.close();
+    }catch(e){
+        history.back();
+    }
+
+}
+
+//--------------------------------------------------
 // STAMPA REFERTO
 //--------------------------------------------------
 
 function stampaEdEsci(){
 
     if(!verificaReferto()){
-
         return;
-
     }
 
     document.body.style.zoom = "92%";
 
-    window.print();
+    // Dopo la stampa torna alla pagina precedente/chiude la finestra
+    window.onafterprint = function(){
+        try{
+            window.close();
+        }catch(e){
+            history.back();
+        }
+    };
 
+    window.print();
 }
 
 </script>
