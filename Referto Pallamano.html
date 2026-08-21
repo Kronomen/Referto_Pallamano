@@ -3229,7 +3229,9 @@ if(scoreA !== scoreB){
 
 suonaFineTempo(3);
 
-mostraPulsanteFineTempo(true);
+// Alla fine del 4° tempo non deve comparire
+// "INIZIA 4° TEMPO SUPPLEMENTARE".
+mostraPulsanteFineTempo(false);
 
 endFourthOvertime();
 
@@ -4269,29 +4271,29 @@ function endFourthOvertime(){
     // DECISIONE FINALE
     //----------------------------------
 
+    // Sicurezza: il pulsante deve rimanere nascosto.
+    mostraPulsanteFineTempo(false);
+
     if(scoreA === scoreB){
 
+        // Punteggio ancora pari: si passa ai tiri di rigore.
         motivoFineGara = "RIGORI";
 
         penaltyShootout.played = true;
 
-showHalfConfirm(
-    "FINE TEMPI SUPPLEMENTARI\nSI PROCEDE AI TIRI DI RIGORE",
-    vaiAiRigori
-);
+        showHalfConfirm(
+            "FINE TEMPI SUPPLEMENTARI\nSI PROCEDE AI TIRI DI RIGORE",
+            vaiAiRigori
+        );
 
     }
     else{
 
+        // Punteggio diverso: la gara termina definitivamente
+        // con la vittoria della squadra in vantaggio.
         motivoFineGara = "4_TEMPI_SUPPLEMENTARI";
 
-        showHalfConfirm(
-
-            "Terminare definitivamente la gara?",
-
-            terminaGaraDefinitivamente
-
-        );
+        terminaGaraDefinitivamente();
 
     }
 
@@ -5129,9 +5131,10 @@ function updateNextHalfButton(){
 
         case STATO_GARA.SUPPLEMENTARE2_SECONDO:
 
-            mostraPulsanteFineTempo(
-                timerSeconds === 4800 && !timerInterval
-            );
+            // Il 4° tempo supplementare è l'ultimo.
+            // A 80:00 NON deve ricomparire il pulsante
+            // "INIZIA 4° TEMPO SUPPLEMENTARE".
+            mostraPulsanteFineTempo(false);
             return;
 
         default:
