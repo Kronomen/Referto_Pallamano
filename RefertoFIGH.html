@@ -2228,11 +2228,34 @@ function chiudiPopupStampa(){
 }
 
 function esciReferto(){
-    try{ window.close(); }catch(e){}
 
+    // 1. Memorizza la pagina/file da cui è stato aperto il referto.
+    const provenienza = document.referrer;
+
+    // 2. Prova a chiudere la finestra.
+    try{
+        window.close();
+    }catch(e){}
+
+    // 3. Se il browser non consente la chiusura, torna alla provenienza.
     setTimeout(function(){
+
         if(window.closed) return;
-        if(history.length > 1) history.back();
+
+        if(provenienza){
+            window.location.href = provenienza;
+            return;
+        }
+
+        // 4. Se non abbiamo il referrer, prova con la cronologia.
+        if(history.length > 1){
+            history.back();
+            return;
+        }
+
+        // 5. Ultima possibilità: Google.
+        window.location.href = "https://www.google.it/";
+
     },150);
 }
 
@@ -2244,7 +2267,7 @@ function stampaEdEsci(){
 
     chiudiPopupStampa();
 
-    document.body.style.zoom = "90%";
+    document.body.style.zoom = "92%";
 
     window.onafterprint = function(){
         document.body.style.zoom = "";
