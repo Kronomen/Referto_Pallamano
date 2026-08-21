@@ -2229,34 +2229,16 @@ function chiudiPopupStampa(){
 
 function esciReferto(){
 
-    // 1. Memorizza la pagina/file da cui è stato aperto il referto.
-    const provenienza = document.referrer;
+    // Torna direttamente al file RegistroPostGara.
+    // Se il file è nella stessa cartella del referto, questo percorso
+    // consente di riaprirlo anche quando document.referrer è vuoto.
+    const registro = "RegistroPostGara.html";
 
-    // 2. Prova a chiudere la finestra.
     try{
-        window.close();
-    }catch(e){}
-
-    // 3. Se il browser non consente la chiusura, torna alla provenienza.
-    setTimeout(function(){
-
-        if(window.closed) return;
-
-        if(provenienza){
-            window.location.href = provenienza;
-            return;
-        }
-
-        // 4. Se non abbiamo il referrer, prova con la cronologia.
-        if(history.length > 1){
-            history.back();
-            return;
-        }
-
-        // 5. Ultima possibilità: Google.
-        window.location.href = "https://www.google.it/";
-
-    },150);
+        window.location.href = registro;
+    }catch(e){
+        window.open(registro, "_self");
+    }
 }
 
 function stampaEdEsci(){

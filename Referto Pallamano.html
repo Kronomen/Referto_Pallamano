@@ -27,6 +27,23 @@
         display: flex;
         flex-direction: column;
     }
+
+/* =========================================
+   CRONOMETRO IN PAUSA - LAMPEGGIO
+   ========================================= */
+.timer-paused-blink {
+    animation: timerPausedBlink 0.8s ease-in-out infinite;
+}
+
+@keyframes timerPausedBlink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.30;
+    }
+}
+
 </style>
 </head>
 
@@ -2458,6 +2475,9 @@ function pausaCronometroPerSanzione(){
 
     timerInterval = null;
 
+    // PAUSA PER SANZIONE → LAMPEGGIO FINO AL PROSSIMO START
+    startTimerPausedBlink();
+
     document.getElementById("btn-toggle-clock").innerText = "▶ START";
 
     if(timerSeconds === 0){
@@ -2789,6 +2809,9 @@ if (statoGara === STATO_GARA.PREPARTITA) {
         clearInterval(timerInterval);
         timerInterval = null;
 
+        // CRONOMETRO IN PAUSA → LAMPEGGIA FINO AL PROSSIMO START
+        startTimerPausedBlink();
+
         document.getElementById("btn-toggle-clock").innerText = "START";
 
         // Il pulsante Modifica compare SOLO se la gara non è iniziata
@@ -2850,6 +2873,9 @@ if (
 
 // Lo stato della gara è già gestito dalle
 // funzioni di transizione.
+
+// CRONOMETRO RIPARTE → FERMA SUBITO IL LAMPEGGIO DI PAUSA
+stopTimerPausedBlink();
 
 updateExitButton();
 
@@ -5147,6 +5173,25 @@ function updateNextHalfButton(){
 
 }
 
+
+//=========================================
+// LAMPEGGIO CRONOMETRO IN PAUSA
+//=========================================
+
+function startTimerPausedBlink(){
+    const timer = document.getElementById("game-timer");
+    if(!timer) return;
+
+    timer.classList.add("timer-paused-blink");
+}
+
+function stopTimerPausedBlink(){
+    const timer = document.getElementById("game-timer");
+    if(!timer) return;
+
+    timer.classList.remove("timer-paused-blink");
+}
+
 //=========================================
 // FERMA LAMPEGGIO TIMER
 //=========================================
@@ -5160,7 +5205,8 @@ function stopTimerWarning(){
         timer.classList.remove(
             "timer-warning",
             "animate-pulse",
-            "text-red-600"
+            "text-red-600",
+            "timer-paused-blink"
         );
 
         timer.classList.add("text-yellow-300");
@@ -5539,6 +5585,12 @@ function handlePenalty7mPlayer(team,id){
     };
 
     //---------------------------------
+    // RIGORE → IL CRONOMETRO CONTINUA A SCORRERE
+    // ma il timer lampeggia mentre il rigore viene gestito.
+    //---------------------------------
+    startTimerPausedBlink();
+
+    //---------------------------------
     // APRE PANNELLO AZIONI
     //---------------------------------
 
@@ -5586,6 +5638,12 @@ function closeActionPanel(team){
     document
         .getElementById("action-title-"+team)
         .innerHTML = "";
+
+    //---------------------------------
+    // FINE GESTIONE RIGORE → FERMA IL LAMPEGGIO
+    //---------------------------------
+
+    stopTimerPausedBlink();
 
     //---------------------------------
     // AZZERA AZIONE IN CORSO
