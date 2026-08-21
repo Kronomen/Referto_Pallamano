@@ -316,14 +316,18 @@ DASHBOARD GARA
 
     <!-- RISULTATO -->
     <div id="updateScoreboard(scoreA, scoreB)"
-         class="bg-black border-4 border-yellow-500 rounded-2xl
-                px-8 py-3
-                text-6xl font-mono font-black tracking-widest
-                text-yellow-300 shadow-xl">
+     class="bg-black border-4 border-yellow-500 rounded-2xl
+            px-8 py-3
+            text-6xl font-mono font-black
+            text-yellow-300 shadow-xl
+            flex items-center justify-center
+            whitespace-nowrap min-w-[190px]">
 
+    <span style="display:inline-block; white-space:nowrap;">
         00 - 00
+    </span>
 
-    </div>
+</div>
 
 <!-- OSPITI -->
 <div class="relative flex justify-start items-center overflow-visible">
@@ -1539,6 +1543,10 @@ function aggiornaTabelloneRigori(){
 
         tabellone.innerText =
             `${String(rigoriA).padStart(2,"0")} - ${String(rigoriB).padStart(2,"0")}`;
+        tabellone.style.whiteSpace = "nowrap";
+        tabellone.style.display = "flex";
+        tabellone.style.alignItems = "center";
+        tabellone.style.justifyContent = "center";
 
     }
 
@@ -3130,8 +3138,14 @@ function ricostruisciDashboard(){
     // PUNTEGGIO
     //=================================
 
-document.getElementById("updateScoreboard(scoreA, scoreB)").innerText =
-    `${String(rigoriA).padStart(2,"0")} - ${String(rigoriB).padStart(2,"0")}`;
+const tabelloneRigori =
+    document.getElementById("updateScoreboard(scoreA, scoreB)");
+
+if(tabelloneRigori){
+    tabelloneRigori.innerText =
+        `${String(rigoriA).padStart(2,"0")} - ${String(rigoriB).padStart(2,"0")}`;
+    tabelloneRigori.style.whiteSpace = "nowrap";
+}
 
 }
 
