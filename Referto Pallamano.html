@@ -2812,6 +2812,9 @@ if (statoGara === STATO_GARA.PREPARTITA) {
         // CRONOMETRO IN PAUSA → LAMPEGGIA FINO AL PROSSIMO START
         startTimerPausedBlink();
 
+        // Il timer riparte: termina il lampeggio della pausa.
+        stopTimerPausedBlink();
+
         document.getElementById("btn-toggle-clock").innerText = "START";
 
         // Il pulsante Modifica compare SOLO se la gara non è iniziata
@@ -5585,10 +5588,10 @@ function handlePenalty7mPlayer(team,id){
     };
 
     //---------------------------------
-    // RIGORE → IL CRONOMETRO CONTINUA A SCORRERE
-    // ma il timer lampeggia mentre il rigore viene gestito.
+    // RIGORE
+    // Il cronometro continua a scorrere
+    // e NON deve lampeggiare.
     //---------------------------------
-    startTimerPausedBlink();
 
     //---------------------------------
     // APRE PANNELLO AZIONI
@@ -5640,10 +5643,12 @@ function closeActionPanel(team){
         .innerHTML = "";
 
     //---------------------------------
-    // FINE GESTIONE RIGORE → FERMA IL LAMPEGGIO
+    // FINE GESTIONE RIGORE
     //---------------------------------
-
-    stopTimerPausedBlink();
+    // NON fermiamo qui il lampeggio:
+    // closeActionPanel() viene usata anche dal popup
+    // di stampa del cartellino per 2' / espulsione.
+    // Il lampeggio deve continuare finché viene premuto START.
 
     //---------------------------------
     // AZZERA AZIONE IN CORSO
