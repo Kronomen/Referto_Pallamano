@@ -274,7 +274,7 @@ DATI GARA
         <h3 class="text-xl font-black mb-4">Durata tempi</h3>
         <p class="text-sm text-slate-600 mb-4">Inserisci la durata del 1° e 2° tempo.</p>
         <div class="flex items-center gap-2">
-            <input id="inputDurata" type="number" min="1" max="60" value="30" class="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-lg font-bold text-center">
+            <input id="inputDurata" type="number" min="1" max="45" value="30" class="w-full border-2 border-slate-300 rounded-lg px-3 py-2 text-lg font-bold text-center">
             <span class="font-black text-lg">min</span>
         </div>
         <div class="flex justify-end gap-3 mt-5">
@@ -1584,9 +1584,9 @@ document.getElementById('inputDurata').value,
 
 
 
-if(isNaN(minuti) || minuti < 1 || minuti > 60){
+if(isNaN(minuti) || minuti < 1 || minuti > 45){
 
-alert('Inserisci un valore tra 1 e 60 minuti');
+alert('Inserisci un valore tra 1 e 45 minuti');
 
 return;
 
@@ -2522,7 +2522,7 @@ function arrestaCronometroFineTempo(){
         // 1° TEMPO SUPPLEMENTARE
         case STATO_GARA.SUPPLEMENTARE1_PRIMO:
 
-            fineTempo = getMatchDurationSeconds() + 300;
+            fineTempo = (getMatchDurationSeconds() + 300);
 
             break;
 
@@ -2530,7 +2530,7 @@ function arrestaCronometroFineTempo(){
         // 2° TEMPO SUPPLEMENTARE
         case STATO_GARA.SUPPLEMENTARE1_SECONDO:
 
-            fineTempo = getMatchDurationSeconds() + 600;
+            fineTempo = (getMatchDurationSeconds() + 600);
 
             break;
 
@@ -2538,7 +2538,7 @@ function arrestaCronometroFineTempo(){
         // 3° TEMPO SUPPLEMENTARE
         case STATO_GARA.SUPPLEMENTARE2_PRIMO:
 
-            fineTempo = getMatchDurationSeconds() + 900;
+            fineTempo = (getMatchDurationSeconds() + 900);
 
             break;
 
@@ -2546,7 +2546,7 @@ function arrestaCronometroFineTempo(){
         // 4° TEMPO SUPPLEMENTARE
         case STATO_GARA.SUPPLEMENTARE2_SECONDO:
 
-            fineTempo = getMatchDurationSeconds() + 1200;
+            fineTempo = (getMatchDurationSeconds() + 1200);
 
             break;
     }
@@ -2901,7 +2901,7 @@ timerInterval = setInterval(() => {
 
         case STATO_GARA.SUPPLEMENTARE1_PRIMO:
 
-            fineTempo = getMatchDurationSeconds() + 300;
+            fineTempo = (getMatchDurationSeconds() + 300);
 
             break;
 
@@ -2912,7 +2912,7 @@ timerInterval = setInterval(() => {
 
         case STATO_GARA.SUPPLEMENTARE1_SECONDO:
 
-            fineTempo = getMatchDurationSeconds() + 600;
+            fineTempo = (getMatchDurationSeconds() + 600);
 
             break;
 
@@ -2923,7 +2923,7 @@ timerInterval = setInterval(() => {
 
         case STATO_GARA.SUPPLEMENTARE2_PRIMO:
 
-            fineTempo = getMatchDurationSeconds() + 900;
+            fineTempo = (getMatchDurationSeconds() + 900);
 
             break;
 
@@ -2934,7 +2934,7 @@ timerInterval = setInterval(() => {
 
         case STATO_GARA.SUPPLEMENTARE2_SECONDO:
 
-            fineTempo = getMatchDurationSeconds() + 1200;
+            fineTempo = (getMatchDurationSeconds() + 1200);
 
             break;
     }
@@ -3119,7 +3119,7 @@ mostraFineTempo("Fine 1° Tempo!");
 
     if(
         statoGara === STATO_GARA.SUPPLEMENTARE1_PRIMO &&
-        timerSeconds >= getMatchDurationSeconds() + 300
+        timerSeconds >= (getMatchDurationSeconds() + 300)
     ){
 
         arrestaCronometroFineTempo();
@@ -3146,7 +3146,7 @@ endFirstOvertime();
 
     if(
         statoGara === STATO_GARA.SUPPLEMENTARE1_SECONDO &&
-        timerSeconds >= getMatchDurationSeconds() + 600
+        timerSeconds >= (getMatchDurationSeconds() + 600)
     ){
 
         arrestaCronometroFineTempo();
@@ -3180,7 +3180,7 @@ endSecondOvertime();
 
     if(
         statoGara === STATO_GARA.SUPPLEMENTARE2_PRIMO &&
-        timerSeconds >= getMatchDurationSeconds() + 900
+        timerSeconds >= (getMatchDurationSeconds() + 900)
     ){
 
         arrestaCronometroFineTempo();
@@ -3207,7 +3207,7 @@ endThirdOvertime();
 
     if(
         statoGara === STATO_GARA.SUPPLEMENTARE2_SECONDO &&
-        timerSeconds >= getMatchDurationSeconds() + 1200
+        timerSeconds >= (getMatchDurationSeconds() + 1200)
     ){
 
         arrestaCronometroFineTempo();
@@ -3753,11 +3753,11 @@ if(partitaDefinitiva){
             break;
 
         case 4:
-            if(timerSeconds < 4200) timerSeconds = 4200;
+            if(timerSeconds < (getMatchDurationSeconds() + 600)) timerSeconds = (getMatchDurationSeconds() + 600);
             break;
 
         case 6:
-            if(timerSeconds < 4800) timerSeconds = 4800;
+            if(timerSeconds < (getMatchDurationSeconds() + 1200)) timerSeconds = (getMatchDurationSeconds() + 1200);
             break;
 
     }
@@ -3976,7 +3976,7 @@ function startSecondOvertime(){
         STATO_GARA.SUPPLEMENTARE1_SECONDO
     );
 
-    timerSeconds = getMatchDurationSeconds() + 300;
+    timerSeconds = (getMatchDurationSeconds() + 300);
 
 refreshDashboard();
 
@@ -4132,7 +4132,7 @@ function startThirdOvertime(){
         STATO_GARA.SUPPLEMENTARE2_PRIMO
     );
 
-    timerSeconds = getMatchDurationSeconds() + 600;
+    timerSeconds = (getMatchDurationSeconds() + 600);
 
     updateClockDisplay();
     updateHalfDisplay();
@@ -4214,7 +4214,7 @@ function startFourthOvertime(){
         STATO_GARA.SUPPLEMENTARE2_SECONDO
     );
 
-    timerSeconds = getMatchDurationSeconds() + 900;
+    timerSeconds = (getMatchDurationSeconds() + 900);
 
     updateClockDisplay();
     updateHalfDisplay();
@@ -4276,7 +4276,8 @@ function endFourthOvertime(){
 
     if(scoreA === scoreB){
 
-        // Punteggio ancora pari: si passa ai tiri di rigore.
+        // 4° tempo supplementare terminato ancora in parità:
+        // mostra sempre il popup per procedere ai tiri di rigore.
         motivoFineGara = "RIGORI";
 
         penaltyShootout.played = true;
@@ -4493,27 +4494,27 @@ function testJumpTime(){
         currentHalf = 2;
         cambiaStatoGara(STATO_GARA.SECONDO_TEMPO);
 
-    }else if(timerSeconds < getMatchDurationSeconds() + 300){
+    }else if(timerSeconds < (getMatchDurationSeconds() + 300)){
 
-    timerSeconds = getMatchDurationSeconds() + 300;
+    timerSeconds = (getMatchDurationSeconds() + 300);
     currentHalf = 3;
     cambiaStatoGara(STATO_GARA.SUPPLEMENTARE1_PRIMO);
 
-}else if(timerSeconds < getMatchDurationSeconds() + 600){
+}else if(timerSeconds < (getMatchDurationSeconds() + 600)){
 
-    timerSeconds = getMatchDurationSeconds() + 600;
+    timerSeconds = (getMatchDurationSeconds() + 600);
     currentHalf = 4;
     cambiaStatoGara(STATO_GARA.SUPPLEMENTARE1_SECONDO);
 
-}else if(timerSeconds < getMatchDurationSeconds() + 900){
+}else if(timerSeconds < (getMatchDurationSeconds() + 900)){
 
-    timerSeconds = getMatchDurationSeconds() + 900;
+    timerSeconds = (getMatchDurationSeconds() + 900);
     currentHalf = 5;
     cambiaStatoGara(STATO_GARA.SUPPLEMENTARE2_PRIMO);
 
-}else if(timerSeconds < getMatchDurationSeconds() + 1200){
+}else if(timerSeconds < (getMatchDurationSeconds() + 1200)){
 
-    timerSeconds = getMatchDurationSeconds() + 1200;
+    timerSeconds = (getMatchDurationSeconds() + 1200);
     currentHalf = 6;
     cambiaStatoGara(STATO_GARA.SUPPLEMENTARE2_SECONDO);
 
@@ -4978,7 +4979,7 @@ switch (statoGara) {
     //=============================
     case STATO_GARA.SUPPLEMENTARE1_PRIMO:
 
-        fineTempo = getMatchDurationSeconds() + 300;
+        fineTempo = (getMatchDurationSeconds() + 300);
 
         break;
 
@@ -4988,7 +4989,7 @@ switch (statoGara) {
     //=============================
     case STATO_GARA.SUPPLEMENTARE1_SECONDO:
 
-        fineTempo = getMatchDurationSeconds() + 600;
+        fineTempo = (getMatchDurationSeconds() + 600);
 
         break;
 
@@ -4998,7 +4999,7 @@ switch (statoGara) {
     //=============================
     case STATO_GARA.SUPPLEMENTARE2_PRIMO:
 
-        fineTempo = getMatchDurationSeconds() + 900;
+        fineTempo = (getMatchDurationSeconds() + 900);
 
         break;
 
@@ -5008,7 +5009,7 @@ switch (statoGara) {
     //=============================
     case STATO_GARA.SUPPLEMENTARE2_SECONDO:
 
-        fineTempo = getMatchDurationSeconds() + 1200;
+        fineTempo = (getMatchDurationSeconds() + 1200);
 
         break;
 }
@@ -5111,21 +5112,21 @@ function updateNextHalfButton(){
         case STATO_GARA.SUPPLEMENTARE1_PRIMO:
 
             mostraPulsanteFineTempo(
-                timerSeconds === 3900 && !timerInterval
+                timerSeconds === (getMatchDurationSeconds() + 300) && !timerInterval
             );
             return;
 
         case STATO_GARA.SUPPLEMENTARE1_SECONDO:
 
             mostraPulsanteFineTempo(
-                timerSeconds === 4200 && !timerInterval
+                timerSeconds === (getMatchDurationSeconds() + 600) && !timerInterval
             );
             return;
 
         case STATO_GARA.SUPPLEMENTARE2_PRIMO:
 
             mostraPulsanteFineTempo(
-                timerSeconds === 4500 && !timerInterval
+                timerSeconds === (getMatchDurationSeconds() + 900) && !timerInterval
             );
             return;
 
