@@ -2229,15 +2229,23 @@ function chiudiPopupStampa(){
 
 function esciReferto(){
 
-    // Torna direttamente al file RegistroPostGara.
-    // Se il file è nella stessa cartella del referto, questo percorso
-    // consente di riaprirlo anche quando document.referrer è vuoto.
-    const registro = "RegistroPostGara.html";
+    // Torna al file precedente nella STESSA scheda.
+    // Se la pagina precedente è disponibile nella cronologia,
+    // torna esattamente a quella.
+    // Se non è disponibile, prova RegistroPostGara.html.
+    // Come ultimo ripiego apre Google.
 
-    try{
-        window.location.href = registro;
-    }catch(e){
-        window.open(registro, "_self");
+    if (window.history.length > 1) {
+        try {
+            window.history.back();
+            return;
+        } catch(e) {}
+    }
+
+    try {
+        window.location.replace("RegistroPostGara.html");
+    } catch(e) {
+        window.location.replace("https://www.google.it");
     }
 }
 
