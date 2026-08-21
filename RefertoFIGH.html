@@ -287,7 +287,7 @@ body{
 
 <div id="refertoControls" style="position:fixed;top:8px;right:8px;z-index:100000;display:flex;gap:5px;">
 <button type="button" onclick="apriPopupStampa()" style="padding:5px 8px;font-size:10px;font-weight:bold;background:#0b63ce;color:#fff;border:none;border-radius:4px;cursor:pointer;">🖨 STAMPA</button>
-<button type="button" onclick="chiudiPopupStampa()" style="padding:4px 7px;font-size:10px;font-weight:bold;background:#d32f2f;color:#fff;border:none;border-radius:4px;cursor:pointer;">✕ CHIUDI</button>
+<button type="button" onclick="esciReferto()" style="padding:4px 7px;font-size:10px;font-weight:bold;background:#d32f2f;color:#fff;border:none;border-radius:4px;cursor:pointer;">✕ CHIUDI</button>
 </div>
 
 <div id="popupStampa" style="
@@ -349,7 +349,7 @@ cursor:pointer;
 
 </button>
 
-<button onclick="esciReferto()"
+<button onclick="chiudiPopupStampa()"
 style="
 flex:1;
 padding:12px;
@@ -2229,24 +2229,41 @@ function chiudiPopupStampa(){
 
 function esciReferto(){
 
-    // Torna al file precedente nella STESSA scheda.
-    // Se la pagina precedente è disponibile nella cronologia,
-    // torna esattamente a quella.
-    // Se non è disponibile, prova RegistroPostGara.html.
-    // Come ultimo ripiego apre Google.
+    // CHIUDI è l'unico comando che esce da RefertoFIGH.
+    // Ordine di destinazione:
+    // 1) RegistroPostGara
+    // 2) Referto Pallamano
+    // 3) index
 
-    if (window.history.length > 1) {
-        try {
-            window.history.back();
+    const destinazioni = [
+        "RegistroPostGara.html",
+        "Referto Pallamano.html",
+        "index.html"
+    ];
+
+    function provaDestinazione(indice){
+        if(indice >= destinazioni.length){
+            window.location.href = "https://www.google.it/";
             return;
-        } catch(e) {}
+        }
+
+        const url = destinazioni[indice];
+
+        // Verifica che il file esista prima di cambiare pagina.
+        fetch(url, {method:"HEAD", cache:"no-store"})
+            .then(response => {
+                if(response.ok){
+                    window.location.href = url;
+                }else{
+                    provaDestinazione(indice + 1);
+                }
+            })
+            .catch(() => {
+                provaDestinazione(indice + 1);
+            });
     }
 
-    try {
-        window.location.replace("RegistroPostGara.html");
-    } catch(e) {
-        window.location.replace("https://www.google.it");
-    }
+    provaDestinazione(0);
 }
 
 function stampaEdEsci(){
