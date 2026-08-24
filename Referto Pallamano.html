@@ -44,6 +44,488 @@
     }
 }
 
+
+
+/* =========================================================
+   LAYOUT A SCHEDE — PRIMA VERSIONE
+   Solo comportamento/grafica dei giocatori e dirigenti.
+   La logica di gara e i gestori degli eventi restano invariati.
+   ========================================================= */
+
+.card-team-panel{
+    min-width:0;
+    min-height:0;
+    overflow:hidden !important;
+}
+
+.card-section-title{
+    flex:0 0 auto;
+    height:24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:5px;
+    border-bottom:2px solid #cbd5e1;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:1.2px;
+    color:#475569;
+}
+
+.player-card-grid{
+    flex:1 1 auto;
+    min-height:0;
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-rows:repeat(4,84px);
+    align-content:start;
+    gap:5px;
+    overflow:hidden;
+}
+
+.roster-player-card{
+    min-width:0;
+    min-height:0;
+    border:2px solid #bfdbfe;
+    border-radius:10px;
+    background:#eff6ff;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    cursor:pointer;
+    user-select:none;
+    touch-action:manipulation;
+    box-shadow:0 1px 3px rgba(15,23,42,.12);
+    transition:transform .08s ease, box-shadow .08s ease;
+}
+
+.card-team-b .roster-player-card{
+    border-color:#ddd6fe;
+    background:#f5f3ff;
+}
+
+.roster-player-card:hover{
+    box-shadow:0 3px 8px rgba(15,23,42,.18);
+}
+
+.roster-player-card:active{
+    transform:scale(.98);
+}
+
+.roster-player-card.is-yellow{
+    border-color:#eab308;
+    background:#fefce8;
+}
+
+.roster-player-card.is-suspended{
+    border-color:#f97316;
+    background:#fff7ed;
+}
+
+.roster-player-card.is-red{
+    border-color:#dc2626;
+    background:#fef2f2;
+    cursor:default;
+}
+
+.roster-player-top{
+    flex:0 0 28px;
+    min-height:28px;
+    display:grid;
+    grid-template-columns:38px minmax(0,1fr);
+    align-items:center;
+    gap:4px;
+    padding:2px 3px;
+}
+
+.roster-player-number{
+    height:25px;
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:17px;
+    line-height:1;
+    font-weight:900;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.card-team-a .roster-player-number{background:#0759a5}
+.card-team-b .roster-player-number{background:#6d28d9}
+
+.roster-player-goals{
+    min-width:0;
+    text-align:right;
+    font-size:10px;
+    line-height:1;
+    font-weight:900;
+    color:#334155;
+    white-space:nowrap;
+}
+
+.roster-player-name{
+    flex:0 0 22px;
+    min-height:22px;
+    max-height:22px;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    align-items:center;
+    justify-content:center;
+    padding:1px 4px;
+    text-align:center;
+    font-size:9px;
+    line-height:11px;
+    font-weight:900;
+    overflow-wrap:anywhere;
+    word-break:normal;
+    overflow:hidden;
+}
+
+.card-team-a .roster-player-name{color:#0759a5}
+.card-team-b .roster-player-name{color:#6d28d9}
+
+.roster-player-type{
+    font-size:7px;
+    color:#64748b;
+    font-weight:900;
+    margin-left:3px;
+}
+
+.roster-player-stats{
+    flex:0 0 18px;
+    min-height:18px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:2px;
+    padding:1px 2px;
+}
+
+.roster-stat{
+    min-width:0;
+    border-radius:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:8px;
+    line-height:1;
+    font-weight:900;
+    background:#e2e8f0;
+    color:#64748b;
+}
+
+.roster-stat.goal{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.roster-stat.yellow.active{
+    background:#facc15;
+    color:#111827;
+}
+
+.roster-stat.two.active{
+    background:#f97316;
+    color:#fff;
+}
+
+.roster-stat.red{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.roster-player-card.is-red .roster-player-stats{
+    grid-template-columns:repeat(3,1fr);
+}
+
+.roster-expelled{
+    flex:0 0 15px;
+    min-height:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#dc2626;
+    color:#fff;
+    font-size:7px;
+    font-weight:900;
+    letter-spacing:.4px;
+}
+
+/* DIRIGENTI */
+#officialsA,#officialsB{
+    min-width:0;
+    min-height:0;
+    overflow:hidden !important;
+    padding:10px !important;
+}
+
+.roster-staff-title{
+    flex:0 0 24px;
+    height:24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-bottom:2px solid #cbd5e1;
+    margin-bottom:5px;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:1.2px;
+    color:#475569;
+}
+
+.roster-staff-grid{
+    flex:0 0 auto;
+    min-height:0;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-rows:repeat(3,82px);
+    gap:5px;
+    overflow:hidden;
+}
+
+.roster-staff-card{
+    min-width:0;
+    min-height:64px;
+    height:82px;
+    border:2px solid #bfdbfe;
+    border-radius:10px;
+    background:#eff6ff;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    cursor:pointer;
+    user-select:none;
+    touch-action:manipulation;
+    box-shadow:0 1px 3px rgba(15,23,42,.12);
+}
+
+#officialsB .roster-staff-card{
+    border-color:#ddd6fe;
+    background:#f5f3ff;
+}
+
+.roster-staff-card:active{
+    transform:scale(.98);
+}
+
+.roster-staff-card.is-yellow{
+    border-color:#eab308;
+    background:#fefce8;
+}
+
+.roster-staff-card.is-suspended{
+    border-color:#f97316;
+    background:#fff7ed;
+}
+
+.roster-staff-card.is-red{
+    border-color:#dc2626;
+    background:#fef2f2;
+    cursor:default;
+}
+
+.roster-staff-top{
+    flex:0 0 31px;
+    height:31px;
+    min-height:31px;
+    display:grid;
+    grid-template-columns:30px minmax(0,1fr);
+    gap:4px;
+    align-items:center;
+    padding:2px 3px;
+    overflow:hidden;
+}
+
+.roster-staff-letter{
+    height:22px;
+    border-radius:5px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:15px;
+    font-weight:900;
+}
+
+#officialsA .roster-staff-letter{background:#0759a5}
+#officialsB .roster-staff-letter{background:#6d28d9}
+
+.roster-staff-name{
+    min-width:0;
+    max-height:22px;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    text-align:center;
+    font-size:8px;
+    line-height:11px;
+    font-weight:900;
+    overflow-wrap:anywhere;
+    overflow:hidden;
+}
+
+#officialsA .roster-staff-name{color:#0759a5}
+#officialsB .roster-staff-name{color:#6d28d9}
+
+.roster-staff-stats{
+    flex:0 0 18px;
+    min-height:18px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:2px;
+    padding:1px 2px;
+}
+
+.roster-staff-expelled{
+    flex:0 0 15px;
+    min-height:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#dc2626;
+    color:#fff;
+    font-size:7px;
+    font-weight:900;
+}
+
+.roster-event-backdrop{
+    position:fixed;
+    inset:0;
+    z-index:99990;
+    background:rgba(15,23,42,.62);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+
+.roster-event-backdrop.hidden{display:none}
+
+.roster-event-box{
+    width:min(430px,94vw);
+    background:#fff;
+    border-radius:16px;
+    padding:16px;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+    text-align:center;
+    border:4px solid #0759a5;
+}
+
+.roster-event-box.team-b{border-color:#6d28d9}
+
+.roster-event-team{
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.4px;
+    color:#0759a5;
+    margin-bottom:3px;
+}
+
+.roster-event-box.team-b .roster-event-team{color:#6d28d9}
+
+.roster-event-title{
+    font-size:19px;
+    font-weight:900;
+    color:#111827;
+}
+
+.roster-event-subtitle{
+    margin:4px 0 13px;
+    color:#475569;
+    font-size:12px;
+    font-weight:800;
+    overflow-wrap:anywhere;
+}
+
+.roster-event-actions{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+}
+
+.roster-event-actions button{
+    min-height:52px;
+    border:0;
+    border-radius:9px;
+    color:#fff;
+    font-size:12px;
+    font-weight:900;
+    touch-action:manipulation;
+}
+
+.roster-event-actions .evt-goal{background:#16a34a}
+.roster-event-actions .evt-penalty{background:#2563eb}
+.roster-event-actions .evt-yellow{background:#eab308;color:#111827}
+.roster-event-actions .evt-two{background:#ea580c}
+.roster-event-actions .evt-red{background:#dc2626}
+.roster-event-actions .evt-disabled{background:#94a3b8;color:#e2e8f0}
+
+.roster-event-close{
+    width:100%;
+    min-height:38px;
+    margin-top:8px;
+    border:0;
+    border-radius:8px;
+    background:#e2e8f0;
+    color:#334155;
+    font-size:11px;
+    font-weight:900;
+}
+
+@media (max-width:1250px){
+    .player-card-grid{gap:4px}
+    .roster-player-top{grid-template-columns:34px minmax(0,1fr);padding:2px}
+    .roster-player-number{height:23px;font-size:15px}
+    .roster-player-name{font-size:8px}
+    .roster-player-goals{font-size:8px}
+    .roster-player-stats{height:18px;min-height:18px;flex-basis:18px}
+    .roster-stat{font-size:7px}
+}
+
+@media (max-width:900px){
+    .player-card-grid{
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        grid-template-rows:repeat(4,84px);
+        gap:3px;
+    }
+    .roster-staff-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-rows:repeat(3,64px);
+        gap:3px;
+    }
+    .card-section-title,.roster-staff-title{height:20px;flex-basis:20px;font-size:8px;margin-bottom:3px}
+    #officialsA,#officialsB{padding:5px !important}
+    .roster-player-top{flex-basis:25px;min-height:25px}
+    .roster-player-number{height:20px;font-size:13px}
+    .roster-player-name{font-size:7px}
+    .roster-player-goals{font-size:7px}
+    .roster-player-stats{flex-basis:18px;min-height:18px;height:18px}
+    .roster-stat{font-size:6px}
+    .roster-expelled{flex-basis:11px;min-height:11px;font-size:6px}
+    .roster-staff-top{flex-basis:24px;min-height:24px}
+    .roster-staff-letter{height:19px;font-size:12px}
+    .roster-staff-name{font-size:7px}
+    .roster-staff-stats{flex-basis:18px;min-height:18px}
+    .roster-staff-expelled{flex-basis:11px;min-height:11px;font-size:6px}
+}
+
+
+/* V4 - spazio dedicato alla dicitura ESPULSO */
+.roster-expelled{
+    flex:0 0 18px !important;
+    min-height:18px !important;
+    height:18px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    background:#dc2626 !important;
+    color:#fff !important;
+    font-size:8px !important;
+    font-weight:900 !important;
+    line-height:18px !important;
+}
+
 </style>
 </head>
 
@@ -413,23 +895,9 @@ DASHBOARD GARA
         <div id="officialsA" class="bg-white border border-slate-300 rounded-2xl shadow-lg p-3 flex flex-col h-[680px] overflow-y-auto"></div>
 
         <!-- GIOCATORI CASA -->
-        <div class="bg-white border border-slate-300 rounded-2xl shadow-lg p-3 flex flex-col h-[680px]">
-            <div class="flex-1">
-                <table class="w-full border-collapse bg-white rounded-xl overflow-hidden">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-700 uppercase text-[11px] border-b border-slate-300">
-                            <th class="w-8 text-center py-1">N°</th>
-                            <th class="text-left px-1">Giocatore</th>
-                            <th class="w-8 text-center text-blue-600">G</th>
-                            <th class="w-8 text-center text-green-600">R</th>
-                            <th class="w-8 text-center text-yellow-600">A</th>
-                            <th class="w-10 text-center text-orange-600">2'</th>
-                            <th class="w-8 text-center text-red-600">E</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body-a" class="divide-y divide-slate-200"></tbody>
-                </table>
-            </div>
+        <div class="bg-white border border-slate-300 rounded-2xl shadow-lg p-3 flex flex-col h-[680px] card-team-panel card-team-a">
+            <div class="card-section-title">GIOCATORI</div>
+            <div id="table-body-a" class="player-card-grid"></div>
         </div> 
 
         <!-- REGISTRO GARA -->
@@ -459,28 +927,25 @@ DASHBOARD GARA
         </div>
 
         <!-- GIOCATORI OSPITI -->
-        <div class="bg-white border border-slate-300 rounded-2xl shadow-lg overflow-hidden p-3 flex flex-col h-[680px]">
-            <div class="flex-1">
-                <table class="w-full border-collapse bg-white rounded-xl overflow-hidden">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-700 uppercase text-[11px] border-b border-slate-300">
-                            <th class="w-8 text-center py-1">N°</th>
-                            <th class="text-left px-1">Giocatore</th>
-                            <th class="w-8 text-center text-blue-600">G</th>
-                            <th class="w-8 text-center text-green-600">R</th>
-                            <th class="w-8 text-center text-yellow-600">A</th>
-                            <th class="w-10 text-center text-orange-600">2'</th>
-                            <th class="w-8 text-center text-red-600">E</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body-b" class="divide-y divide-slate-200"></tbody>
-                </table>
-            </div>
+        <div class="bg-white border border-slate-300 rounded-2xl shadow-lg overflow-hidden p-3 flex flex-col h-[680px] card-team-panel card-team-b">
+            <div class="card-section-title">GIOCATORI</div>
+            <div id="table-body-b" class="player-card-grid"></div>
         </div>
 
         <!-- DIRIGENTI OSPITI -->
         <div id="officialsB" class="bg-white border border-slate-300 rounded-2xl shadow-lg p-3 flex flex-col h-[680px] overflow-y-auto"></div>
     </div>
+</div>
+
+<!-- POPUP AZIONI TESSERATO -->
+<div id="roster-event-modal" class="roster-event-backdrop hidden">
+  <div id="roster-event-box" class="roster-event-box">
+    <div id="roster-event-team" class="roster-event-team">CASA</div>
+    <div id="roster-event-title" class="roster-event-title">SELEZIONA EVENTO</div>
+    <div id="roster-event-subtitle" class="roster-event-subtitle"></div>
+    <div id="roster-event-actions" class="roster-event-actions"></div>
+    <button type="button" class="roster-event-close" onclick="closeRosterEventModal()">ANNULLA</button>
+  </div>
 </div>
 
 <!-- EDITOR EVENTO REGISTRO -->
@@ -2150,230 +2615,76 @@ function renderTable(team) {
 
     tbody.innerHTML = "";
 
-    const row = (item) => {
+    roster.players.forEach(item => {
 
-        //---------------------------------
-        // GIOCATORE ESPULSO
-        //---------------------------------
+        const isRed = !!item.red;
+        const isYellow = !isRed && item.yellows > 0;
+        const isSuspended = !isRed && item.suspensions > 0;
 
-        const isRed = item.red
-            ? "bg-red-100 opacity-80"
-            : "";
+        const card = document.createElement("div");
 
-        //---------------------------------
-        // GOAL
-        //---------------------------------
+        card.className =
+            "roster-player-card" +
+            (isRed ? " is-red" : isYellow ? " is-yellow" : isSuspended ? " is-suspended" : "");
 
-        const goalBtn =
-            item.type === "G"
-                ? (
-                    item.red
+        const safeName = String(item.name || "").trim();
+        const safeType = String(item.type || "").trim();
 
-                        ? `<div class="w-8 h-8 min-w-8 max-w-8 min-h-8 max-h-8
-                                   flex items-center justify-center
-                                   bg-red-200 text-red-800
-                                   rounded font-bold text-[11px]
-                                   leading-none overflow-hidden shrink-0">
-                                ${item.goals}
-                           </div>`
+        card.title = safeName;
 
-                        : `<button
-                                onclick="handleGoal('${team}','${item.id}')"
-                                class="w-8 h-8
-                                       bg-blue-600 hover:bg-blue-500
-                                       text-white rounded
-                                       text-[11px] font-bold
-                                       cursor-pointer">
-                                ${item.goals}
-                           </button>`
-                )
-                : "-";
+        card.innerHTML = `
+            <div class="roster-player-top">
+                <div class="roster-player-number">${item.num}</div>
+                <div class="roster-player-goals">⚽ ${item.goals || 0}</div>
+            </div>
 
-        //---------------------------------
-        // RIGORE
-        //---------------------------------
+            <div class="roster-player-name">
+                ${safeName || "NOMINATIVO NON INSERITO"}
+                ${safeType ? `<span class="roster-player-type">${safeType}</span>` : ""}
+            </div>
 
-        const penaltyBtn =
-            item.type === "G"
-                ? (
-                    item.red
+            <div class="roster-player-stats">
+                <div class="roster-stat yellow ${isYellow ? "active" : ""}">
+                    A ${item.yellows || 0}
+                </div>
+                <div class="roster-stat two ${isSuspended ? "active" : ""}">
+                    2' ${item.suspensions || 0}/3
+                </div>
+                <div class="roster-stat red">
+                    ${isRed ? "E ✓" : "E"}
+                </div>
+            </div>
 
-                        ? `<div class="w-8 h-8 min-w-8 max-w-8 min-h-8 max-h-8
-                                   flex items-center justify-center
-                                   bg-red-200 text-red-800
-                                   rounded font-bold text-[11px]
-                                   leading-none overflow-hidden shrink-0">
-                                R
-                           </div>`
+            ${isRed
+                ? `<div class="roster-expelled">ESPULSO</div>`
+                : ""
+            }
+        `;
 
-                        : `<button
-                                onclick="handlePenalty7mPlayer('${team}','${item.id}')"
-                                class="w-8 h-8
-                                       bg-green-700 hover:bg-green-600
-                                       text-white rounded
-                                       text-[11px] font-bold
-                                       cursor-pointer">
-                                R
-                           </button>`
-                )
-                : "-";
+        if (!isRed) {
+            card.addEventListener("click", function () {
+                openRosterEventModal("PLAYER", team, item.id);
+            });
+        }
 
-        //---------------------------------
-        // AMMONIZIONE
-        //---------------------------------
-
-        const yellowBtn =
-            item.red
-
-                ? `<div class="w-8 h-8 min-w-8 max-w-8 min-h-8 max-h-8
-                           flex items-center justify-center
-                           bg-red-200 text-red-800
-                           rounded font-bold text-[11px]
-                           leading-none overflow-hidden shrink-0">
-                        ${item.yellows}
-                   </div>`
-
-                : `<button
-                        onclick="handleYellow('${team}','${item.id}','${item.type}')"
-                        class="w-8 h-8
-                               rounded text-[11px]
-                               cursor-pointer
-                               ${
-                                   item.yellows > 0
-                                   ? "bg-yellow-500 text-black font-bold"
-                                   : "bg-slate-800 text-slate-400"
-                               }">
-                        ${item.yellows}
-                   </button>`;
-
-        //---------------------------------
-        // 2 MINUTI
-        //---------------------------------
-
-        const suspensionBtn =
-            item.red
-
-                ? `<div class="w-10 h-8 min-w-10 max-w-10 min-h-8 max-h-8
-                           flex items-center justify-center
-                           bg-red-600 text-white
-                           rounded font-bold text-[11px]
-                           leading-none overflow-hidden shrink-0">
-                        ${item.suspensions}/3
-                   </div>`
-
-                : `<button
-                        onclick="handleSuspension('${team}','${item.id}','${item.type}')"
-                        class="w-10 h-8
-                               rounded text-[11px]
-                               cursor-pointer
-                               ${
-                                   item.suspensions > 0
-                                   ? "bg-orange-500 text-white font-bold"
-                                   : "bg-slate-800 text-slate-400"
-                               }">
-                        ${item.suspensions}/3
-                   </button>`;
-
-        //---------------------------------
-        // ESPULSIONE
-        //---------------------------------
-
-        const redBtn =
-            item.red
-
-                ? `<div class="w-8 h-8 min-w-8 max-w-8 min-h-8 max-h-8
-                           flex items-center justify-center
-                           bg-red-700 text-white
-                           rounded font-bold text-[11px]
-                           leading-none overflow-hidden shrink-0">
-                        ESP
-                   </div>`
-
-                : `<button
-                        onclick="handleRedCard('${team}','${item.id}','${item.type}')"
-                        class="w-8 h-8
-                               rounded text-[11px]
-                               bg-red-700 hover:bg-red-600
-                               text-white font-bold
-                               cursor-pointer">
-                        E
-                   </button>`;
-
-        //---------------------------------
-        // RIGA FISSA
-        //---------------------------------
-
-        return `
-        <tr
-            class="h-10 border-b border-slate-200 ${isRed}"
-            style="height:40px; max-height:40px;"
-        >
-
-            <td class="h-10 p-1 text-center
-                       font-black font-mono text-[22px]
-                       leading-none tracking-wide text-blue-800
-                       overflow-hidden">
-                ${item.num}
-            </td>
-
-            <td class="h-10 p-1
-                       text-[10px] text-blue-900
-                       font-semibold truncate
-                       max-w-[150px]
-                       overflow-hidden">
-                ${abbreviaNome(item.name, 10)}
-
-                <span class="text-[8px]
-                             text-blue-800
-                             font-extrabold">
-                    ${item.type}
-                </span>
-            </td>
-
-            <td class="h-10 p-0.5 text-center overflow-hidden">
-                ${goalBtn}
-            </td>
-
-            <td class="h-10 p-0.5 text-center overflow-hidden">
-                ${penaltyBtn}
-            </td>
-
-            <td class="h-10 p-0.5 text-center overflow-hidden">
-                ${yellowBtn}
-            </td>
-
-            <td class="h-10 p-0.5 text-center overflow-hidden">
-                ${suspensionBtn}
-            </td>
-
-            <td class="h-10 p-0.5 text-center overflow-hidden">
-                ${redBtn}
-            </td>
-
-        </tr>`;
-    };
-
-    //---------------------------------
-    // GIOCATORI
-    //---------------------------------
-
-    roster.players.forEach(player => {
-
-        tbody.innerHTML += row(player);
-
+        tbody.appendChild(card);
     });
 
-    //---------------------------------
-    // DIRIGENTI
-    //---------------------------------
-
     if (typeof renderOfficials === "function") {
-
         renderOfficials(team);
-
     }
 }
 
+
+//=========================================
+// RENDER GIOCATORI
+//=========================================
+
+function renderPlayers(team) {
+
+    renderTable(team);
+
+}
 
 //=========================================
 // RENDER GIOCATORI
@@ -2396,71 +2707,193 @@ function renderPlayers(team) {
 
 function renderOfficials(team){
 
-    const panel = document.getElementById(team === "A" ? "officialsA" : "officialsB");
+    const panel = document.getElementById(
+        team === "A" ? "officialsA" : "officialsB"
+    );
+
     if(!panel) return;
 
     const roster = team === "A" ? currentRosterA : currentRosterB;
+    const officialsList = roster && roster.officials ? roster.officials : [];
+    const lettere = ["A", "B", "C", "D", "E"];
 
     let html = `
-    
-
-<div class="grid grid-cols-[48px_1fr_44px_44px_44px] items-center text-[11px] font-black uppercase text-slate-700 border-b border-slate-300 pb-1">
-    <div></div>
-    <div></div>
-    <div class="text-center text-yellow-600">A</div>
-    <div class="text-center text-orange-600">2'</div>
-    <div class="text-center text-red-600">E</div>
-</div>
-    <div class="flex-1 overflow-y-auto space-y-1">
+        <div class="roster-staff-title">DIRIGENTI</div>
+        <div class="roster-staff-grid">
     `;
 
-    const lettere = ["A", "B", "C", "D", "E"];
-    const officialsList = roster && roster.officials ? roster.officials : [];
+    officialsList.forEach((item, index) => {
 
-    officialsList.forEach((item, index)=>{
         const lettera = lettere[index] || "";
-        
-        // Lettura dinamica del nome del dirigente dalla configurazione
-        const officialName = (item.name && item.name.trim() !== "") ? item.name : 
-                             (item.nome && item.nome.trim() !== "") ? item.nome : 
-                             `DIRIGENTE ${lettera}`;
 
-        const isRed = item.red ? "bg-red-100 opacity-80" : "bg-white";
+        const officialName =
+            (item.name && item.name.trim() !== "") ? item.name :
+            (item.nome && item.nome.trim() !== "") ? item.nome :
+            `DIRIGENTE ${lettera}`;
 
-        const yellowBtn = item.red
-            ? `<div class="w-8 h-8 flex items-center justify-center bg-red-200 text-red-800 rounded font-bold text-xs">${item.yellows}</div>`
-            : `<button onclick="handleYellow('${team}','${item.id}','${item.type}')" class="w-8 h-8 rounded text-xs ${item.yellows > 0 ? "bg-yellow-500 text-black font-bold" : "bg-slate-800 text-slate-400"}">${item.yellows}</button>`;
-
-        const suspensionBtn = item.red
-            ? `<div class="w-10 h-8 flex items-center justify-center bg-red-600 text-white rounded font-bold text-xs">${item.suspensions}/3</div>`
-            : `<button onclick="handleSuspension('${team}','${item.id}','${item.type}')" class="w-10 h-8 rounded text-xs ${item.suspensions > 0 ? "bg-orange-500 text-white font-bold" : "bg-slate-800 text-slate-400"}">${item.suspensions}/3</button>`;
-
-        const redBtn = item.red
-            ? `<div class="w-8 h-8 flex items-center justify-center bg-red-700 text-white rounded font-bold text-xs">E</div>`
-            : `<button onclick="handleRedCard('${team}','${item.id}','${item.type}')" class="w-8 h-8 rounded bg-red-700 hover:bg-red-600 text-white font-bold text-xs">E</button>`;
+        const isRed = !!item.red;
+        const isYellow = !isRed && item.yellows > 0;
+        const isSuspended = !isRed && item.suspensions > 0;
 
         html += `
-        <div class="flex items-center border-b border-slate-200 ${isRed} py-1.5 px-1">
-            <div class="w-12 text-center ${team === "A" ? "text-blue-700" : "text-rose-500"} font-black text-xl leading-none">
-                ${lettera}
-            </div>
-            <div class="w-[210px] px-1 truncate">
-                <div class="font-bold text-[10px] text-slate-900 leading-tight">
-                    ${abbreviaNome(officialName, 10)}
+            <div
+                class="roster-staff-card${isRed ? " is-red" : isYellow ? " is-yellow" : isSuspended ? " is-suspended" : ""}"
+                ${!isRed ? `onclick="openRosterEventModal('STAFF','${team}','${item.id}')"` : ""}
+                title="${officialName.replace(/"/g, '&quot;')}"
+            >
+                <div class="roster-staff-top">
+                    <div class="roster-staff-letter">${lettera}</div>
+                    <div class="roster-staff-name">${officialName}</div>
                 </div>
+
+                <div class="roster-staff-stats">
+                    <div class="roster-stat yellow ${isYellow ? "active" : ""}">
+                        A ${item.yellows || 0}
+                    </div>
+                    <div class="roster-stat two ${isSuspended ? "active" : ""}">
+                        2' ${item.suspensions || 0}
+                    </div>
+                    <div class="roster-stat red">
+                        ${isRed ? "E ✓" : "E"}
+                    </div>
+                </div>
+
+                ${isRed ? '<div class="roster-staff-expelled">ESPULSO</div>' : ""}
             </div>
-            <div class="flex items-center gap-1 ml-auto">
-                ${yellowBtn}
-                ${suspensionBtn}
-                ${redBtn}
-            </div>
-        </div>
         `;
     });
 
     html += `</div>`;
     panel.innerHTML = html;
 }
+
+
+//=========================================
+// POPUP AZIONI GIOCATORI / DIRIGENTI
+//=========================================
+
+let rosterEventSelection = null;
+
+function openRosterEventModal(kind, team, id){
+
+    const roster = team === "A" ? currentRosterA : currentRosterB;
+    const list = kind === "PLAYER" ? roster.players : roster.officials;
+
+    const item = list.find(x => x.id === id);
+    if(!item) return;
+
+    if(item.red){
+        return;
+    }
+
+    rosterEventSelection = { kind, team, id };
+
+    const modal = document.getElementById("roster-event-modal");
+    const box = document.getElementById("roster-event-box");
+    const teamLabel = document.getElementById("roster-event-team");
+    const title = document.getElementById("roster-event-title");
+    const subtitle = document.getElementById("roster-event-subtitle");
+    const actions = document.getElementById("roster-event-actions");
+
+    const teamName = team === "A"
+        ? (document.getElementById("panel-title-a")?.textContent || "CASA")
+        : (document.getElementById("panel-title-b")?.textContent || "OSPITI");
+
+    const name = String(item.name || item.nome || "").trim();
+    const label = kind === "PLAYER"
+        ? `N° ${item.num} · ${name}`
+        : `DIRIGENTE ${item.type || ""} · ${name}`;
+
+    teamLabel.textContent = teamName;
+    title.textContent = "SELEZIONA EVENTO";
+    subtitle.textContent = label;
+
+    box.classList.toggle("team-b", team === "B");
+
+    let buttons = "";
+
+    if(kind === "PLAYER"){
+        buttons += `
+            <button class="evt-goal" onclick="executeRosterEvent('GOAL')">⚽ GOAL</button>
+            <button class="evt-penalty" onclick="executeRosterEvent('PENALTY')">7M RIGORE</button>
+        `;
+    }
+
+    buttons += `
+        <button class="evt-yellow" onclick="executeRosterEvent('YELLOW')">🟨 AMMONIZIONE</button>
+        <button class="evt-two" onclick="executeRosterEvent('TWO')">2' ESCLUSIONE</button>
+        <button class="evt-red" onclick="executeRosterEvent('RED')">🟥 ESPULSIONE</button>
+    `;
+
+    actions.innerHTML = buttons;
+    modal.classList.remove("hidden");
+}
+
+function closeRosterEventModal(){
+    rosterEventSelection = null;
+
+    const modal = document.getElementById("roster-event-modal");
+    if(modal){
+        modal.classList.add("hidden");
+    }
+}
+
+function executeRosterEvent(action){
+
+    if(!rosterEventSelection) return;
+
+    const { kind, team, id } = rosterEventSelection;
+
+    // Chiude il popup prima di passare al gestore originale.
+    closeRosterEventModal();
+
+    const roster = team === "A" ? currentRosterA : currentRosterB;
+    const list = kind === "PLAYER" ? roster.players : roster.officials;
+    const item = list.find(x => x.id === id);
+
+    if(!item || item.red) return;
+
+    if(action === "GOAL" && kind === "PLAYER"){
+        handleGoal(team, id);
+        return;
+    }
+
+    if(action === "PENALTY" && kind === "PLAYER"){
+        handlePenalty7mPlayer(team, id);
+        return;
+    }
+
+    if(action === "YELLOW"){
+        handleYellow(team, id, kind === "PLAYER" ? "G" : item.type);
+        return;
+    }
+
+    if(action === "TWO"){
+        handleSuspension(team, id, kind === "PLAYER" ? "G" : item.type);
+        return;
+    }
+
+    if(action === "RED"){
+        handleRedCard(team, id, kind === "PLAYER" ? "G" : item.type);
+        return;
+    }
+}
+
+document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){
+        closeRosterEventModal();
+    }
+});
+
+document.addEventListener("click", function(e){
+    const modal = document.getElementById("roster-event-modal");
+    const box = document.getElementById("roster-event-box");
+
+    if(modal && !modal.classList.contains("hidden") &&
+       e.target === modal && box && !box.contains(e.target)){
+        closeRosterEventModal();
+    }
+});
 
 //=========================================
 // PAUSA CRONOMETRO PER SANZIONE
