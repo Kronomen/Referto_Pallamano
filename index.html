@@ -122,9 +122,8 @@ function entraSchermoIntero(){
 }
 
 function apriGara(){
-  // Passaggio diretto al referto: nessuna transizione, nessun fullscreen
-  // e nessun ricaricamento della schermata INDEX.
-  window.location.replace("Referto_Pallamano_Tablet.html");
+  // Usa location.href al posto di replace per evitare blocchi della cronologia su Safari
+  window.location.href = "Referto_Pallamano_Tablet.html";
 }
 function chiudi(){
   window.close();
