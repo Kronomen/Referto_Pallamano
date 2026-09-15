@@ -5343,24 +5343,5 @@ document.addEventListener('keydown', function(e){
 })();
 </script>
 
-
-<script id="chrome-tablet-config-fallback">
-(function(){
-  function ensureConfigOpen(){
-    try{
-      var modal=document.getElementById('editTeamsModal');
-      if(!modal) return;
-      if(typeof window.openEditTeams==='function'){
-        if(getComputedStyle(modal).display==='none' || !modal.dataset.chromeOpened){
-          window.openEditTeams();
-          modal.dataset.chromeOpened='1';
-        }
-      }
-    }catch(e){ console.error('CONFIGURAZIONE fallback:',e); }
-  }
-  if(document.readyState==='complete') setTimeout(ensureConfigOpen,50);
-  else window.addEventListener('load',function(){ setTimeout(ensureConfigOpen,50); },{once:true});
-})();
-</script>
 </body>
 </html>
