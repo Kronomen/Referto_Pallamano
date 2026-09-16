@@ -7514,7 +7514,7 @@ function apriManualeUso(){
     </div>
 
     <div class="edit-restore" style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
-      <button id="restoreBtn" class="btn blue" style="width:100%;display:none" type="button" onclick="restoreMatch()">RIPRISTINA</button>
+      <button id="restoreBtn" class="btn blue" style="width:100%;" type="button" onclick="restoreMatch()">RIPRISTINA</button>
       <button id="openSavedBtn" class="btn gray" style="width:100%" type="button" onclick="openSavedJson()">APRI</button>
       <button id="loadMatchDataBtn" class="btn green" style="width:100%" type="button" onclick="openMatchDataFile()">CARICA DATI GARA</button>
       
@@ -12560,5 +12560,130 @@ document.addEventListener('keydown', function(e){
   document.addEventListener('DOMContentLoaded',function(){
     paint('A'); paint('B');
   });
+})();
+</script>
+
+
+<style id="tablet-touch-sensitivity-v1">
+/* TOUCH TABLET 11" — area di tocco più tollerante e risposta immediata.
+   Non cambia la grafica: aumenta solo la robustezza della pressione. */
+button,
+.player-card-touch,
+.staff-card-touch,
+.quick-event{
+  -webkit-tap-highlight-color:transparent !important;
+  -webkit-touch-callout:none !important;
+  touch-action:manipulation !important;
+  user-select:none !important;
+}
+
+/* Feedback immediato quando il dito appoggia sul controllo. */
+.player-card-touch.touch-pressed,
+.staff-card-touch.touch-pressed,
+.quick-event.touch-pressed,
+button.touch-pressed{
+  filter:brightness(.94) !important;
+}
+
+/* Sul tablet i controlli principali non devono avere zone di pressione minuscole.
+   Manteniamo le dimensioni visive già definite dal layout. */
+@media (pointer:coarse){
+  .quick-event,
+  .player-card-touch,
+  .staff-card-touch,
+  .timeout-btn,
+  #startBtn,
+  #halfBtn,
+  #undoBtn{
+    cursor:pointer !important;
+  }
+}
+</style>
+
+<script id="tablet-touch-sensitivity-v1">
+/* Risposta touch immediata per tablet/iPad.
+   Esegue l'azione sul touchend e neutralizza il click sintetico successivo,
+   evitando sia tocchi persi sia doppie registrazioni. */
+(function(){
+  let lastTouchHandledAt=0;
+  let internalClick=false;
+  let pressedEl=null;
+
+  function actionable(target){
+    if(!target || !target.closest) return null;
+
+    // Il pulsante TIRA durante i rigori ha già una gestione propria.
+    if(target.closest('.shootout-shoot-btn')) return null;
+
+    const el=target.closest('.quick-event, .player-card-touch, .staff-card-touch');
+    if(!el) return null;
+    if(el.disabled) return null;
+    if(el.matches('.player-card-touch, .staff-card-touch') &&
+       target.closest('button[disabled]')) return null;
+    return el;
+  }
+
+  document.addEventListener('touchstart',function(ev){
+    if(!ev.changedTouches || ev.changedTouches.length!==1) return;
+    const el=actionable(ev.target);
+    if(!el) return;
+    pressedEl=el;
+    el.classList.add('touch-pressed');
+  },{passive:true});
+
+  document.addEventListener('touchend',function(ev){
+    if(!ev.changedTouches || ev.changedTouches.length!==1) return;
+    const el=actionable(ev.target) || pressedEl;
+    if(pressedEl){
+      pressedEl.classList.remove('touch-pressed');
+      pressedEl=null;
+    }
+    if(!el) return;
+
+    // Se il dito è stato spostato troppo, non trasformiamo il gesto in un click.
+    const t=ev.changedTouches[0];
+    const sx=Number(el.dataset.touchStartX||t.clientX);
+    const sy=Number(el.dataset.touchStartY||t.clientY);
+    delete el.dataset.touchStartX;
+    delete el.dataset.touchStartY;
+
+    lastTouchHandledAt=Date.now();
+    internalClick=true;
+    try{
+      if(typeof el.click==='function') el.click();
+    }finally{
+      internalClick=false;
+    }
+  },{passive:true});
+
+  document.addEventListener('touchcancel',function(){
+    if(pressedEl){
+      pressedEl.classList.remove('touch-pressed');
+      pressedEl=null;
+    }
+  },{passive:true});
+
+  // Memorizza la posizione iniziale per il controllo dello spostamento.
+  document.addEventListener('touchstart',function(ev){
+    if(!ev.changedTouches || ev.changedTouches.length!==1) return;
+    const el=actionable(ev.target);
+    if(!el) return;
+    const t=ev.changedTouches[0];
+    el.dataset.touchStartX=String(t.clientX);
+    el.dataset.touchStartY=String(t.clientY);
+  },{passive:true});
+
+  // Il touchend sopra ha già eseguito l'azione: blocchiamo soltanto il click
+  // sintetico generato dal browser, non i normali click del mouse.
+  document.addEventListener('click',function(ev){
+    if(internalClick) return;
+    if(Date.now()-lastTouchHandledAt < 650){
+      const el=actionable(ev.target);
+      if(el){
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+      }
+    }
+  },true);
 })();
 </script>
