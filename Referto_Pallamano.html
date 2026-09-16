@@ -6959,11 +6959,12 @@ body:not(.referto-attivo) #editTeamsModal {
   background:rgba(0,0,0,.22) !important;
 }
 body:not(.referto-attivo) #editTeamsModal .edit-teams-modal {
-  width:min(380px,90vw) !important;
-  max-width:min(380px,90vw) !important;
-  max-height:calc(100vh - 24px) !important;
+  width:min(700px,calc(100vw - 8px)) !important;
+  max-width:min(700px,calc(100vw - 8px)) !important;
+  max-height:calc(100vh - 8px) !important;
   padding:12px !important;
   border-radius:10px !important;
+  overflow:auto !important;
 }
 
 /* Dopo REFERTO: torna al referto pieno, senza sfondo decorativo. */
@@ -7336,6 +7337,32 @@ body.referto-attivo #manualeConfigBtn{
     overflow:hidden !important;
     box-sizing:border-box !important;
   }
+}
+</style>
+<style id="config-opening-layout-authoritative">
+/* CONFIGURAZIONE ALL'APERTURA — finestra ampia con le due squadre affiancate. */
+body:not(.referto-attivo) #editTeamsModal .edit-teams-modal{
+  width:min(700px,calc(100vw - 8px)) !important;
+  max-width:min(700px,calc(100vw - 8px)) !important;
+  max-height:calc(100vh - 8px) !important;
+  padding:12px !important;
+  box-sizing:border-box !important;
+  overflow:auto !important;
+}
+body:not(.referto-attivo) #editTeamsModal .edit-teams-grid{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:10px !important;
+}
+body:not(.referto-attivo) #editTeamsModal .edit-players-grid{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:4px !important;
+}
+body:not(.referto-attivo) #editTeamsModal .edit-staff-grid{
+  display:grid !important;
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  gap:4px !important;
 }
 </style>
 </head>
@@ -8236,7 +8263,7 @@ function buildStateFromSavedReferto(data){
     }
   });
 
-  s.staffLetters={A:[...STAFF],B:[...STAFF]};
+s.staffLetters={A:[...STAFF],B:[...STAFF]};
   s.staffNames={A:STAFF.map(()=>''),B:STAFF.map(()=> '')};
   s.staff={A:STAFF.map(()=>({yellow:0,two:0,red:false})),
            B:STAFF.map(()=>({yellow:0,two:0,red:false}))};
