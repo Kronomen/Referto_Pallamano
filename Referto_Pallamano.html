@@ -7045,11 +7045,70 @@ body:not(.referto-attivo) #editTeamsModal {
   background:rgba(0,0,0,.22) !important;
 }
 body:not(.referto-attivo) #editTeamsModal .edit-teams-modal {
-  width:min(380px,90vw) !important;
-  max-width:min(380px,90vw) !important;
-  max-height:calc(100vh - 24px) !important;
-  padding:12px !important;
+  /* Configurazione tablet 11": più ampia e con altezza sufficiente
+     per mostrare tutte le sezioni senza comprimere i controlli. */
+  width:min(700px,calc(100vw - 20px)) !important;
+  max-width:min(700px,calc(100vw - 20px)) !important;
+  max-height:calc(100vh - 16px) !important;
+  min-height:min(560px,calc(100vh - 16px)) !important;
+  padding:12px 14px !important;
   border-radius:10px !important;
+  overflow:auto !important;
+}
+
+/* Le due impostazioni indipendenti occupano lo stesso rigo. */
+.config-options-row{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:10px !important;
+  margin-top:9px !important;
+  align-items:stretch !important;
+}
+.config-option-box{
+  min-width:0 !important;
+  padding:8px 9px !important;
+  border:1px solid #cbd5e1 !important;
+  border-radius:9px !important;
+  background:#f8fafc !important;
+  text-align:left !important;
+}
+.config-option-box label{
+  display:flex !important;
+  align-items:center !important;
+  gap:7px !important;
+  min-height:24px !important;
+  font-weight:900 !important;
+  font-size:11px !important;
+  line-height:1.05 !important;
+  cursor:pointer !important;
+}
+.config-option-box input[type=checkbox]{
+  width:18px !important;
+  height:18px !important;
+  flex:0 0 18px !important;
+  margin:0 !important;
+}
+.config-option-box .config-option-help{
+  margin-top:4px !important;
+  font-size:8px !important;
+  line-height:1.2 !important;
+  color:#475569 !important;
+}
+
+@media(max-width:600px){
+  body:not(.referto-attivo) #editTeamsModal .edit-teams-modal {
+    width:calc(100vw - 8px) !important;
+    max-width:calc(100vw - 8px) !important;
+    min-height:calc(100vh - 8px) !important;
+    max-height:calc(100vh - 8px) !important;
+  }
+  .config-options-row{
+    grid-template-columns:1fr 1fr !important;
+    gap:6px !important;
+  }
+  .config-option-box{padding:7px !important}
+  .config-option-box label{font-size:9px !important;gap:5px !important}
+  .config-option-box .config-option-help{font-size:7px !important}
 }
 
 /* Dopo REFERTO: torna al referto pieno, senza sfondo decorativo. */
@@ -7386,12 +7445,22 @@ function apriManualeUso(){
       </div>
     </div>
 
-    <div style="margin-top:9px;padding:10px;border:1px solid #cbd5e1;border-radius:10px;background:#f8fafc;text-align:left">
-      <label style="display:flex;align-items:center;gap:9px;font-weight:900;font-size:13px;cursor:pointer">
-        <input id="palazzettoContinuousInput" type="checkbox" style="width:20px;height:20px;accent-color:#16a34a">
-        CRONOMETRO PALAZZETTO CONTINUATIVO
-      </label>
-      <div style="font-size:11px;color:#475569;margin-top:5px">Se non selezionato, il cronometro ufficiale riparte da 00:00 ad ogni tempo. Questa impostazione serve solo per il calcolo del cartellino dei 2'.</div>
+    <div class="config-options-row">
+      <div class="config-option-box">
+        <label>
+          <input id="palazzettoContinuousInput" type="checkbox" style="accent-color:#16a34a">
+          <span>CRONOMETRO PALAZZETTO CONTINUATIVO</span>
+        </label>
+        <div class="config-option-help">Se non selezionato, il cronometro ufficiale riparte da 00:00 ad ogni tempo. Questa impostazione serve solo per il calcolo del cartellino dei 2'.</div>
+      </div>
+
+      <div class="config-option-box">
+        <label>
+          <input id="stampaCartellinoInput" type="checkbox" style="accent-color:#16a34a">
+          <span>STAMPA CARTELLINO ESCLUSIONI</span>
+        </label>
+        <div class="config-option-help">Se selezionato, dopo un'esclusione di 2' o un'espulsione diretta il cartellino viene aperto direttamente per la stampa, senza popup. Se non selezionato, il cartellino non viene mai stampato.</div>
+      </div>
     </div>
 
     <div style="margin-top:9px">
@@ -7623,6 +7692,7 @@ let state={
   halfDurationMinutes:30,matchMode:'STANDARD',rigoriStarted:false,
   // Configurazione del cronometro ufficiale del palazzetto (solo per i cartellini)
   cronometroContinuativo:false,
+  stampaCartellino:false,
   firstHalfScoreA:0,firstHalfScoreB:0,
   secondHalfScoreA:0,secondHalfScoreB:0,
   overtimeSeries:0,overtimeHalf:0,
@@ -7766,6 +7836,7 @@ function restoreMatch(){
     }
 
     state=saved.state;
+    state.stampaCartellino=state.stampaCartellino===true;
     ensureTeamColors();
     state.staffNames=state.staffNames || {A:STAFF.map(()=>''),B:STAFF.map(()=>'' )};
     ensureShootoutState();
@@ -8258,6 +8329,7 @@ function loadSavedJson(event){
       }
 
       state=imported;
+      state.stampaCartellino=state.stampaCartellino===true;
 
       // Il JSON appena aperto è la fonte di verità: non mantenere eventi
       // residui della gara precedente.
@@ -10728,7 +10800,8 @@ function stopForDisciplinary(team,num,text){
 
   el('timer').classList.add('blink');
 
-  // Memorizziamo il cartellino mentre il cronometro è fermo.
+  // La stampa del cartellino è regolata esclusivamente dalla spunta
+  // STAMPA CARTELLINO presente in CONFIGURAZIONE.
   pendingCardPrint={
     team:String(team),
     num:String(num),
@@ -10738,10 +10811,13 @@ function stopForDisciplinary(team,num,text){
     duration:Number((typeof getHalfSeconds==='function' ? getHalfSeconds()/60 : 30))
   };
 
-  el('disciplineTitle').textContent='PROVVEDIMENTO DISCIPLINARE';
-  el('disciplineText').textContent=
-    `${state.teams[team]} · ${num} · ${text}. Il cronometro è fermo.`;
-  el('disciplineModal').style.display='flex';
+  if(state.stampaCartellino===true){
+    // Nessun popup: apre direttamente il cartellino per la stampa.
+    confirmCardPrint();
+  }else{
+    // Nessun popup e nessuna stampa quando la spunta è disattivata.
+    pendingCardPrint=null;
+  }
 }
 
 function closeDiscipline(){
@@ -10752,8 +10828,10 @@ function closeDiscipline(){
   if(state.timer>0 && state.phase!==7) el('timer').classList.add('blink');
   render();
 
-  // Il cronometro resta fermo: ora chiediamo se stampare il cartellino.
-  if(pendingCardPrint){
+  // Compatibilità con eventuali chiamate legacy. Il normale flusso non apre
+  // più questo popup: stopForDisciplinary() decide direttamente in base
+  // alla spunta STAMPA CARTELLINO.
+  if(pendingCardPrint && state.stampaCartellino===true){
     const p=pendingCardPrint;
     el('cardPrintTitle').textContent =
       p.type==='RED' ? '🟥 CARTELLINO ESPULSIONE' : "🟧 CARTELLINO 2'";
@@ -10972,6 +11050,8 @@ function openEditTeams(){
   if(modeInput)modeInput.value=state.matchMode || 'STANDARD';
   const pc=el('palazzettoContinuousInput');
   if(pc)pc.checked=state.cronometroContinuativo===true;
+  const sc=el('stampaCartellinoInput');
+  if(sc)sc.checked=state.stampaCartellino===true;
   const msg=el('editNumberError');
   if(msg)msg.classList.remove('show');
   const rb=el('restoreBtn');
@@ -11163,6 +11243,7 @@ function saveEditTeams(){
   state.halfDurationMinutes=duration;
   state.matchMode=el('matchModeInput')?.value || 'STANDARD';
   state.cronometroContinuativo=!!el('palazzettoContinuousInput')?.checked;
+  state.stampaCartellino=!!el('stampaCartellinoInput')?.checked;
 
   // Le lettere sono esclusivamente A-B-C-D-E e non sono modificabili.
   // L'unica operazione consentita è lasciare vuoto il nome del dirigente.
@@ -11248,6 +11329,7 @@ function resetMatch(){
     halfDurationMinutes:30,matchMode:'STANDARD',rigoriStarted:false,
   // Configurazione del cronometro ufficiale del palazzetto (solo per i cartellini)
   cronometroContinuativo:false,
+    stampaCartellino:false,
     firstHalfScoreA:0,firstHalfScoreB:0,
     secondHalfScoreA:0,secondHalfScoreB:0,
     overtimeSeries:0,overtimeHalf:0,
@@ -11505,6 +11587,9 @@ function closeConfigAndStart(){
   // ☑ = cronometro palazzetto continuativo -> mini timer NASCOSTO
   const palazzettoContinuousInput=el('palazzettoContinuousInput');
   state.cronometroContinuativo=!!palazzettoContinuousInput?.checked;
+
+  const stampaCartellinoInput=el('stampaCartellinoInput');
+  state.stampaCartellino=!!stampaCartellinoInput?.checked;
 
   // IMPORTANTISSIMO: REFERTO deve usare la modalità scelta in CONFIGURAZIONE.
   // selectMatchMode() aggiorna l'input, ma non basta da solo perché REFERTO
