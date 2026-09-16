@@ -11932,6 +11932,12 @@ document.addEventListener('keydown', function(e){
   background:#fff;
   color:var(--team-home,#2563eb);
   border:1px dashed #94a3b8;
+  font-size:clamp(7px,.78vw,10px);
+  letter-spacing:-.35px;
+  padding:1px 2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
 }
 .panel.team-b .quick-event.choose{color:var(--team-away,#7c3aed)}
 .quick-event.active{
@@ -11939,9 +11945,14 @@ document.addEventListener('keydown', function(e){
   outline-offset:-3px;
   filter:brightness(.9);
 }
-.quick-event-toolbar[data-selected] .quick-event.choose{
+.quick-event-toolbar[data-selected] .quick-event.choose,
+.quick-event.choose.has-selection{
   border-style:solid;
-  font-size:clamp(8px,.95vw,12px);
+  font-size:clamp(6px,.68vw,9px);
+  font-weight:900;
+  letter-spacing:-.45px;
+  padding-left:1px;
+  padding-right:1px;
 }
 
 @media screen and (orientation:landscape) and (min-width:900px){
@@ -12210,6 +12221,8 @@ document.addEventListener('keydown', function(e){
   }
   .quick-event-row{gap:2px}
   .quick-event{font-size:7px;border-radius:4px}
+  .quick-event.choose{font-size:6px;letter-spacing:-.35px;padding-left:1px;padding-right:1px}
+  .quick-event.choose.has-selection{font-size:6px;letter-spacing:-.45px}
   .main > .panel:first-child,
   .main > .panel:last-child{
     display:flex !important;
@@ -12221,6 +12234,32 @@ document.addEventListener('keydown', function(e){
     min-height:0 !important;
   }
   #eventModal{display:none !important}
+}
+</style>
+
+
+<style id="tablet-inline-event-label-fix">
+/* Contenitore "SELEZIONA EVENTO": testo sempre compatto e contenuto. */
+.quick-event-toolbar .quick-event.choose{
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:7px !important;
+  line-height:1 !important;
+  letter-spacing:-.35px !important;
+  padding:1px 2px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+}
+.quick-event-toolbar .quick-event.choose.has-selection{
+  font-size:7px !important;
+  letter-spacing:-.45px !important;
+}
+@media screen and (max-width:900px){
+  .quick-event-toolbar .quick-event.choose,
+  .quick-event-toolbar .quick-event.choose.has-selection{
+    font-size:6px !important;
+    letter-spacing:-.4px !important;
+  }
 }
 </style>
 
@@ -12251,10 +12290,24 @@ document.addEventListener('keydown', function(e){
   function paint(team){
     const root=toolbar(team);
     if(!root)return;
+    const selectedType=window.quickEventSelection[team];
     root.querySelectorAll('.quick-event[data-event]').forEach(btn=>{
-      btn.classList.toggle('active',btn.dataset.event===window.quickEventSelection[team]);
+      btn.classList.toggle('active',btn.dataset.event===selectedType);
     });
-    if(window.quickEventSelection[team]){
+
+    // Il quarto contenitore della seconda riga mostra sempre lo stato
+    // della selezione: inizialmente "SELEZIONA EVENTO", dopo il click
+    // mostra il nome dell'evento scelto.
+    const choose=root.querySelector('.quick-event.choose');
+    if(choose){
+      choose.textContent=selectedType ? labels[selectedType] : 'SELEZIONA EVENTO';
+      choose.classList.toggle('has-selection',!!selectedType);
+      choose.setAttribute('aria-label', selectedType
+        ? `Evento selezionato: ${labels[selectedType]}`
+        : 'Seleziona evento');
+    }
+
+    if(selectedType){
       root.dataset.selected='1';
     }else{
       delete root.dataset.selected;
