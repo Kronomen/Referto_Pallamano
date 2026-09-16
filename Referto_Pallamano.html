@@ -289,7 +289,8 @@ function recordShootoutShot(goal){
   d.canShoot=false;
   if(goal){
     state.shootout[team==='A'?'scoreA':'scoreB']++;
-    d.goals++;
+    // I gol della serie dei rigori finali NON sono gol individuali del giocatore.
+    // Incrementano solo il risultato finale/serie dei rigori.
     if(team==='A') state.scoreA++; else state.scoreB++;
   }
 
@@ -7212,6 +7213,20 @@ body.referto-attivo #app > * {
         </div>
       </div>
 
+      <div class="quick-event-toolbar" data-team="A" aria-label="Eventi rapidi CASA">
+        <div class="quick-event-row">
+          <button type="button" class="quick-event warning" data-event="YELLOW" onclick="selectQuickEvent('A','YELLOW',this)">WARNING</button>
+          <button type="button" class="quick-event two" data-event="TWO" onclick="selectQuickEvent('A','TWO',this)">2 MIN.</button>
+          <button type="button" class="quick-event disq" data-event="RED" onclick="selectQuickEvent('A','RED',this)">DISQ</button>
+          <button type="button" class="quick-event technical" data-event="TEAM_PENALTY" onclick="selectQuickEvent('A','TEAM_PENALTY',this)">T.PENALTY</button>
+        </div>
+        <div class="quick-event-row">
+          <button type="button" class="quick-event goal" data-event="GOAL" onclick="selectQuickEvent('A','GOAL',this)">GOAL</button>
+          <button type="button" class="quick-event seven-goal" data-event="PENALTY_GOAL" onclick="selectQuickEvent('A','PENALTY_GOAL',this)">7m GOAL</button>
+          <button type="button" class="quick-event seven-miss" data-event="PENALTY_MISS" onclick="selectQuickEvent('A','PENALTY_MISS',this)">7m MISS</button>
+          <button type="button" class="quick-event choose" onclick="clearQuickEvent('A')">SELEZIONA EVENTO</button>
+        </div>
+      </div>
       <div class="players-caption">N° MAGLIA · EVENTO</div>
       <div id="playersA" class="players"></div>
 
@@ -7247,6 +7262,20 @@ body.referto-attivo #app > * {
         </div>
       </div>
 
+      <div class="quick-event-toolbar" data-team="B" aria-label="Eventi rapidi OSPITI">
+        <div class="quick-event-row">
+          <button type="button" class="quick-event warning" data-event="YELLOW" onclick="selectQuickEvent('B','YELLOW',this)">WARNING</button>
+          <button type="button" class="quick-event two" data-event="TWO" onclick="selectQuickEvent('B','TWO',this)">2 MIN.</button>
+          <button type="button" class="quick-event disq" data-event="RED" onclick="selectQuickEvent('B','RED',this)">DISQ</button>
+          <button type="button" class="quick-event technical" data-event="TEAM_PENALTY" onclick="selectQuickEvent('B','TEAM_PENALTY',this)">T.PENALTY</button>
+        </div>
+        <div class="quick-event-row">
+          <button type="button" class="quick-event goal" data-event="GOAL" onclick="selectQuickEvent('B','GOAL',this)">GOAL</button>
+          <button type="button" class="quick-event seven-goal" data-event="PENALTY_GOAL" onclick="selectQuickEvent('B','PENALTY_GOAL',this)">7m GOAL</button>
+          <button type="button" class="quick-event seven-miss" data-event="PENALTY_MISS" onclick="selectQuickEvent('B','PENALTY_MISS',this)">7m MISS</button>
+          <button type="button" class="quick-event choose" onclick="clearQuickEvent('B')">SELEZIONA EVENTO</button>
+        </div>
+      </div>
       <div class="players-caption">N° MAGLIA · EVENTO</div>
       <div id="playersB" class="players"></div>
 
@@ -11870,3 +11899,515 @@ document.addEventListener('keydown', function(e){
 </div>
 
 
+
+<style id="tablet-11-ehf-inline-layout">
+/* ============================================================
+   LAYOUT TABLET 11" — STILE INLINE EHF
+   Gli eventi vengono scelti nella barra della squadra e poi
+   applicati toccando direttamente giocatore/dirigente.
+   Nessun popup per la normale registrazione degli eventi.
+   ============================================================ */
+
+.quick-event-toolbar{
+  flex:0 0 82px;
+  height:82px;
+  min-height:82px;
+  padding:4px 3px 3px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  background:#f8fafc;
+  border-bottom:1px solid #cbd5e1;
+  box-sizing:border-box;
+}
+.quick-event-row{
+  flex:1 1 0;
+  min-height:0;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:4px;
+}
+.quick-event{
+  min-width:0;
+  min-height:0;
+  height:100%;
+  border:0;
+  border-radius:6px;
+  padding:2px 4px;
+  font:900 clamp(9px,1.05vw,13px)/1 Arial,sans-serif;
+  white-space:nowrap;
+  touch-action:manipulation;
+  -webkit-user-select:none;
+  user-select:none;
+  cursor:pointer;
+  box-shadow:0 1px 2px #0002;
+}
+.quick-event:active{transform:scale(.985)}
+.quick-event.warning{background:#facc15;color:#111827}
+.quick-event.two{background:#ea580c;color:#fff}
+.quick-event.disq{background:#dc2626;color:#fff}
+.quick-event.technical{background:#64748b;color:#fff}
+.quick-event.goal{background:#16a34a;color:#fff}
+.quick-event.seven-goal{background:#2563eb;color:#fff}
+.quick-event.seven-miss{background:#475569;color:#fff}
+.quick-event.choose{
+  background:#fff;
+  color:var(--team-home,#2563eb);
+  border:1px dashed #94a3b8;
+}
+.panel.team-b .quick-event.choose{color:var(--team-away,#7c3aed)}
+.quick-event.active{
+  outline:3px solid rgba(15,23,42,.38);
+  outline-offset:-3px;
+  filter:brightness(.9);
+}
+.quick-event-toolbar[data-selected] .quick-event.choose{
+  border-style:solid;
+  font-size:clamp(8px,.95vw,12px);
+}
+
+@media screen and (orientation:landscape) and (min-width:900px){
+  /* Le tre colonne restano quelle del file; viene solo aggiunta
+     la barra eventi e ridistribuito lo spazio verticale. */
+  .main{
+    grid-template-columns:minmax(0,1.12fr) minmax(175px,.72fr) minmax(0,1.12fr) !important;
+    gap:5px !important;
+  }
+
+  .main > .panel:first-child,
+  .main > .panel:last-child{
+    display:grid !important;
+    grid-template-rows:
+      43px       /* testata squadra */
+      82px       /* eventi rapidi */
+      10px       /* caption */
+      347px      /* 16 giocatori 4x4 */
+      10px       /* dirigenti */
+      80px !important; /* dirigenti */
+    min-height:0 !important;
+    overflow:hidden !important;
+  }
+
+  .main > .panel:first-child > .panel-head,
+  .main > .panel:last-child > .panel-head{
+    height:43px !important;
+    min-height:43px !important;
+    padding:2px 5px !important;
+    overflow:hidden !important;
+  }
+
+  .main > .panel:first-child > .panel-head .team-line,
+  .main > .panel:last-child > .panel-head .team-line{
+    height:25px !important;
+    min-height:25px !important;
+  }
+
+  .main > .panel:first-child > .panel-head .name-input,
+  .main > .panel:last-child > .panel-head .name-input{
+    height:25px !important;
+    min-height:25px !important;
+    padding:0 6px !important;
+    line-height:24px !important;
+    font-size:clamp(13px,1.45vw,18px) !important;
+  }
+
+  .main > .panel:first-child > .panel-head .timeout-btn,
+  .main > .panel:last-child > .panel-head .timeout-btn{
+    height:25px !important;
+    min-height:25px !important;
+    padding:0 10px !important;
+    line-height:24px !important;
+    font-size:clamp(9px,1vw,12px) !important;
+  }
+
+  .main > .panel:first-child > .panel-head .team-counters,
+  .main > .panel:last-child > .panel-head .team-counters{
+    height:11px !important;
+    min-height:11px !important;
+    margin-top:1px !important;
+    line-height:10px !important;
+    font-size:8px !important;
+    gap:9px !important;
+  }
+
+  .main > .panel:first-child > .players-caption,
+  .main > .panel:last-child > .players-caption{
+    height:10px !important;
+    min-height:10px !important;
+    line-height:10px !important;
+    padding:0 2px !important;
+    font-size:clamp(7px,.72vw,10px) !important;
+    text-align:left !important;
+    color:var(--team-home,#2563eb) !important;
+    background:#f8fafc !important;
+  }
+  .main > .panel:last-child > .players-caption{
+    color:var(--team-away,#7c3aed) !important;
+  }
+
+  .main > .panel:first-child > .players,
+  .main > .panel:last-child > .players{
+    height:347px !important;
+    min-height:347px !important;
+    max-height:347px !important;
+    padding:3px !important;
+    gap:3px !important;
+    overflow:hidden !important;
+    display:grid !important;
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    grid-template-rows:repeat(4,minmax(0,1fr)) !important;
+  }
+
+  .player-card{
+    border-radius:5px !important;
+    box-shadow:none !important;
+    background:#f8fafc !important;
+  }
+  .panel.team-a .player-card{border-color:color-mix(in srgb,var(--team-home,#2563eb) 30%,#cbd5e1) !important}
+  .panel.team-b .player-card{border-color:color-mix(in srgb,var(--team-away,#7c3aed) 30%,#cbd5e1) !important}
+
+  .player-top{
+    height:28px !important;
+    min-height:28px !important;
+    flex:0 0 28px !important;
+    padding:0 3px !important;
+    gap:2px !important;
+  }
+  .player-number{
+    width:42px !important;
+    min-width:42px !important;
+    height:26px !important;
+    min-height:26px !important;
+    border-radius:5px !important;
+    font-size:16px !important;
+    line-height:26px !important;
+    background:var(--team-home,#2563eb) !important;
+  }
+  .panel.team-b .player-number{
+    background:var(--team-away,#7c3aed) !important;
+  }
+  .player-goals{
+    font-size:10px !important;
+    line-height:26px !important;
+    font-weight:900 !important;
+  }
+  .player-name-inline{
+    font-size:7px !important;
+    line-height:26px !important;
+  }
+
+  .player-card > .discipline-row,
+  .staff-card > .discipline-row{
+    height:18px !important;
+    min-height:18px !important;
+    flex:0 0 18px !important;
+    gap:2px !important;
+    padding:1px 3px !important;
+  }
+  .player-card > .discipline-row .discipline-cell,
+  .staff-card > .discipline-row .discipline-cell{
+    height:16px !important;
+    min-height:16px !important;
+    border-radius:3px !important;
+    font-size:7px !important;
+  }
+  .player-card > .discipline-status{
+    height:12px !important;
+    min-height:12px !important;
+    flex:0 0 12px !important;
+    margin:0 3px 2px !important;
+    font-size:6px !important;
+  }
+  .player-card > .discipline-extra-status{
+    height:10px !important;
+    min-height:10px !important;
+    font-size:6px !important;
+  }
+
+  .main > .panel:first-child > .staff-title,
+  .main > .panel:last-child > .staff-title{
+    height:10px !important;
+    min-height:10px !important;
+    line-height:10px !important;
+    padding:0 !important;
+    font-size:6px !important;
+  }
+
+  .main > .panel:first-child > .staff,
+  .main > .panel:last-child > .staff{
+    height:80px !important;
+    min-height:80px !important;
+    max-height:80px !important;
+    padding:2px 3px !important;
+    gap:3px !important;
+    overflow:hidden !important;
+    display:flex !important;
+  }
+
+  .staff-card{
+    height:76px !important;
+    min-height:76px !important;
+    padding:2px !important;
+    border-radius:5px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    flex:1 1 0 !important;
+    width:0 !important;
+  }
+  .staff-main-row{
+    height:39px !important;
+    min-height:39px !important;
+    flex:0 0 39px !important;
+    justify-content:center !important;
+  }
+  .staff-main-row .staff-name-inline{display:none !important}
+  .staff-label{
+    width:100% !important;
+    height:37px !important;
+    min-height:37px !important;
+    line-height:37px !important;
+    border-radius:4px !important;
+    font-size:15px !important;
+    background:var(--team-home,#2563eb) !important;
+    color:#fff !important;
+  }
+  .panel.team-b .staff-label{background:var(--team-away,#7c3aed) !important}
+  .staff-card > .discipline-row{
+    margin-top:1px !important;
+  }
+  .staff-card > .discipline-status{
+    height:12px !important;
+    min-height:12px !important;
+    flex:0 0 12px !important;
+    margin:0 2px !important;
+    font-size:6px !important;
+  }
+
+  /* REGISTRO centrale simile alla schermata allegata. */
+  .main > .panel:nth-child(2){
+    background:#fffdf2 !important;
+    border-radius:4px !important;
+  }
+  .main > .panel:nth-child(2) .log-head{
+    height:35px !important;
+    min-height:35px !important;
+    flex:0 0 35px !important;
+    background:#fff !important;
+  }
+  .main > .panel:nth-child(2) .log-title{
+    font-size:clamp(10px,1.1vw,14px) !important;
+  }
+  .main > .panel:nth-child(2) .log-columns{
+    background:#fffdf2 !important;
+    color:#475569 !important;
+    border-bottom:1px solid #cbd5e1 !important;
+    grid-template-columns:38px 22px 30px minmax(0,1fr) 36px !important;
+  }
+  .main > .panel:nth-child(2) .log{
+    background:#fffdf2 !important;
+    color:#111827 !important;
+  }
+  .main > .panel:nth-child(2) .log-row{
+    background:transparent !important;
+    color:#111827 !important;
+    border-bottom:1px solid #e5e7eb !important;
+  }
+  .main > .panel:nth-child(2) .empty{
+    color:#cbd5e1 !important;
+  }
+
+  /* I popup usati per la selezione dell'evento ordinario non vengono
+     più mostrati: restano disponibili solo per le funzioni speciali. */
+  #eventModal{display:none !important}
+}
+
+/* In portrait la barra resta leggibile, su due righe compatte. */
+@media screen and (orientation:portrait) and (max-width:900px){
+  .quick-event-toolbar{
+    flex:0 0 66px;
+    height:66px;
+    min-height:66px;
+    padding:2px;
+    gap:2px;
+  }
+  .quick-event-row{gap:2px}
+  .quick-event{font-size:7px;border-radius:4px}
+  .main > .panel:first-child,
+  .main > .panel:last-child{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  .main > .panel:first-child > .players,
+  .main > .panel:last-child > .players{
+    flex:1 1 auto !important;
+    min-height:0 !important;
+  }
+  #eventModal{display:none !important}
+}
+</style>
+
+<script id="tablet-inline-events-v1">
+/* ============================================================
+   EVENTI INLINE
+   - si seleziona prima l'evento;
+   - si tocca poi il giocatore/dirigente;
+   - nessun popup per GOAL, 7m, WARNING, 2' e DISQ.
+   ============================================================ */
+(function(){
+  window.quickEventSelection={A:null,B:null};
+
+  const labels={
+    YELLOW:'WARNING',
+    TWO:"2 MIN.",
+    RED:'DISQ',
+    TEAM_PENALTY:'T.PENALTY',
+    GOAL:'GOAL',
+    PENALTY_GOAL:'7m GOAL',
+    PENALTY_MISS:'7m MISS'
+  };
+
+  function toolbar(team){
+    return document.querySelector('.quick-event-toolbar[data-team="'+team+'"]');
+  }
+
+  function paint(team){
+    const root=toolbar(team);
+    if(!root)return;
+    root.querySelectorAll('.quick-event[data-event]').forEach(btn=>{
+      btn.classList.toggle('active',btn.dataset.event===window.quickEventSelection[team]);
+    });
+    if(window.quickEventSelection[team]){
+      root.dataset.selected='1';
+    }else{
+      delete root.dataset.selected;
+    }
+  }
+
+  window.selectQuickEvent=function(team,type,button){
+    if(state.phase===7 && (type==='GOAL'||type==='PENALTY_GOAL'||type==='PENALTY_MISS')){
+      toast('Durante i rigori utilizzare il pulsante TIRA');
+      return;
+    }
+
+    if(type==='TEAM_PENALTY'){
+      snapshot();
+      addEvent(team,'—','TEAM_PENALTY','T.PENALTY');
+      render();
+      window.quickEventSelection[team]=null;
+      paint(team);
+      return;
+    }
+
+    window.quickEventSelection[team]=type;
+    paint(team);
+  };
+
+  window.clearQuickEvent=function(team){
+    window.quickEventSelection[team]=null;
+    paint(team);
+    toast('SELEZIONA UN EVENTO');
+  };
+
+  function clearAfter(team){
+    window.quickEventSelection[team]=null;
+    paint(team);
+  }
+
+  function directPenalty(team,index,scored){
+    const num=state.numbers[team][index];
+    if(isActiveSuspension(team,num)){
+      toast("2' IN CORSO: 7m NON CONSENTITO");
+      return;
+    }
+
+    snapshot();
+    state.penalty[team]++;
+    if(scored){
+      state.penaltyScored[team]++;
+      state.discipline[team][index].goals++;
+      if(team==='A')state.scoreA++;
+      else state.scoreB++;
+      addEvent(team,num,'PENALTY','RIGORE REALIZZATO',`${state.scoreA}-${state.scoreB}`);
+    }else{
+      addEvent(team,num,'PENALTY','RIGORE ERRATO');
+    }
+    render();
+    clearAfter(team);
+  }
+
+  function apply(team,index,kind){
+    const type=window.quickEventSelection[team];
+    if(!type){
+      toast('SELEZIONA PRIMA UN EVENTO');
+      return;
+    }
+
+    const d=kind==='PLAYER' ? state.discipline[team][index] : state.staff[team][index];
+    if(!d)return;
+
+    if(d.red || (kind==='PLAYER' && Number(d.two||0)>=3)){
+      toast(kind==='PLAYER' ? 'GIOCATORE NON DISPONIBILE' : 'DIRIGENTE NON DISPONIBILE');
+      return;
+    }
+
+    if(kind==='STAFF'){
+      if(['GOAL','PENALTY_GOAL','PENALTY_MISS'].includes(type)){
+        toast('GOAL E 7m SONO DISPONIBILI SOLO PER I GIOCATORI');
+        return;
+      }
+      if(type==='TEAM_PENALTY'){
+        return;
+      }
+      if(type==='YELLOW' || type==='TWO' || type==='RED'){
+        clearAfter(team);
+        staffAction(team,index,type);
+        return;
+      }
+    }
+
+    if(kind==='PLAYER'){
+      if(type==='GOAL'){
+        clearAfter(team);
+        playerAction(team,index,'GOAL');
+        return;
+      }
+      if(type==='PENALTY_GOAL'){
+        clearAfter(team);
+        directPenalty(team,index,true);
+        return;
+      }
+      if(type==='PENALTY_MISS'){
+        clearAfter(team);
+        directPenalty(team,index,false);
+        return;
+      }
+      if(type==='YELLOW' || type==='TWO' || type==='RED'){
+        clearAfter(team);
+        playerAction(team,index,type);
+        return;
+      }
+    }
+  }
+
+  /*
+     Override della vecchia apertura popup.
+     Le card esistenti del file continuano a chiamare openEventMenu(),
+     ma ora questa funzione applica direttamente l'evento selezionato.
+  */
+  window.openEventMenu=function(kind,team,index){
+    apply(team,index,kind);
+  };
+
+  /* Se il file usa anche la vecchia delegazione touch, evitiamo che
+     un secondo evento venga generato dal click sintetico del tablet. */
+  document.addEventListener('click',function(ev){
+    const b=ev.target.closest?.('.quick-event');
+    if(!b)return;
+    ev.preventDefault();
+  },true);
+
+  document.addEventListener('DOMContentLoaded',function(){
+    paint('A'); paint('B');
+  });
+})();
+</script>
