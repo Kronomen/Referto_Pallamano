@@ -9798,7 +9798,12 @@ function tick(){
       startBtn.style.pointerEvents='none';
     }
     beepEndOfPeriod(state.phase);
-    toast('FINE '+phaseLabel(state.phase));
+    // Alla fine naturale del cronometro apriamo direttamente l'unico popup
+    // di fine periodo; il passaggio al periodo successivo avverrà dalla
+    // conferma dello stesso popup.
+    render();
+    finishHalf();
+    return;
   }
   render();
 }
@@ -9861,10 +9866,10 @@ function cancelPhaseTransition(){
   GESTIONE FINE / INIZIO PERIODO
   Adeguata alla logica del Referto Pallamano:
   - a fine tempo il cronometro resta fermo;
-  - compare un popup che chiede conferma della FINE del periodo;
-  - solo dopo la conferma vengono memorizzati i dati del periodo;
-  - se è previsto un periodo successivo, compare un secondo popup
-    che chiede di confermare l'INIZIO del periodo successivo;
+  - compare un solo popup che comunica la FINE del periodo e il punteggio;
+  - la conferma dello stesso popup avvia direttamente il periodo successivo;
+  - alla fine del 4° tempo supplementare, solo in caso di parità, lo stesso
+    popup preannuncia l'inizio dei tiri di rigore;
   - annullando la richiesta la gara resta ferma sul periodo appena concluso;
   - non viene modificata la logica di punteggio, eventi, supplementari o rigori.
 */
@@ -9896,20 +9901,12 @@ function finishHalf(){
   if(state.timer!==end)return;
 
   const phase=state.phase;
-  const scoreA=Number(state.scoreA||0);
-  const scoreB=Number(state.scoreB||0);
 
-  // Primo popup: conferma della fine del periodo.
-  showPhaseTransition(
-    'FINE '+phaseLabel(phase),
-    `Risultato al termine del periodo: ${scoreA} - ${scoreB}`,
-    ()=>{
-      pendingEndPhase=null;
-      processFinishedPhase(phase);
-    }
-  );
-
+  // UN SOLO POPUP: processFinishedPhase() costruisce direttamente
+  // il popup completo relativo alla fine del periodo.
+  // Non mostrare prima un secondo popup generico di "fine tempo".
   pendingEndPhase=phase;
+  processFinishedPhase(phase);
   saveRecovery();
 }
 
@@ -9917,23 +9914,22 @@ function processFinishedPhase(phase){
   // Il periodo viene memorizzato SOLO dopo la conferma della sua fine.
   rememberCompletedPhase(phase);
 
-  /* 1° TEMPO */
+  const scoreText = `${state.scoreA} - ${state.scoreB}`;
+
+  /* 1° TEMPO: un solo popup. Alla conferma si passa direttamente al 2°. */
   if(phase===1){
     state.firstHalfScoreA=state.scoreA;
     state.firstHalfScoreB=state.scoreB;
 
     showPhaseTransition(
-      'INIZIARE IL 2° TEMPO?',
-      `1° tempo terminato: ${state.scoreA} - ${state.scoreB}`,
+      'FINE 1° TEMPO',
+      `Punteggio al termine del 1° tempo: ${scoreText}`,
       ()=>{
         state.phase=2;
         state.timer=getPhaseEnd(1);
         state.running=false;
         setPhaseStartScore();
-
         recordSystemPhaseEvent('FINE 1° TEMPO');
-        // L'evento INIZIO 2° TEMPO viene scritto quando viene dato START,
-        // non semplicemente quando si chiude il popup di transizione.
         render();
         saveRecovery();
       }
@@ -9943,109 +9939,136 @@ function processFinishedPhase(phase){
 
   /* FINE 2° TEMPO */
   if(phase===2){
-    // Manteniamo anche i dati storici già usati dal referto.
-    // Il contenitore dei parziali visualizza invece il punteggio totale.
     state.secondHalfScoreA=state.scoreA;
     state.secondHalfScoreB=state.scoreB;
 
-    recordSystemPhaseEvent('FINE 2° TEMPO');
-
-    /*
-      FINE 2° TEMPO:
-      la modalità scelta in CONFIGURAZIONE decide il proseguimento.
-      RIGORI deve portare al popup dei rigori dopo il 2° tempo
-      (se il risultato è pari), senza chiudere la gara come STANDARD.
-    */
     if(state.matchMode==='RIGORI'){
       if(state.scoreA===state.scoreB){
         state.motivoFineGara='RIGORI';
         showPhaseTransition(
-          'INIZIARE I TIRI DI RIGORE?',
-          `Parità dopo i tempi regolamentari: ${state.scoreA} - ${state.scoreB}`,
-          openTabletShootoutFile
+          'INIZIO TIRI DI RIGORE',
+          `2° tempo terminato sul ${scoreText}. La gara è ancora in parità: conferma per iniziare i tiri di rigore.`,
+          ()=>{
+            recordSystemPhaseEvent('FINE 2° TEMPO');
+            openTabletShootoutFile();
+          }
         );
         return;
       }
 
       state.motivoFineGara='TEMPI_REGOLAMENTARI';
-      endMatch();
+      showPhaseTransition(
+        'FINE 2° TEMPO',
+        `Punteggio finale: ${scoreText}`,
+        ()=>{
+          recordSystemPhaseEvent('FINE 2° TEMPO');
+          endMatch();
+        }
+      );
       return;
     }
 
-    if(state.matchMode==='SUPPLEMENTARI'){
-      if(state.scoreA===state.scoreB){
-        showPhaseTransition(
-          'INIZIARE IL 1° TEMPO SUPPLEMENTARE?',
-          `Parità dopo i tempi regolamentari: ${state.scoreA} - ${state.scoreB}`,
-          startFirstOvertime
-        );
-        return;
-      }
-
-      state.motivoFineGara='TEMPI_REGOLAMENTARI';
-      endMatch();
+    if(state.matchMode==='SUPPLEMENTARI' && state.scoreA===state.scoreB){
+      showPhaseTransition(
+        'FINE 2° TEMPO',
+        `Punteggio al termine dei tempi regolamentari: ${scoreText}. La gara è pari: conferma per iniziare il 1° tempo supplementare.`,
+        ()=>{
+          recordSystemPhaseEvent('FINE 2° TEMPO');
+          startFirstOvertime();
+        }
+      );
       return;
     }
 
-    // Modalità STANDARD.
     state.motivoFineGara='TEMPI_REGOLAMENTARI';
-    endMatch();
+    showPhaseTransition(
+      'FINE 2° TEMPO',
+      `Punteggio finale: ${scoreText}`,
+      ()=>{
+        recordSystemPhaseEvent('FINE 2° TEMPO');
+        endMatch();
+      }
+    );
     return;
   }
 
-  /* FINE 1° TEMPO SUPPLEMENTARE */
+  /* FINE 1° TEMPO SUPPLEMENTARE: un solo popup, poi direttamente il 2°. */
   if(phase===3){
-    recordSystemPhaseEvent('FINE 1° TEMPO SUPPLEMENTARE');
     showPhaseTransition(
-      'INIZIARE IL 2° TEMPO SUPPLEMENTARE?',
-      `1° tempo supplementare terminato: ${state.scoreA} - ${state.scoreB}`,
-      startSecondOvertime
+      'FINE 1° TEMPO SUPPLEMENTARE',
+      `Punteggio al termine del periodo: ${scoreText}`,
+      ()=>{
+        recordSystemPhaseEvent('FINE 1° TEMPO SUPPLEMENTARE');
+        startSecondOvertime();
+      }
     );
     return;
   }
 
   /* FINE 2° TEMPO SUPPLEMENTARE */
   if(phase===4){
-    recordSystemPhaseEvent('FINE 2° TEMPO SUPPLEMENTARE');
     if(state.scoreA!==state.scoreB){
       state.motivoFineGara='2_TEMPI_SUPPLEMENTARI';
-      endMatch();
+      showPhaseTransition(
+        'FINE 2° TEMPO SUPPLEMENTARE',
+        `Punteggio finale: ${scoreText}`,
+        ()=>{
+          recordSystemPhaseEvent('FINE 2° TEMPO SUPPLEMENTARE');
+          endMatch();
+        }
+      );
       return;
     }
 
     showPhaseTransition(
-      'INIZIARE IL 3° TEMPO SUPPLEMENTARE?',
-      `Ancora parità: ${state.scoreA} - ${state.scoreB}.`,
-      startThirdOvertime
+      'FINE 2° TEMPO SUPPLEMENTARE',
+      `Punteggio al termine del periodo: ${scoreText}. La gara è ancora in parità: conferma per iniziare il 3° tempo supplementare.`,
+      ()=>{
+        recordSystemPhaseEvent('FINE 2° TEMPO SUPPLEMENTARE');
+        startThirdOvertime();
+      }
     );
     return;
   }
 
-  /* FINE 3° TEMPO SUPPLEMENTARE */
+  /* FINE 3° TEMPO SUPPLEMENTARE: un solo popup, poi direttamente il 4°. */
   if(phase===5){
-    recordSystemPhaseEvent('FINE 3° TEMPO SUPPLEMENTARE');
     showPhaseTransition(
-      'INIZIARE IL 4° TEMPO SUPPLEMENTARE?',
-      `3° tempo supplementare terminato: ${state.scoreA} - ${state.scoreB}`,
-      startFourthOvertime
+      'FINE 3° TEMPO SUPPLEMENTARE',
+      `Punteggio al termine del periodo: ${scoreText}`,
+      ()=>{
+        recordSystemPhaseEvent('FINE 3° TEMPO SUPPLEMENTARE');
+        startFourthOvertime();
+      }
     );
     return;
   }
 
   /* FINE 4° TEMPO SUPPLEMENTARE */
   if(phase===6){
-    recordSystemPhaseEvent('FINE 4° TEMPO SUPPLEMENTARE');
     if(state.scoreA!==state.scoreB){
       state.motivoFineGara='4_TEMPI_SUPPLEMENTARI';
-      endMatch();
+      showPhaseTransition(
+        'FINE 4° TEMPO SUPPLEMENTARE',
+        `Punteggio finale: ${scoreText}`,
+        ()=>{
+          recordSystemPhaseEvent('FINE 4° TEMPO SUPPLEMENTARE');
+          endMatch();
+        }
+      );
       return;
     }
 
+    // UNICO popup speciale: solo qui, con parità dopo il 4° supplementare,
+    // si preannuncia direttamente l'inizio dei tiri di rigore.
     state.motivoFineGara='RIGORI';
     showPhaseTransition(
-      'INIZIARE I TIRI DI RIGORE?',
-      `Ancora parità dopo i tempi supplementari: ${state.scoreA} - ${state.scoreB}.`,
-      openTabletShootoutFile
+      'INIZIO TIRI DI RIGORE',
+      `4° tempo supplementare terminato sul ${scoreText}. La gara è ancora in parità: conferma per iniziare i tiri di rigore.`,
+      ()=>{
+        recordSystemPhaseEvent('FINE 4° TEMPO SUPPLEMENTARE');
+        openTabletShootoutFile();
+      }
     );
     return;
   }
@@ -11312,52 +11335,7 @@ function changePlayerNumber(input){
   render();
 }
 
-/* F9 = fine tempo completa:
-   registra SUBITO l'evento FINE del periodo nel Registro Gare.
-   Non richiede di premere un secondo pulsante. */
-document.addEventListener('keydown', function(ev){
-  if(ev.key !== 'F9') return;
-  ev.preventDefault();
-  ev.stopPropagation();
-
-  // I rigori finali sono gestiti da un file separato.
-  if(state.phase===7) return;
-
-  state.running=false;
-  clearInterval(interval);
-  interval=null;
-  state.timer=getPhaseEnd(state.phase);
-  el('timer').classList.remove('blink');
-
-  const phase=state.phase;
-  beepEndOfPeriod(phase);
-  const endTexts={
-    1:'FINE 1° TEMPO',
-    2:'FINE 2° TEMPO',
-    3:'FINE 1° TEMPO SUPPLEMENTARE',
-    4:'FINE 2° TEMPO SUPPLEMENTARE',
-    5:'FINE 3° TEMPO SUPPLEMENTARE',
-    6:'FINE 4° TEMPO SUPPLEMENTARE'
-  };
-
-  const endText=endTexts[phase];
-  if(endText){
-    // Usa direttamente addEvent, senza passare da un controllo del
-    // popup o da una funzione di transizione.
-    const already=state.events.some(e=>
-      e?.type==='SYSTEM' &&
-      String(e?.text||e?.event||'').trim().toUpperCase()===endText.toUpperCase()
-    );
-    if(!already){
-      addEvent('—','—','SYSTEM',endText,`${state.scoreA}-${state.scoreB}`);
-    }
-  }
-
-  render();
-  saveRecovery();
-
-  toast(endText ? endText : 'TEMPO PORTATO ALLA FINE');
-});
+/* Il comando F9 è gestito dall'handler dedicato #f9-fine-tempo-handler in fondo al file. */
 
 /* Controlli touch: funzionano su iPad/tablet e anche con mouse.
    Il cronometro può essere avviato sia dal tasto START sia toccando direttamente il tempo. */
