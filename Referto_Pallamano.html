@@ -7198,6 +7198,37 @@ body.referto-attivo #app > * {
   pointer-events:auto !important;
 }
 </style>
+
+<style id="two-countdown-horizontal-final">
+/* PIU' ESCLUSIONI CONSECUTIVE: i countdown vengono mostrati affiancati
+   nella stessa riga della card del giocatore/dirigente. */
+.player-card > .discipline-status.countdown,
+.staff-card > .discipline-status.countdown{
+  display:flex !important;
+  flex-direction:row !important;
+  flex-wrap:nowrap !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:3px !important;
+  overflow:hidden !important;
+  white-space:nowrap !important;
+  line-height:1 !important;
+  padding:0 2px !important;
+}
+.player-card > .discipline-status.countdown .countdown-line,
+.staff-card > .discipline-status.countdown .countdown-line{
+  display:inline-flex !important;
+  flex:0 0 auto !important;
+  width:auto !important;
+  height:auto !important;
+  min-width:0 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  font-size:7px !important;
+  font-weight:900 !important;
+  font-variant-numeric:tabular-nums !important;
+}
+</style>
 </head>
 
 <body>
@@ -8915,6 +8946,10 @@ function renderLog(){
     const phaseEvent=/^(?:INIZIO|FINE)\s+(?:1°|2°|3°|4°)\s+TEMPO(?:\s+SUPPLEMENTARE)?$/.test(String(e.text||e.event||'').trim());
     const cls=(e.team==='A'?'log-a':(e.team==='B'?'log-b':''))+(phaseEvent?' system-phase-event':'');
     let text=String(e.text||e.event||'').replace(/\b(?:giocatore|dirigente)\s*(?:n[°º.]?\s*)?\d+\s*[-:·]?\s*/ig,'').replace(/\bN[°º.]?\s*\d+\s*[-:·]?\s*/ig,'').trim();
+    // Nel REGISTRO GARA le esclusioni vengono indicate in forma estesa.
+    // Manteniamo il valore interno dell'evento invariato per la logica e per
+    // la compatibilità con i salvataggi, modificando soltanto la visualizzazione.
+    if(e.type==='TWO' || /^2\s*['’]?$/i.test(text)) text='ESCLUSIONE 2 MINUTI';
     const num=e.num&&e.num!=='—'?e.num:'';
     const editable=e.type!=='SYSTEM';
     return `<div class="log-row ${cls}" ${editable?`onclick="editLogRow(${idx})"`:''}>`+
